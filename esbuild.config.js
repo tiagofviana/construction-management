@@ -112,7 +112,7 @@ const entries = [
         ...defaultOption,
         entryPoints: ['src\\front-end\\spa\\main.ts'],
         outdir: '.\\src\\back-end\\apps\\spa\\static\\spa\\_js\\index\\bundled\\',
-        publicPath: '/static/spa/_js/index',
+        publicPath: '/static/spa/_js/index/bundled',
     },
 
     // MPA
