@@ -1,0 +1,9 @@
+{% extends 'core/base.html' %} {% load static %} {% block extra_head %}
+<link rel="stylesheet" type="text/css" href="{% static 'spa/_js/index/bundled/main.min.css' %}" />
+{% endblock extra_head %} {% block content %} {% csrf_token %}
+
+<div id="app"></div>
+
+<script type="module" src="{% static 'spa/_js/index/bundled/main.min.js' %}"></script>
+
+{% endblock content %}

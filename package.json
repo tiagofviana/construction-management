@@ -1,0 +1,40 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "styles-dev": "@tailwindcss -i src\\front-end\\styles\\main.css -o src\\back-end\\apps\\core\\static\\core\\_css\\tailwind\\output.css --watch",
+        "styles-prod": "@tailwindcss -i src\\front-end\\styles\\main.css -o src\\back-end\\apps\\core\\static\\core\\_css\\tailwind\\output.css --minify",
+        "build-dev": "node .\\esbuild.config.js --dev",
+        "build-prod": "node .\\esbuild.config.js",
+        "type-check": "vue-tsc --project .\\tsconfig.json --noEmit --watch",
+        "lint": "eslint src/",
+        "lint:fix": "eslint src/ --fix",
+        "format": "prettier --write src/"
+    },
+    "dependencies": {
+        "@lucide/vue": "^1.17.0",
+        "@tailwindcss/cli": "^4.3.0",
+        "axios": "^1.16.1",
+        "dotenv": "^17.4.2",
+        "esbuild": "^0.28.0",
+        "gsap": "^3.15.0",
+        "konva": "^10.3.0",
+        "pinia": "^3.0.4",
+        "tailwindcss": "^4.3.0",
+        "typescript": "^6.0.3",
+        "unplugin-vue": "^7.2.0",
+        "vue": "^3.5.34",
+        "vue-router": "^5.0.7"
+    },
+    "devDependencies": {
+        "@types/node": "^25.9.1",
+        "@typescript-eslint/parser": "^8.59.4",
+        "@vue/eslint-config-prettier": "^10.2.0",
+        "@vue/eslint-config-typescript": "^14.7.0",
+        "eslint": "^10.4.0",
+        "eslint-plugin-vue": "^10.9.1",
+        "prettier": "^3.8.3",
+        "prettier-plugin-tailwindcss": "^0.8.0",
+        "vue-tsc": "^3.3.1"
+    }
+}

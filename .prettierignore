@@ -1,0 +1,32 @@
+# Enviroment file
+**/.env
+
+# IDE directories 
+**/.idea
+
+# Python
+**/venv
+**/env
+**/__pycache__
+
+# NodeJs
+**/node_modules
+**/package-lock.json
+
+# Staticfiles directory created by the command 'python manage.py collectstatic --noinput'
+**/staticfiles
+
+# Sqlite
+**/*.sqlite3
+
+# Temporary directory
+src/temp
+
+# Media directory
+src/media
+
+# Tailwind
+**/tailwind/**/output.css
+
+# Build
+**/_js/**/*.min.js

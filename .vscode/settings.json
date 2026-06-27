@@ -1,0 +1,32 @@
+{
+    "editor.fontSize": 18,
+    "workbench.tree.indent": 28,
+    "workbench.statusBar.visible": true,
+    "workbench.colorTheme": "Dark Modern",
+    "workbench.iconTheme": "vscode-icons",
+    "explorer.confirmDelete": true,
+    "explorer.confirmDragAndDrop": false,
+    "explorer.autoReveal": false,
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "package.json": "package-lock.json, tsconfig.json, eslint*, .prettier*, esbuild.config.js",
+        ".gitignore": ".gitattributes, README.md",
+        "requirements-default.txt": "requirements*.txt"
+    },
+    "editor.wordWrap": "bounded",
+    "editor.wrappingIndent": "same",
+    "editor.wordWrapColumn": 100,
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": false,
+    "editor.formatOnSaveMode": "file",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "prettier.configPath": ".prettierrc.json",
+    "svg.preview.mode": "svg"
+}

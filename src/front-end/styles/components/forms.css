@@ -1,0 +1,40 @@
+@layer components {
+    .field {
+        @apply mt-4;
+
+        & > label {
+            @apply text-sm font-medium text-neutral-700;
+        }
+
+        input[type='password'],
+        input[type='text'],
+        input[type='email'] {
+            @apply w-full rounded border border-neutral-300 bg-white px-3.5 py-2.5 text-sm text-neutral-900 transition-all duration-150 outline-none placeholder:text-neutral-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-400;
+        }
+
+        &.invalid-field {
+            & > label {
+                @apply text-red-600;
+            }
+
+            & > input {
+                @apply border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20;
+            }
+        }
+    }
+
+    .checkbox {
+        @apply mt-4;
+        label {
+            @apply inline-flex cursor-pointer items-center rounded border border-transparent p-2 text-sm font-medium text-neutral-700 select-none hover:border-black/5 hover:bg-green-50 hover:text-green-800;
+
+            input[type='checkbox'] {
+                @apply mr-2 size-4.5 cursor-pointer rounded border border-neutral-300 text-red-600 accent-green-600;
+            }
+
+            &:has(input:checked) {
+                @apply border-black/10 bg-green-50 text-green-800;
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+@layer components {
+    .btn {
+        @apply table cursor-pointer items-center justify-center gap-2 rounded-lg border border-transparent px-5 py-2.5 text-sm font-medium tracking-wide transition-all duration-150 ease-in-out select-none focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .btn-black {
+        @apply bg-neutral-900 text-white hover:bg-neutral-700 focus:ring-neutral-500 active:bg-neutral-800;
+    }
+
+    .btn-blue {
+        @apply text-shadow bg-blue-600 text-white hover:bg-blue-500 focus:ring-blue-400 active:bg-blue-700;
+    }
+
+    .btn-red {
+        @apply text-shadow bg-red-600 text-white hover:bg-red-500 focus:ring-red-400 active:bg-red-700;
+    }
+
+    .btn-orange {
+        @apply bg-orange-500 text-white hover:bg-orange-400 focus:ring-orange-300 active:bg-orange-600;
+    }
+
+    .btn-green {
+        @apply bg-emerald-600 text-white hover:bg-emerald-500 focus:ring-emerald-400 active:bg-emerald-700;
+    }
+
+    .btn-gray {
+        @apply bg-neutral-200 text-neutral-700 hover:bg-neutral-300 focus:ring-neutral-300 active:bg-neutral-400;
+    }
+
+    .btn-white {
+        @apply border border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-50 focus:ring-neutral-300 active:bg-neutral-100;
+    }
+}
