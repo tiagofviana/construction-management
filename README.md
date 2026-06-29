@@ -1,4 +1,4 @@
-# Geomarket
+# Project setup
 
 This template should help get you started developing. Run the following code to clone the project in your machine:
 
@@ -6,11 +6,11 @@ This template should help get you started developing. Run the following code to 
 git clone https://gitlab.com/tiagofviana/construction-management.git
 ```
 
-## Recommended IDE Setup
+## Recommended IDE
 
 [VSCode](https://code.visualstudio.com/)
 
-## 🛠️ Project Setup
+## 🛠️ Languages
 
 Make sure you have the following programs correctly installed:
 
