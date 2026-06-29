@@ -11,6 +11,7 @@ export class Grid {
         this.stage = stage
         this.config = config
         this.stage.add(this.layer)
+        this.layer.moveToBottom()
     }
 
     public destroy() {

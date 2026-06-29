@@ -1,4 +1,4 @@
-import { snapValue } from '../utils'
+import { snapValue, calculateCurve } from '../utils'
 import type { ToolOptions, PathCommand, Point, Config } from '../types'
 
 export class DrawingToolManager {
@@ -28,7 +28,7 @@ export class DrawingToolManager {
     }
 
     public shouldDrawPreview(): boolean {
-        return ['line', 'arc'].includes(this.activeTool || '')
+        return ['line', 'curve'].includes(this.activeTool || '')
     }
 
     public createMoveCommand(point: Point): PathCommand {
@@ -48,7 +48,7 @@ export class DrawingToolManager {
     }
 
     public createCurveCommand(startPoint: PathCommand, endPoint: Point): PathCommand {
-        const controls = this.calculateCurveControls({ x: startPoint.x, y: startPoint.y }, endPoint)
+        const controls = calculateCurve({ x: startPoint.x, y: startPoint.y }, endPoint)
 
         return {
             cmd: 'C',
@@ -65,6 +65,7 @@ export class DrawingToolManager {
         if (lastPath === null) return null
 
         const to = { ...this.mousePoint }
+
         if (this.config.isSnapOn) {
             to.x = snapValue(to.x, this.config.snapLength)
             to.y = snapValue(to.y, this.config.snapLength)
@@ -73,21 +74,6 @@ export class DrawingToolManager {
         return {
             from: { x: lastPath.x, y: lastPath.y },
             to,
-        }
-    }
-
-    private calculateCurveControls(
-        start: Point,
-        end: Point,
-        tension: number = 0.5,
-    ): { x1: number; y1: number; x2: number; y2: number } {
-        const dx = end.x - start.x
-
-        return {
-            x1: start.x + dx * tension,
-            y1: start.y,
-            x2: end.x,
-            y2: start.y,
         }
     }
 }

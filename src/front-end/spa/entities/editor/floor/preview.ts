@@ -1,68 +1,48 @@
 import Konva from 'konva'
-import type { Line } from 'konva/lib/shapes/Line'
-import type { Stage } from 'konva/lib/Stage'
-import type { Point, ToolOptions, Config } from './types'
+import type { Layer } from 'konva/lib/Layer'
+import type { Point, ToolOptions } from './types'
+import { calculateCurve } from './utils'
 
 export class Preview {
-    private layer = new Konva.Layer({ listening: false })
-    private config: Config
+    private group = new Konva.Group({ listening: false })
 
-    constructor(stage: Stage, config: Config) {
-        this.config = config
-        stage.add(this.layer)
-    }
-
-    private createDashedLine(to: Point, from: Point): Line {
-        return new Konva.Line({
-            points: [from.x, from.y, to.x, to.y],
-            stroke: '#193cb8',
-            strokeWidth: 1.5,
-            dash: [12, 8],
-            listening: false,
-        })
+    constructor(layer: Layer) {
+        layer.add(this.group)
     }
 
     public destroy() {
-        this.layer.destroy()
+        this.group.destroy()
     }
 
     public clear() {
-        this.layer.destroyChildren()
+        this.group.destroyChildren()
     }
 
-    public draw(to: Point, from: Point, tool: ToolOptions) {
-        this.layer.destroyChildren()
+    public draw(from: Point, to: Point, tool: ToolOptions) {
+        this.group.destroyChildren()
+        let data = `M ${from.x} ${from.y} `
 
         if (tool === 'line') {
-            const previewLine = this.createDashedLine(to, from)
-            this.layer.add(previewLine)
+            data += `L ${to.x} ${to.y}`
         }
 
-        // if (mode.value === 'arc') {
-        //     // Draw preview arc as SVG path
-        //     const a = arcParams.value
-        //     const previewArc = new Konva.Path({
-        //         data: `M ${from.x} ${from.y} A ${a.rx} ${a.ry} ${a.xAxisRotation} ${a.largeArc ? 1 : 0} ${a.sweep ? 1 : 0} ${to.x} ${to.y}`,
-        //         stroke: COLORS.pathPreview,
-        //         strokeWidth: 1.5,
-        //         fill: 'transparent',
-        //         dash: [4, 4],
-        //         listening: false,
-        //     })
-        //     uiLayer.add(previewArc)
+        if (tool === 'curve') {
+            const controls = calculateCurve(from, to)
+            data += `C ${controls.x1} ${controls.y1} ${controls.x2} ${controls.y2} ${to.x} ${to.y}`
+        }
 
-        //     // Radius handles visual
-        //     const midX = (from.x + to.x) / 2
-        //     const midY = (from.y + to.y) / 2
-        //     uiLayer.add(
-        //         new Konva.Line({
-        //             points: [midX - a.rx, midY, midX + a.rx, midY],
-        //             stroke: COLORS.anchor + '55',
-        //             strokeWidth: 0.8,
-        //             dash: [3, 3],
-        //         }),
-        //     )
-        // }
-        this.layer.batchDraw()
+        const draw = this.createDashedDraw(data)
+        this.group.add(draw)
+    }
+
+    private createDashedDraw(data: string): Konva.Path {
+        return new Konva.Path({
+            data: data,
+            stroke: '#193cb8',
+            strokeWidth: 1.5,
+            dash: [12, 8],
+            fill: 'transparent',
+            listening: false,
+        })
     }
 }

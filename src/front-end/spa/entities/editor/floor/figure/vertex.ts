@@ -27,9 +27,10 @@ export class VertexRenderer {
 
             if (isDraggable) {
                 circle.on('dragmove', () => {
+                    Math.round(circle.x())
                     const point = this.validateAndSnapPoint({
-                        x: circle.x(),
-                        y: circle.y(),
+                        x: Math.round(circle.x()),
+                        y: Math.round(circle.y()),
                     })
 
                     circle.setPosition(point)

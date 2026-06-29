@@ -1,5 +1,6 @@
 import Konva from 'konva'
 import type { Stage } from 'konva/lib/Stage'
+import type { Layer } from 'konva/lib/Layer'
 import type { Point, ToolOptions, Config, PathCommand } from './types'
 import { Preview } from './preview'
 import { Grid } from './grid'
@@ -9,11 +10,12 @@ import { ZoomController } from './controllers/zoom'
 import { PanController } from './controllers/pan'
 import { PathManager } from './manager/path'
 import { DrawingToolManager } from './manager/drawingTool'
-import { InputHandler } from './inputHandler'
+import { InputHandler } from './handler'
 
 export class FloorCanvas {
     private elmt: HTMLDivElement
     private stage: Stage
+    private drawLayer: Layer
 
     private _config: Config = {
         width: 2400,
@@ -45,12 +47,13 @@ export class FloorCanvas {
     constructor(elmt: HTMLDivElement, path: Array<PathCommand> = []) {
         this.elmt = elmt
         this.pathManager = new PathManager(this._config, path)
-
         this.stage = new Konva.Stage({
             container: elmt,
             width: elmt.clientWidth,
             height: elmt.clientHeight,
         })
+        this.drawLayer = new Konva.Layer({ listening: false })
+        this.stage.add(this.drawLayer)
 
         // Initialize controllers
         this.zoomController = new ZoomController(this.stage, this._config)
@@ -61,9 +64,9 @@ export class FloorCanvas {
 
         // Initialize components
         this.grid = new Grid(this.stage, this._config)
-        this.figure = new Figure(this.stage, this._config)
-        this.preview = new Preview(this.stage, this._config)
-        this.info = new Info(this.stage)
+        this.figure = new Figure(this.stage, this.drawLayer, this._config)
+        this.preview = new Preview(this.drawLayer)
+        this.info = new Info(this.drawLayer)
 
         // Initialize input handler
         this.inputHandler = new InputHandler(
@@ -96,6 +99,7 @@ export class FloorCanvas {
         this.figure.draw(this.pathManager.getPath(), isSelect, (newPath) => {
             this.onFigureChange(newPath)
         })
+
         this.info.draw(this.pathManager.getPath())
         this.updatePreview()
     }
@@ -130,6 +134,7 @@ export class FloorCanvas {
         this.info.clear()
         this.preview.clear()
         this.figure.clear()
+        this.drawLayer.batchDraw()
     }
 
     public resetZoom(): void {
@@ -238,6 +243,7 @@ export class FloorCanvas {
             return
         }
 
-        this.preview.draw(points.to, points.from, this.activeTool)
+        this.preview.draw(points.from, points.to, this.activeTool)
+        this.drawLayer.batchDraw()
     }
 }

@@ -1,4 +1,5 @@
 import type { Stage } from 'konva/lib/Stage'
+import type { Layer } from 'konva/lib/Layer'
 import { PathRenderer } from './path'
 import { VertexRenderer } from './vertex'
 import { CurveControlRenderer } from './curve'
@@ -9,8 +10,8 @@ export class Figure {
     private vertexRenderer: VertexRenderer
     private curveControlRenderer: CurveControlRenderer
 
-    constructor(stage: Stage, config: Config) {
-        this.pathRenderer = new PathRenderer(stage)
+    constructor(stage: Stage, layer: Layer, config: Config) {
+        this.pathRenderer = new PathRenderer(layer)
         this.vertexRenderer = new VertexRenderer(stage, config)
         this.curveControlRenderer = new CurveControlRenderer(stage, config)
     }
@@ -41,5 +42,23 @@ export class Figure {
             this.pathRenderer.redraw(path)
             onDrag(path)
         })
+    }
+
+    public redrawPath(path: Array<PathCommand>): void {
+        this.pathRenderer.redraw(path)
+    }
+
+    public redrawCurveControls(
+        path: Array<PathCommand>,
+        onDrag: (value: Array<PathCommand>) => void = () => {},
+    ): void {
+        this.curveControlRenderer.draw(path, () => {
+            this.pathRenderer.redraw(path)
+            onDrag(path)
+        })
+    }
+
+    public isCurveControlDragging(): boolean {
+        return this.curveControlRenderer?.isDragging ?? false
     }
 }

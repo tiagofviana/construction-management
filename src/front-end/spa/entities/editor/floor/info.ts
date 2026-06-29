@@ -1,28 +1,26 @@
 import Konva from 'konva'
-import type { Stage } from 'konva/lib/Stage'
+import type { Layer } from 'konva/lib/Layer'
 import type { Label } from 'konva/lib/shapes/Label'
 import type { Text } from 'konva/lib/shapes/Text'
 import type { PathCommand } from './types'
 
 export class Info {
-    private layer = new Konva.Layer({ listening: false })
-    private stage: Stage
+    private group = new Konva.Group({ listening: false })
 
-    constructor(stage: Stage) {
-        this.stage = stage
-        this.stage.add(this.layer)
+    constructor(layer: Layer) {
+        layer.add(this.group)
     }
 
     public destroy() {
-        this.layer.destroy()
+        this.group.destroy()
     }
 
     public clear() {
-        this.layer.destroyChildren()
+        this.group.destroyChildren()
     }
 
     public draw(path: Array<PathCommand>) {
-        this.layer.destroyChildren()
+        this.group.destroyChildren()
 
         for (let i = 1; i < path.length; i++) {
             const previous = path[i - 1]
@@ -32,8 +30,6 @@ export class Info {
                 this.createLineLabels(previous, current)
             }
         }
-
-        this.layer.batchDraw()
     }
 
     private createLineLabels(previus: PathCommand, current: PathCommand) {
@@ -56,7 +52,7 @@ export class Info {
             y: midY - bounds.height / 2,
         })
 
-        this.layer.add(label)
+        this.group.add(label)
     }
 
     private createLabel(text: string): Label {
@@ -88,6 +84,7 @@ export class Info {
             shadowColor: '#000',
             shadowBlur: 5,
             shadowOpacity: 0.6,
+            opacity: 1,
         })
     }
 }

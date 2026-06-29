@@ -76,8 +76,8 @@ export class CurveControlRenderer {
 
         circle.on('dragmove', () => {
             const point = this.validateAndSnapPoint({
-                x: circle.x(),
-                y: circle.y(),
+                x: Math.round(circle.x()),
+                y: Math.round(circle.y()),
             })
 
             circle.position(point)
@@ -96,7 +96,6 @@ export class CurveControlRenderer {
         this.controlLayer.add(line)
         this.controlLayer.add(circle)
     }
-    
 
     private createControlLine(from: Point, to: Point): Line {
         return new Konva.Line({
@@ -111,7 +110,7 @@ export class CurveControlRenderer {
         return new Konva.Circle({
             x: point.x,
             y: point.y,
-            radius: 4,
+            radius: 4.5,
             fill: '#22c55e',
             stroke: '#000',
             strokeWidth: 0.5,
