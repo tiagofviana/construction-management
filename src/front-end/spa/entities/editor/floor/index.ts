@@ -76,6 +76,9 @@ export class FloorCanvas {
             this.drawingToolManager,
             (point) => this.handleMouseTrack(point),
             (tool) => this.handleToolAction(tool),
+            () => {
+                this.updateZoom()
+            },
         )
 
         // Initial draw
@@ -138,11 +141,19 @@ export class FloorCanvas {
     }
 
     public resetZoom(): void {
-        this.zoomController.resetZoom(this.onZoomChange)
+        this.zoomController.resetZoom()
+        this.updateZoom()
     }
 
     public applyZoom(zoom: number): void {
-        this.zoomController.applyZoom(zoom, this.onZoomChange)
+        this.zoomController.applyZoom(zoom)
+        this.updateZoom()
+    }
+
+    private updateZoom() {
+        if (this.onZoomChange) {
+            this.onZoomChange(this.zoomController.getScale())
+        }
     }
 
     private handleMouseTrack(point: Point): void {

@@ -43,17 +43,17 @@ export class ZoomController {
         }
     }
 
-    public resetZoom = (onZoomChange?: (value: number) => void): void => {
-        if (onZoomChange) {
-            onZoomChange(1)
-        }
-
+    public resetZoom(): void {
         this.stage.scale({ x: 1, y: 1 })
         this.stage.position({ x: 0, y: 0 })
         this.centralize()
     }
 
-    public applyZoom = (zoom: number, onZoomChange?: (value: number) => void): void => {
+    public getScale(): number {
+        return this.stage.scale().x
+    }
+
+    public applyZoom(zoom: number): void {
         const current = this.stage.scaleX()
         const newScale = Math.min(Math.max(current + zoom, MIN_ZOOM), MAX_ZOOM)
         const cx = this.stage.width() / 2
@@ -64,9 +64,6 @@ export class ZoomController {
             x: cx - (cx - this.stage.x()) * ratio,
             y: cy - (cy - this.stage.y()) * ratio,
         })
-        if (onZoomChange) {
-            onZoomChange(newScale)
-        }
     }
 
     public centralize = (): void => {

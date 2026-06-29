@@ -13,10 +13,14 @@ export class InputHandler {
         private drawingToolManager: DrawingToolManager,
         private onMouseTrack: (point: Point) => void,
         private onStageDown: (tool: ToolOptions) => void,
+        private onWheel: () => void,
     ) {}
 
     public bindStageEvents(): void {
-        this.stage.on('wheel', (e) => this.zoomController.onWheel(e))
+        this.stage.on('wheel', (e) => {
+            this.zoomController.onWheel(e)
+            this.onWheel()
+        })
         this.stage.on('mousedown touchstart', () => this.handleStageDown())
         this.stage.on('mouseup touchend', () => this.handleStageUp())
         this.stage.on('mousemove touchmove', () => this.handleStageMove())
