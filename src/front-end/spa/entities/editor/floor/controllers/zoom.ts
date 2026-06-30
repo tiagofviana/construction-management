@@ -3,9 +3,9 @@ import type { KonvaEventObject } from 'konva/lib/Node'
 import type { Stage } from 'konva/lib/Stage'
 import type { Point, Config } from '../types'
 
-const ZOOM_SPEED = 0.05
+const ZOOM_SPEED = 0.1
 const MIN_ZOOM = 0.25
-const MAX_ZOOM = 6.0
+const MAX_ZOOM = 10
 
 export class ZoomController {
     constructor(
