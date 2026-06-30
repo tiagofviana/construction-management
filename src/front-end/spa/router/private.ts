@@ -11,18 +11,6 @@ export const privateRoutes: RouteRecordRaw[] = [
                 name: 'private.home',
                 component: () => import('@/views/private/KonvaView.vue'),
             },
-            {
-                path: '/p2',
-                component: () => import('@/views/private/CopyView.vue'),
-            },
-            {
-                path: '/teste',
-                component: () => import('@/views/private/TestView1.vue'),
-            },
-            {
-                path: '/teste2',
-                component: () => import('@/views/private/TestView2.vue'),
-            },
         ],
     },
 ]
