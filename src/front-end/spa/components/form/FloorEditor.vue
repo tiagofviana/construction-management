@@ -229,11 +229,14 @@
                 </header>
             </div>
 
-            <div
-                ref="container"
-                class="flex-1 overflow-hidden inset-shadow-sm inset-shadow-black/30"
-                :class="cursorClass"
-            ></div>
+            <div class="relative flex-1">
+                <div ref="container" class="size-full overflow-hidden" :class="cursorClass"></div>
+
+                <div
+                    class="absolute top-0 right-0 bottom-0 left-0 inset-shadow-sm inset-shadow-black/30"
+                    style="pointer-events: none"
+                ></div>
+            </div>
         </div>
 
         <aside
