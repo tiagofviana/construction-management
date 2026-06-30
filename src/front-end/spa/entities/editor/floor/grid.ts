@@ -4,22 +4,41 @@ import type { Config } from './types'
 
 export class Grid {
     private layer = new Konva.Layer({ listening: false })
+    private group = new Konva.Group({ listening: false })
     private stage: Stage
     private config: Config
 
     constructor(stage: Stage, config: Config) {
         this.stage = stage
         this.config = config
+
         this.stage.add(this.layer)
+
+        const rect = new Konva.Rect({
+            x: 0,
+            y: 0,
+            width: config.width,
+            height: config.height,
+            fill: 'white',
+            shadowColor: 'black',
+            shadowBlur: 4,
+            shadowOffset: { x: 0, y: 0 },
+            shadowOpacity: 0.3,
+        })
+
+        this.layer.add(rect)
+        this.layer.add(this.group)
+
         this.layer.moveToBottom()
     }
 
     public destroy() {
+        this.group.destroy()
         this.layer.destroy()
     }
 
     public clear() {
-        this.layer.destroyChildren()
+        this.group.destroyChildren()
     }
 
     public draw() {
@@ -27,7 +46,7 @@ export class Grid {
 
         for (let x = 0; x <= width; x += gridSize) {
             const major = x % (gridSize * 5) === 0
-            this.layer.add(
+            this.group.add(
                 new Konva.Line({
                     points: [x, 0, x, height],
                     stroke: major ? '#21262d' : '#161b22',
@@ -40,7 +59,7 @@ export class Grid {
 
         for (let y = 0; y <= height; y += gridSize) {
             const major = y % (gridSize * 5) === 0
-            this.layer.add(
+            this.group.add(
                 new Konva.Line({
                     points: [0, y, width, y],
                     stroke: major ? '#21262d' : '#161b22',

@@ -13,7 +13,7 @@ export class CurveControlRenderer {
         stage: Konva.Stage,
         private config: Config,
     ) {
-        this.controlLayer = new Konva.Layer()
+        this.controlLayer = new Konva.Layer({ listening: true })
         stage.add(this.controlLayer)
     }
 
@@ -95,6 +95,7 @@ export class CurveControlRenderer {
 
         this.controlLayer.add(line)
         this.controlLayer.add(circle)
+        this.controlLayer
     }
 
     private createControlLine(from: Point, to: Point): Line {
@@ -110,7 +111,7 @@ export class CurveControlRenderer {
         return new Konva.Circle({
             x: point.x,
             y: point.y,
-            radius: 4.5,
+            radius: 6,
             fill: '#22c55e',
             stroke: '#000',
             strokeWidth: 0.5,

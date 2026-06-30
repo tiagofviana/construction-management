@@ -11,7 +11,7 @@ export class VertexRenderer {
         stage: Konva.Stage,
         private config: Config,
     ) {
-        this.vertexLayer = new Konva.Layer()
+        this.vertexLayer = new Konva.Layer({ listening: true })
         stage.add(this.vertexLayer)
     }
 
@@ -58,7 +58,7 @@ export class VertexRenderer {
         return new Konva.Circle({
             x: point.x,
             y: point.y,
-            radius: 5,
+            radius: 8,
             fill: '#faa032',
             stroke: 'rgba(0,0,0,.2)',
             strokeWidth: 0.6,

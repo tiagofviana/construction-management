@@ -12,8 +12,8 @@ export class Figure {
 
     constructor(stage: Stage, layer: Layer, config: Config) {
         this.pathRenderer = new PathRenderer(layer)
-        this.vertexRenderer = new VertexRenderer(stage, config)
         this.curveControlRenderer = new CurveControlRenderer(stage, config)
+        this.vertexRenderer = new VertexRenderer(stage, config)
     }
 
     public destroy(): void {
