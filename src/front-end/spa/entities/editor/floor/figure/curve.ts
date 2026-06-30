@@ -95,7 +95,6 @@ export class CurveControlRenderer {
 
         this.controlLayer.add(line)
         this.controlLayer.add(circle)
-        this.controlLayer
     }
 
     private createControlLine(from: Point, to: Point): Line {
