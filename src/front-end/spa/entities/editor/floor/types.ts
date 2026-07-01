@@ -26,17 +26,17 @@ export interface MotionPoints {
 
 export type PathCommand = MoveCmd | LineCmd | CurveCmd
 
-interface MoveCmd {
+export interface MoveCmd {
     cmd: 'M'
     x: number
     y: number
 }
-interface LineCmd {
+export interface LineCmd {
     cmd: 'L'
     x: number
     y: number
 }
-interface CurveCmd {
+export interface CurveCmd {
     cmd: 'C'
     x: number
     y: number
