@@ -1,7 +1,7 @@
 import Konva from 'konva'
 import type { Layer } from 'konva/lib/Layer'
-import type { Point, ToolOptions } from './types'
-import { calculateCurve } from './utils'
+import type { Point, ToolOptions } from '../types'
+import { calculateCurve } from '../utils'
 
 export class Preview {
     private group = new Konva.Group({ listening: false })

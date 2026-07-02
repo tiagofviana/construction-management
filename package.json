@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "@lucide/vue": "^1.17.0",
+        "@melloware/coloris": "^0.25.0",
         "@tailwindcss/cli": "^4.3.0",
         "axios": "^1.16.1",
         "dotenv": "^17.4.2",

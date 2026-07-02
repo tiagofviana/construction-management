@@ -4,6 +4,11 @@ export function snapValue(value: number, snapLength: number): number {
     return Math.round(value / snapLength) * snapLength
 }
 
+export function isHexColor(color: string) {
+    const hexRegex = /^#([0-9A-Fa-f]{6})$/
+    return hexRegex.test(color)
+}
+
 export function calculateCurve(
     start: Point,
     end: Point,

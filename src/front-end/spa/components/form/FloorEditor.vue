@@ -240,7 +240,7 @@
         </div>
 
         <aside
-            class="flex w-full max-w-44 flex-1 flex-col overflow-y-auto border-l border-black/10"
+            class="flex max-h-full w-full max-w-56 flex-1 flex-col overflow-y-auto border-l border-black/10"
             :class="isDarkTheme ? 'border-slate-600 bg-slate-800' : 'border-black/10 bg-slate-100'"
         >
             <div
@@ -249,6 +249,83 @@
             >
                 <h2 class="px-4 text-center text-lg">Propriedades</h2>
             </div>
+
+            <form @submit.prevent="handleSubmit()" class="px-2 py-8">
+                <div class="field" :class="{ 'invalid-field': formErrors.name }">
+                    <label for="name">Nome:</label>
+
+                    <input
+                        id="name"
+                        type="text"
+                        placeholder=""
+                        autocomplete="off"
+                        v-model="form.name"
+                        @input="delete formErrors.name"
+                        required
+                    />
+
+                    <FieldError v-if="formErrors.name" :message="formErrors.name[0]" />
+                </div>
+
+                <div class="field" :class="{ 'invalid-field': formErrors.description }">
+                    <label for="description">Descrição:</label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        v-model="form.description"
+                        @input="delete formErrors.description"
+                        required
+                    ></textarea>
+
+                    <FieldError
+                        v-if="formErrors.description"
+                        :message="formErrors.description[0]"
+                    />
+                </div>
+
+                <div class="field" :class="{ 'invalid-field': formErrors.area }">
+                    <label for="area">Área total (m²):</label>
+
+                    <input
+                        id="area"
+                        name="area"
+                        type="number"
+                        inputmode="decimal"
+                        min="0"
+                        step="0.1"
+                        placeholder=""
+                        autocomplete="off"
+                        v-model="form.area"
+                        @input="delete formErrors.area"
+                        required
+                    />
+
+                    <FieldError v-if="formErrors.area" :message="formErrors.area[0]" />
+                </div>
+
+                <div class="field" :class="{ 'invalid-field': formErrors.color }">
+                    <label for="identificationColor">Cor de identificação:</label>
+
+                    <input
+                        ref="color-input"
+                        id="identificationColor"
+                        name="identificationColor"
+                        type="text"
+                        placeholder=""
+                        autocomplete="off"
+                        v-model="form.color"
+                        @input="delete formErrors.color"
+                        required
+                    />
+
+                    <FieldError v-if="formErrors.color" :message="formErrors.color[0]" />
+                </div>
+
+                <button type="submit" class="btn btn-blue mx-auto mt-4" disabled>
+                    <TextLoading text="SALVAR" :isLoading="isFormLoading" class="stroke-white" />
+                </button>
+            </form>
 
             <hr
                 class="mt-auto border border-t"
@@ -298,12 +375,44 @@ import {
     Magnet,
     Eraser,
 } from '@lucide/vue'
+import Coloris from '@melloware/coloris'
 import type { Point, PathCommand, ToolOptions } from '@/entities/editor/floor/types'
 import { FloorCanvas } from '@/entities/editor/floor'
 import AlertModal from '@/components/alerts/AlertModal.vue'
+import FieldError from '@/components/form/FieldError.vue'
+import TextLoading from '@/components/loading/TextLoading.vue'
+import { PathSerializer } from '@/entities/editor/floor/serializers'
+
+const formErrors = ref<{
+    name?: string[]
+    description?: string[]
+    path?: string[]
+    color?: string[]
+    area?: string[]
+}>({})
+
+interface FormData {
+    name: string
+    description: string
+    path: string
+    color: string
+    area: number
+}
+
+const form = defineModel<FormData>({
+    required: true,
+    default: () => ({
+        name: '',
+        description: '',
+        color: '#bcd9ff',
+        area: 0,
+    }),
+})
 
 const isDarkTheme = ref(false)
+const isFormLoading = ref(false)
 const container = useTemplateRef('container')
+const colorInput = useTemplateRef('color-input')
 const floorCanvas = shallowRef<null | FloorCanvas>(null)
 const isGridVisible = ref(true)
 const isSnapOn = ref(false)
@@ -311,7 +420,6 @@ const activeTool = ref<ToolOptions>(null)
 const zoomScale = ref(1)
 const mousePosition = ref<Point>({ x: 0, y: 0 })
 const path = ref<Array<PathCommand>>([])
-
 const eraserAlertKey = ref(0)
 
 const cursorClass = computed(() => ({
@@ -336,13 +444,66 @@ onMounted(() => {
         path.value = value
     }
 
+    fc.setColor(form.value.color)
+
     floorCanvas.value = fc
+
+    Coloris({
+        el: colorInput.value as HTMLInputElement,
+        theme: 'polaroid',
+        themeMode: 'light',
+        format: 'hex',
+        formatToggle: false,
+        alpha: false,
+        wrap: false,
+        defaultColor: form.value.color,
+        swatches: [
+            // Red
+            '#fba7a7',
+
+            // Orange
+            '#f7de9b',
+
+            // Yellow
+            '#fef9c2',
+
+            // Green
+            '#78d99c',
+
+            // Cyan
+            '#9de9f0',
+
+            // Blue
+            '#b5d5ff',
+
+            // Purple
+            '#b49fce',
+
+            // Stone
+            '#b8b1b9',
+
+            // Neutral
+            '#d4d4d4',
+
+            // Gray
+            '#eaeaea',
+
+            // White
+            '#ffffff',
+        ],
+        onChange: (color) => {
+            form.value.color = color
+            floorCanvas.value?.setColor(color)
+        },
+    })
 
     window.addEventListener('keydown', onKeyDown)
 })
 
 onUnmounted(() => {
     window.removeEventListener('keydown', onKeyDown)
+
+    Coloris.close()
 
     floorCanvas.value?.destroy()
     floorCanvas.value = null
@@ -383,5 +544,10 @@ function onKeyDown(event: KeyboardEvent) {
     if (key === 'Escape') changeTool(null)
 
     // if (e.key === 'Delete' || e.key === 'Backspace') deleteSelected()
+}
+
+function handleSubmit() {
+    const data = PathSerializer.toString(path.value)
+    console.log(data)
 }
 </script>

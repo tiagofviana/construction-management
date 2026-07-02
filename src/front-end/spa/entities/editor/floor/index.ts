@@ -2,7 +2,7 @@ import Konva from 'konva'
 import type { Stage } from 'konva/lib/Stage'
 import type { Layer } from 'konva/lib/Layer'
 import type { Point, ToolOptions, Config, PathCommand } from './types'
-import { Preview } from './preview'
+import { Preview } from './figure/preview'
 import { Grid } from './grid'
 import { Figure } from './figure'
 import { Info } from './info'
@@ -93,6 +93,10 @@ export class FloorCanvas {
 
     get config(): Config {
         return this._config
+    }
+
+    public setColor(color: string) {
+        this.figure.setColor(color)
     }
 
     set activeTool(tool: ToolOptions) {

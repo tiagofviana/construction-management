@@ -61,4 +61,8 @@ export class Figure {
     public isCurveControlDragging(): boolean {
         return this.curveControlRenderer?.isDragging ?? false
     }
+
+    public setColor(color: string) {
+        this.pathRenderer.setColor(color)
+    }
 }

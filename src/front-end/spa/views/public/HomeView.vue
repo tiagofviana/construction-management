@@ -12,7 +12,7 @@
         />
 
         <form
-            @submit.prevent="handleLogin()"
+            @submit.prevent="handleSubmit()"
             class="w-11/12 max-w-xs rounded-md border border-black/10 bg-white p-6"
         >
             <!-- Email -->
@@ -24,7 +24,7 @@
                     type="text"
                     placeholder=""
                     autocomplete="email"
-                    v-model="email"
+                    v-model="form.email"
                     @input="delete formErrors.email"
                     required
                 />
@@ -41,7 +41,7 @@
                     type="password"
                     placeholder=""
                     autocomplete="current-password"
-                    v-model="password"
+                    v-model="form.password"
                     @input="delete formErrors.password"
                     required
                 />
@@ -52,13 +52,13 @@
             <!-- Stay connected -->
             <div class="checkbox mt-6">
                 <label>
-                    <input type="checkbox" v-model="stayConnected" />
+                    <input type="checkbox" v-model="form.stayConnected" />
                     Permanecer conectado
                 </label>
             </div>
 
             <button type="submit" class="btn btn-blue mx-auto mt-4">
-                <TextLoading text="ACESSAR" :isLoading="isLoading" class="stroke-white" />
+                <TextLoading text="ACESSAR" :isLoading="isFormLoading" class="stroke-white" />
             </button>
         </form>
     </section>
@@ -70,9 +70,20 @@ import AlertModal, { type ModalType } from '@/components/alerts/AlertModal.vue'
 import FieldError from '@/components/form/FieldError.vue'
 import TextLoading from '@/components/loading/TextLoading.vue'
 
-const email = defineModel<string>('email', { default: 'test@email.com', required: true })
-const password = defineModel<string>('password', { default: '1234asdf1', required: true })
-const stayConnected = defineModel<boolean>('stayConnected', { default: false, required: true })
+interface LoginForm {
+    email: string
+    password: string
+    stayConnected: boolean
+}
+
+const form = defineModel<LoginForm>({
+    required: true,
+    default: () => ({
+        email: 'test@email.com',
+        password: '1234asdf1',
+        stayConnected: false,
+    }),
+})
 
 const formErrors = ref<{
     email?: string[]
@@ -91,10 +102,11 @@ function setAlertMessage(msg: string, type: ModalType) {
     alert.type = type
 }
 
-const isLoading = ref(false)
-const handleLogin = async () => {
-    if (isLoading.value) return
-    isLoading.value = true
+const isFormLoading = ref(false)
+
+function handleSubmit() {
+    if (isFormLoading.value) return
+    isFormLoading.value = true
     formErrors.value = {}
     setAlertMessage('O login ainda não foi implementado', 'error')
 }
