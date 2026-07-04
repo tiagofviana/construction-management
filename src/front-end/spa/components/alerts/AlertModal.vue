@@ -9,7 +9,7 @@
                 ref="cardRef"
                 role="alertdialog"
                 aria-modal="true"
-                class="w-11/12 max-w-md rounded-lg bg-white shadow-2xl"
+                class="w-11/12 max-w-md rounded-lg bg-white shadow-2xl shadow-black/10"
             >
                 <div v-if="title" class="flex items-center gap-3.5 p-5">
                     <div>
