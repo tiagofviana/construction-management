@@ -2,12 +2,15 @@ import Konva from 'konva'
 import type { Layer } from 'konva/lib/Layer'
 import type { Label } from 'konva/lib/shapes/Label'
 import type { Text } from 'konva/lib/shapes/Text'
-import type { PathCommand, LineCmd, CurveCmd } from './types'
+import type { PathCommand, LineCmd, CurveCmd, Config } from './types'
 
 export class Info {
     private group = new Konva.Group({ listening: false })
 
-    constructor(layer: Layer) {
+    constructor(
+        layer: Layer,
+        private config: Config,
+    ) {
         layer.add(this.group)
     }
 
@@ -21,6 +24,10 @@ export class Info {
 
     public draw(path: Array<PathCommand>) {
         this.group.destroyChildren()
+
+        if (this.config.isMeasuresOn === false) {
+            return
+        }
 
         for (let i = 1; i < path.length; i++) {
             const previous = path[i - 1]

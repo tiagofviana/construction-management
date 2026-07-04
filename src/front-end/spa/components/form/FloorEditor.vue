@@ -1,7 +1,6 @@
 <template>
     <section
-        class="min-h-content flex h-full w-11/12 max-w-full overflow-hidden rounded border border-black/20 select-none"
-        :class="isDarkTheme ? 'bg-slate-700 text-white' : 'bg-slate-100 text-black'"
+        class="min-h-content flex h-full w-11/12 max-w-full overflow-hidden rounded border border-black/20 bg-slate-100 text-black select-none"
     >
         <AlertModal
             v-if="eraserAlertKey > 0"
@@ -16,124 +15,85 @@
         />
 
         <aside
-            class="flex w-full max-w-44 flex-1 flex-col overflow-y-auto border-r border-black/10"
-            :class="isDarkTheme ? 'border-slate-600 bg-slate-800' : 'border-black/10 bg-slate-100'"
+            class="flex w-full max-w-44 flex-1 flex-col overflow-y-auto border-r border-black/10 bg-slate-100"
         >
             <template v-if="floorCanvas !== null">
-                <div
-                    class="flex h-12 items-center border-b-2"
-                    :class="isDarkTheme ? 'border-slate-600' : 'border-slate-200'"
-                >
-                    <label
-                        class="relative mx-auto flex w-13 cursor-pointer flex-row justify-between gap-2 overflow-hidden rounded-full border border-black/10 p-0.5 transition-all"
-                        :class="isDarkTheme ? 'bg-slate-400' : 'bg-slate-500'"
-                    >
-                        <input type="checkbox" class="hidden" v-model="isDarkTheme" />
-
-                        <Moon
-                            :size="17"
-                            class="stroke-gray-600 transition-all duration-500"
-                            :class="{ 'opacity-0': !isDarkTheme }"
-                        />
-
-                        <Sun
-                            :size="18"
-                            class="stroke-gray-100 transition-all duration-500"
-                            :class="{ 'opacity-0': isDarkTheme }"
-                        />
-
-                        <span
-                            class="absolute top-1/2 table size-4 -translate-y-1/2 rounded-full bg-gray-100 transition-all duration-500"
-                            :class="isDarkTheme ? 'left-full -ml-1 -translate-x-full' : 'left-1'"
-                        ></span>
-                    </label>
+                <div class="flex h-12 items-center justify-center border-b border-slate-200">
+                    <h2 class="px-4 text-center text-lg">Ferramentas</h2>
                 </div>
 
                 <!-- Tools -->
-                <div>
-                    <h2 class="px-4 pt-4 pb-2 text-center text-lg">Ferramentas</h2>
+                <ul>
+                    <li
+                        class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10 hover:bg-slate-200"
+                        :class="{
+                            'text-orange-700': activeTool === 'select',
+                        }"
+                        @click="changeTool('select')"
+                    >
+                        <MousePointer :size="20" :stroke-width="1.6" />
 
-                    <ul>
-                        <li
-                            class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10"
+                        <span
+                            class="transition-all"
                             :class="{
-                                'hover:bg-slate-600': isDarkTheme,
-                                'hover:bg-slate-200': !isDarkTheme,
-                                'text-orange-700': activeTool === 'select',
+                                'text-lg font-bold': activeTool === 'select',
+                                'text-xs font-semibold': activeTool !== 'select',
                             }"
-                            @click="changeTool('select')"
                         >
-                            <MousePointer :size="20" :stroke-width="1.6" />
+                            Selecionar
+                        </span>
 
-                            <span
-                                class="transition-all"
-                                :class="{
-                                    'text-lg font-bold': activeTool === 'select',
-                                    'text-xs font-semibold': activeTool !== 'select',
-                                }"
-                            >
-                                Selecionar
-                            </span>
+                        <span class="font-mono text-xs text-purple-700">[S]</span>
+                    </li>
 
-                            <span class="font-mono text-xs text-purple-700">[S]</span>
-                        </li>
+                    <li
+                        class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10 hover:bg-slate-200"
+                        :class="{
+                            'text-blue-700': activeTool === 'line',
+                        }"
+                        @click="changeTool('line')"
+                    >
+                        <Ruler :size="activeTool === 'line' ? 23 : 20" :stroke-width="1.6" />
 
-                        <li
-                            class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10"
+                        <span
+                            class="transition-all"
                             :class="{
-                                'hover:bg-slate-600': isDarkTheme,
-                                'hover:bg-slate-200': !isDarkTheme,
-                                'text-blue-700': activeTool === 'line',
+                                'text-lg font-bold': activeTool === 'line',
+                                'text-xs font-semibold': activeTool !== 'line',
                             }"
-                            @click="changeTool('line')"
                         >
-                            <Ruler :size="activeTool === 'line' ? 23 : 20" :stroke-width="1.6" />
+                            Linha
+                        </span>
 
-                            <span
-                                class="transition-all"
-                                :class="{
-                                    'text-lg font-bold': activeTool === 'line',
-                                    'text-xs font-semibold': activeTool !== 'line',
-                                }"
-                            >
-                                Linha
-                            </span>
+                        <span class="font-mono text-xs text-purple-700">[D]</span>
+                    </li>
 
-                            <span class="font-mono text-xs text-purple-700">[D]</span>
-                        </li>
-
-                        <li
-                            class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10"
+                    <li
+                        class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10 hover:bg-slate-200"
+                        :class="{
+                            'text-blue-700': activeTool === 'curve',
+                        }"
+                        @click="changeTool('curve')"
+                    >
+                        <DraftingCompass
+                            :size="activeTool === 'curve' ? 23 : 20"
+                            :stroke-width="1.6"
+                        />
+                        <span
+                            class="transition-all"
                             :class="{
-                                'hover:bg-slate-600': isDarkTheme,
-                                'hover:bg-slate-200': !isDarkTheme,
-                                'text-blue-700': activeTool === 'curve',
+                                'text-lg font-bold': activeTool === 'curve',
+                                'text-xs font-semibold': activeTool !== 'curve',
                             }"
-                            @click="changeTool('curve')"
                         >
-                            <DraftingCompass
-                                :size="activeTool === 'curve' ? 23 : 20"
-                                :stroke-width="1.6"
-                            />
-                            <span
-                                class="transition-all"
-                                :class="{
-                                    'text-lg font-bold': activeTool === 'curve',
-                                    'text-xs font-semibold': activeTool !== 'curve',
-                                }"
-                            >
-                                Arco
-                            </span>
+                            Arco
+                        </span>
 
-                            <span class="font-mono text-xs text-purple-700">[A]</span>
-                        </li>
-                    </ul>
-                </div>
+                        <span class="font-mono text-xs text-purple-700">[A]</span>
+                    </li>
+                </ul>
 
-                <hr
-                    class="mt-auto border border-t"
-                    :class="isDarkTheme ? 'border-slate-600' : 'border-slate-200'"
-                />
+                <hr class="mt-auto border border-t border-slate-200" />
 
                 <p
                     class="flex flex-row items-center justify-center gap-2 border-b border-black/10 px-4 py-3 text-xs text-gray-500"
@@ -189,20 +149,17 @@
 
         <div class="flex flex-1 flex-col">
             <div
-                class="flex h-12 items-center justify-start gap-2 border-r border-b-2 border-black/10 px-3"
-                :class="
-                    isDarkTheme ? 'border-slate-600 bg-slate-800' : 'border-slate-200 bg-slate-100'
-                "
+                class="flex h-12 items-center justify-start gap-2 border-r border-b-2 border-slate-200 bg-slate-100 px-3"
             >
                 <header class="flex flex-row gap-4">
                     <button
                         type="button"
                         class="action-btn flex cursor-pointer items-center gap-1 rounded border px-2 py-1 font-semibold transition-all"
                         :class="{
-                            'border-black/20 bg-blue-200 text-blue-900': isGridVisible,
+                            'border-black/20 bg-gray-300 text-gray-900': isGridVisible,
                             'border-transparent': !isGridVisible,
                         }"
-                        @click="toggleGrid"
+                        @click="toggleGrid()"
                     >
                         <Grid2X2 :size="18" :stroke-width="1.2" /> <span>Grade</span>
                     </button>
@@ -214,9 +171,21 @@
                             'border-black/20 bg-red-200 text-red-900': isSnapOn,
                             'border-transparent': !isSnapOn,
                         }"
-                        @click="toggleSnap"
+                        @click="toggleSnap()"
                     >
                         <Magnet :size="18" :stroke-width="1.2" /> <span>Encaixe</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="action-btn flex cursor-pointer items-center gap-1 rounded border px-2 py-1 font-semibold transition-all"
+                        :class="{
+                            'border-black/20 bg-blue-200 text-blue-900': isMeasuresOn,
+                            'border-transparent': !isMeasuresOn,
+                        }"
+                        @click="toggleMeasures()"
+                    >
+                        <RulerDimensionLine :size="18" :stroke-width="1.2" /> <span>Medidas</span>
                     </button>
 
                     <button
@@ -240,17 +209,13 @@
         </div>
 
         <aside
-            class="flex max-h-full w-full max-w-56 flex-1 flex-col overflow-y-auto border-l border-black/10"
-            :class="isDarkTheme ? 'border-slate-600 bg-slate-800' : 'border-black/10 bg-slate-100'"
+            class="flex max-h-full w-full max-w-56 flex-1 flex-col overflow-y-auto border-l border-black/10 bg-slate-100"
         >
-            <div
-                class="flex h-12 items-center justify-center border-b-2"
-                :class="isDarkTheme ? 'border-slate-600' : 'border-slate-200'"
-            >
+            <div class="flex h-12 items-center justify-center border-b border-slate-200">
                 <h2 class="px-4 text-center text-lg">Propriedades</h2>
             </div>
 
-            <form @submit.prevent="handleSubmit()" class="px-2 py-8">
+            <form @submit.prevent="handleSubmit()" class="px-2 pb-8">
                 <div class="field" :class="{ 'invalid-field': formErrors.name }">
                     <label for="name">Nome:</label>
 
@@ -327,10 +292,7 @@
                 </button>
             </form>
 
-            <hr
-                class="mt-auto border border-t"
-                :class="isDarkTheme ? 'border-slate-600' : 'border-slate-200'"
-            />
+            <hr class="mt-auto border border-t border-slate-200" />
 
             <div v-if="path.length > 0" class="py-3">
                 <h2 class="px-2.5 text-center">Resultado</h2>
@@ -364,8 +326,6 @@
 <script lang="ts" setup>
 import { ref, shallowRef, useTemplateRef, computed, onMounted, onUnmounted } from 'vue'
 import {
-    Moon,
-    Sun,
     MousePointer,
     DraftingCompass,
     Ruler,
@@ -374,6 +334,7 @@ import {
     Grid2X2,
     Magnet,
     Eraser,
+    RulerDimensionLine,
 } from '@lucide/vue'
 import Coloris from '@melloware/coloris'
 import type { Point, PathCommand, ToolOptions } from '@/entities/editor/floor/types'
@@ -408,14 +369,13 @@ const form = defineModel<FormData>({
         area: 0,
     }),
 })
-
-const isDarkTheme = ref(false)
 const isFormLoading = ref(false)
 const container = useTemplateRef('container')
 const colorInput = useTemplateRef('color-input')
 const floorCanvas = shallowRef<null | FloorCanvas>(null)
 const isGridVisible = ref(true)
-const isSnapOn = ref(false)
+const isSnapOn = ref(true)
+const isMeasuresOn = ref(true)
 const activeTool = ref<ToolOptions>(null)
 const zoomScale = ref(1)
 const mousePosition = ref<Point>({ x: 0, y: 0 })
@@ -512,6 +472,11 @@ onUnmounted(() => {
 function toggleGrid() {
     isGridVisible.value = !isGridVisible.value
     floorCanvas.value?.gridVisibility(isGridVisible.value)
+}
+
+function toggleMeasures() {
+    isMeasuresOn.value = !isMeasuresOn.value
+    floorCanvas.value?.measuresActivation(isMeasuresOn.value)
 }
 
 function toggleSnap() {

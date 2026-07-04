@@ -23,7 +23,8 @@ export class FloorCanvas {
         padding: 400,
         gridSize: 10,
         snapLength: 10,
-        isSnapOn: false,
+        isSnapOn: true,
+        isMeasuresOn: true,
     }
 
     // Components
@@ -66,7 +67,7 @@ export class FloorCanvas {
         this.grid = new Grid(this.stage, this._config)
         this.figure = new Figure(this.stage, this.drawLayer, this._config)
         this.preview = new Preview(this.drawLayer)
-        this.info = new Info(this.drawLayer)
+        this.info = new Info(this.drawLayer, this._config)
 
         // Initialize input handler
         this.inputHandler = new InputHandler(
@@ -125,6 +126,13 @@ export class FloorCanvas {
     public snapActivation(status: boolean): void {
         this._config.isSnapOn = status
         this.updatePreview()
+    }
+
+    public measuresActivation(status: boolean): void {
+        this._config.isMeasuresOn = status
+
+        const path = this.pathManager.getPath()
+        this.info.draw(path)
     }
 
     public gridVisibility(isVisible: boolean): void {

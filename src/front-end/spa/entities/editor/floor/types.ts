@@ -12,6 +12,7 @@ export interface Config {
     gridSize: number
     snapLength: number
     isSnapOn: boolean
+    isMeasuresOn: boolean
 }
 
 export interface Point {

@@ -17,28 +17,28 @@ export class VertexRenderer {
 
     public draw(
         path: Array<PathCommand>,
-        isDraggable: boolean,
         onDrag: (value: Array<PathCommand>) => void = () => {},
     ): void {
         this.vertexLayer.destroyChildren()
 
-        path.forEach((item) => {
-            const circle = this.createVerticeCircle({ x: item.x, y: item.y }, isDraggable)
+        const lastIndex = path.length - 1
+        path.forEach((item, index) => {
+            const color = lastIndex === index ? '#3253fa' : '#faa032'
 
-            if (isDraggable) {
-                circle.on('dragmove', () => {
-                    Math.round(circle.x())
-                    const point = this.validateAndSnapPoint({
-                        x: Math.round(circle.x()),
-                        y: Math.round(circle.y()),
-                    })
+            const circle = this.createVerticeCircle({ x: item.x, y: item.y }, color)
 
-                    circle.setPosition(point)
-                    item.x = point.x
-                    item.y = point.y
-                    onDrag(path)
+            circle.on('dragmove', () => {
+                Math.round(circle.x())
+                const point = this.validateAndSnapPoint({
+                    x: Math.round(circle.x()),
+                    y: Math.round(circle.y()),
                 })
-            }
+
+                circle.setPosition(point)
+                item.x = point.x
+                item.y = point.y
+                onDrag(path)
+            })
 
             this.vertexLayer.add(circle)
         })
@@ -54,12 +54,12 @@ export class VertexRenderer {
         this.vertexLayer.destroy()
     }
 
-    private createVerticeCircle(point: Point, isDraggable: boolean): Circle {
+    private createVerticeCircle(point: Point, color: string): Circle {
         return new Konva.Circle({
             x: point.x,
             y: point.y,
             radius: 8,
-            fill: '#faa032',
+            fill: color,
             stroke: 'rgba(0,0,0,.2)',
             strokeWidth: 0.6,
             hitStrokeWidth: 8,
@@ -67,7 +67,7 @@ export class VertexRenderer {
             shadowBlur: 4,
             shadowOffset: { x: 1, y: 1 },
             shadowOpacity: 0.6,
-            draggable: isDraggable,
+            draggable: true,
             miterLimit: 900,
         })
     }

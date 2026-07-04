@@ -30,15 +30,23 @@ export class Figure {
 
     public draw(
         path: Array<PathCommand>,
-        isDraggable: boolean,
+        showVertex: boolean,
         onDrag: (value: Array<PathCommand>) => void = () => {},
     ): void {
         this.pathRenderer.redraw(path)
-        this.vertexRenderer.draw(path, isDraggable, () => {
+
+        if (!showVertex) {
+            this.vertexRenderer.clear()
+            this.curveControlRenderer.clear()
+            return
+        }
+
+        this.curveControlRenderer.draw(path, () => {
             this.pathRenderer.redraw(path)
             onDrag(path)
         })
-        this.curveControlRenderer.draw(path, () => {
+
+        this.vertexRenderer.draw(path, () => {
             this.pathRenderer.redraw(path)
             onDrag(path)
         })
