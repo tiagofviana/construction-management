@@ -1,326 +1,367 @@
 <template>
-    <section
-        class="min-h-content flex h-full w-11/12 max-w-full overflow-hidden rounded border border-black/20 bg-slate-100 text-black select-none"
-    >
-        <AlertModal
-            v-if="eraserAlertKey > 0"
-            type="info"
-            title="Deseja continuar?"
-            message="Tem certeza que deseja apagar o desenho?"
-            ok-label="Confirmar"
-            :has-cancel-button="true"
-            cancel-label="Cancelar"
-            :key="eraserAlertKey"
-            @ok="clearPath()"
-        />
-
-        <aside
-            class="flex w-full max-w-44 flex-1 flex-col overflow-y-auto border-r border-black/10 bg-slate-100"
+    <Teleport to="body" v-if="!isHidden">
+        <section
+            class="fixed top-0 left-0 z-100 flex h-full max-h-dvh w-full overflow-hidden bg-black/40 py-8 shadow-2xl shadow-black/10 backdrop-blur-sm select-none"
         >
-            <template v-if="floorCanvas !== null">
-                <div class="flex h-12 items-center justify-center border-b border-slate-200">
-                    <h2 class="px-4 text-center text-lg">Ferramentas</h2>
-                </div>
+            <AlertModal
+                v-if="eraserAlertKey > 0"
+                type="info"
+                title="Deseja continuar?"
+                message="Tem certeza que deseja apagar o desenho?"
+                ok-label="Confirmar"
+                :has-cancel-button="true"
+                cancel-label="Cancelar"
+                :key="eraserAlertKey"
+                @ok="clearPath()"
+            />
 
-                <!-- Tools -->
-                <ul>
-                    <li
-                        class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10 hover:bg-slate-200"
-                        :class="{
-                            'text-orange-700': activeTool === 'select',
-                        }"
-                        @click="changeTool('select')"
-                    >
-                        <MousePointer :size="20" :stroke-width="1.6" />
-
-                        <span
-                            class="transition-all"
-                            :class="{
-                                'text-lg font-bold': activeTool === 'select',
-                                'text-xs font-semibold': activeTool !== 'select',
-                            }"
-                        >
-                            Selecionar
-                        </span>
-
-                        <span class="font-mono text-xs text-purple-700">[S]</span>
-                    </li>
-
-                    <li
-                        class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10 hover:bg-slate-200"
-                        :class="{
-                            'text-blue-700': activeTool === 'line',
-                        }"
-                        @click="changeTool('line')"
-                    >
-                        <Ruler :size="activeTool === 'line' ? 23 : 20" :stroke-width="1.6" />
-
-                        <span
-                            class="transition-all"
-                            :class="{
-                                'text-lg font-bold': activeTool === 'line',
-                                'text-xs font-semibold': activeTool !== 'line',
-                            }"
-                        >
-                            Linha
-                        </span>
-
-                        <span class="font-mono text-xs text-purple-700">[D]</span>
-                    </li>
-
-                    <li
-                        class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10 hover:bg-slate-200"
-                        :class="{
-                            'text-blue-700': activeTool === 'curve',
-                        }"
-                        @click="changeTool('curve')"
-                    >
-                        <DraftingCompass
-                            :size="activeTool === 'curve' ? 23 : 20"
-                            :stroke-width="1.6"
-                        />
-                        <span
-                            class="transition-all"
-                            :class="{
-                                'text-lg font-bold': activeTool === 'curve',
-                                'text-xs font-semibold': activeTool !== 'curve',
-                            }"
-                        >
-                            Arco
-                        </span>
-
-                        <span class="font-mono text-xs text-purple-700">[A]</span>
-                    </li>
-                </ul>
-
-                <hr class="mt-auto border border-t border-slate-200" />
-
-                <p
-                    class="flex flex-row items-center justify-center gap-2 border-b border-black/10 px-4 py-3 text-xs text-gray-500"
-                >
-                    <span
-                        class="transition-all"
-                        :class="{
-                            'font-base text-lg text-red-600':
-                                mousePosition.x < 0 || mousePosition.x > floorCanvas.config.width,
-                        }"
-                    >
-                        x: {{ mousePosition.x }}
-                    </span>
-
-                    <span
-                        class="transition-all"
-                        :class="{
-                            'font-base text-lg text-red-600':
-                                mousePosition.y < 0 || mousePosition.y > floorCanvas.config.height,
-                        }"
-                    >
-                        y: {{ mousePosition.y }}
-                    </span>
-                </p>
-
-                <div class="flex flex-row items-center justify-center px-4 py-3">
-                    <button
-                        type="button"
-                        class="cursor-pointer stroke-black hover:stroke-green-700"
-                        @click="floorCanvas.applyZoom(0.25)"
-                    >
-                        <Plus :size="18" :stroke-width="1.2" class="stroke-inherit" />
-                    </button>
-
-                    <button
-                        type="button"
-                        class="mx-3 w-12 cursor-pointer text-center font-mono text-sm text-yellow-700"
-                        @click="floorCanvas.resetZoom()"
-                    >
-                        {{ Math.round(zoomScale * 100) }}%
-                    </button>
-
-                    <button
-                        type="button"
-                        class="cursor-pointer stroke-black hover:stroke-red-700"
-                        @click="floorCanvas.applyZoom(-0.25)"
-                    >
-                        <Minus :size="18" :stroke-width="1.2" class="stroke-inherit" />
-                    </button>
-                </div>
-            </template>
-        </aside>
-
-        <div class="flex flex-1 flex-col">
             <div
-                class="flex h-12 items-center justify-start gap-2 border-r border-b-2 border-slate-200 bg-slate-100 px-3"
+                class="mx-auto flex h-full w-11/12 overflow-hidden rounded-lg border border-black/20 bg-slate-100"
             >
-                <header class="flex flex-row gap-4">
-                    <button
-                        type="button"
-                        class="action-btn flex cursor-pointer items-center gap-1 rounded border px-2 py-1 font-semibold transition-all"
-                        :class="{
-                            'border-black/20 bg-gray-300 text-gray-900': isGridVisible,
-                            'border-transparent': !isGridVisible,
-                        }"
-                        @click="toggleGrid()"
-                    >
-                        <Grid2X2 :size="18" :stroke-width="1.2" /> <span>Grade</span>
-                    </button>
+                <aside
+                    class="flex w-full max-w-44 flex-1 flex-col overflow-y-auto border-r border-black/10 bg-slate-100"
+                >
+                    <template v-if="floorCanvas !== null">
+                        <div
+                            class="flex h-12 items-center justify-center border-b border-slate-200"
+                        >
+                            <h2 class="px-4 text-center text-lg">Ferramentas</h2>
+                        </div>
 
-                    <button
-                        type="button"
-                        class="action-btn flex cursor-pointer items-center gap-1 rounded border px-2 py-1 font-semibold transition-all"
-                        :class="{
-                            'border-black/20 bg-red-200 text-red-900': isSnapOn,
-                            'border-transparent': !isSnapOn,
-                        }"
-                        @click="toggleSnap()"
-                    >
-                        <Magnet :size="18" :stroke-width="1.2" /> <span>Encaixe</span>
-                    </button>
+                        <!-- Tools -->
+                        <ul>
+                            <li
+                                class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10 hover:bg-slate-200"
+                                :class="{
+                                    'text-orange-700': activeTool === 'select',
+                                }"
+                                @click="changeTool('select')"
+                            >
+                                <MousePointer :size="20" :stroke-width="1.6" />
 
-                    <button
-                        type="button"
-                        class="action-btn flex cursor-pointer items-center gap-1 rounded border px-2 py-1 font-semibold transition-all"
-                        :class="{
-                            'border-black/20 bg-blue-200 text-blue-900': isMeasuresOn,
-                            'border-transparent': !isMeasuresOn,
-                        }"
-                        @click="toggleMeasures()"
-                    >
-                        <RulerDimensionLine :size="18" :stroke-width="1.2" /> <span>Medidas</span>
-                    </button>
+                                <span
+                                    class="transition-all"
+                                    :class="{
+                                        'text-lg font-bold': activeTool === 'select',
+                                        'text-xs font-semibold': activeTool !== 'select',
+                                    }"
+                                >
+                                    Selecionar
+                                </span>
 
-                    <button
-                        type="button"
-                        class="action-btn roundedpx-2 flex cursor-pointer items-center gap-1 py-1 font-semibold transition-all"
-                        @click="eraserAlertKey += 1"
-                    >
-                        <Eraser :size="18" :stroke-width="1.2" /> <span>Limpar</span>
-                    </button>
-                </header>
-            </div>
+                                <span class="font-mono text-xs text-purple-700">[S]</span>
+                            </li>
 
-            <div class="relative flex-1">
-                <div ref="container" class="size-full overflow-hidden" :class="cursorClass"></div>
+                            <li
+                                class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10 hover:bg-slate-200"
+                                :class="{
+                                    'text-blue-700': activeTool === 'line',
+                                }"
+                                @click="changeTool('line')"
+                            >
+                                <Ruler
+                                    :size="activeTool === 'line' ? 23 : 20"
+                                    :stroke-width="1.6"
+                                />
 
-                <div
-                    class="absolute top-0 right-0 bottom-0 left-0 inset-shadow-sm inset-shadow-black/30"
-                    style="pointer-events: none"
-                ></div>
-            </div>
-        </div>
+                                <span
+                                    class="transition-all"
+                                    :class="{
+                                        'text-lg font-bold': activeTool === 'line',
+                                        'text-xs font-semibold': activeTool !== 'line',
+                                    }"
+                                >
+                                    Linha
+                                </span>
 
-        <aside
-            class="flex max-h-full w-full max-w-56 flex-1 flex-col overflow-y-auto border-l border-black/10 bg-slate-100"
-        >
-            <div class="flex h-12 items-center justify-center border-b border-slate-200">
-                <h2 class="px-4 text-center text-lg">Propriedades</h2>
-            </div>
+                                <span class="font-mono text-xs text-purple-700">[D]</span>
+                            </li>
 
-            <form @submit.prevent="handleSubmit()" class="px-2 pb-8">
-                <div class="field" :class="{ 'invalid-field': formErrors.name }">
-                    <label for="name">Nome:</label>
+                            <li
+                                class="flex cursor-pointer items-center justify-center gap-2 border-t border-b border-transparent p-2 hover:border-black/10 hover:bg-slate-200"
+                                :class="{
+                                    'text-blue-700': activeTool === 'curve',
+                                }"
+                                @click="changeTool('curve')"
+                            >
+                                <DraftingCompass
+                                    :size="activeTool === 'curve' ? 23 : 20"
+                                    :stroke-width="1.6"
+                                />
+                                <span
+                                    class="transition-all"
+                                    :class="{
+                                        'text-lg font-bold': activeTool === 'curve',
+                                        'text-xs font-semibold': activeTool !== 'curve',
+                                    }"
+                                >
+                                    Arco
+                                </span>
 
-                    <input
-                        id="name"
-                        type="text"
-                        placeholder=""
-                        autocomplete="off"
-                        v-model="form.name"
-                        @input="delete formErrors.name"
-                        required
-                    />
+                                <span class="font-mono text-xs text-purple-700">[A]</span>
+                            </li>
+                        </ul>
 
-                    <FieldError v-if="formErrors.name" :message="formErrors.name[0]" />
-                </div>
+                        <hr class="mt-auto border border-t border-slate-200" />
 
-                <div class="field" :class="{ 'invalid-field': formErrors.description }">
-                    <label for="description">Descrição:</label>
-
-                    <textarea
-                        id="description"
-                        name="description"
-                        v-model="form.description"
-                        @input="delete formErrors.description"
-                        required
-                    ></textarea>
-
-                    <FieldError
-                        v-if="formErrors.description"
-                        :message="formErrors.description[0]"
-                    />
-                </div>
-
-                <div class="field" :class="{ 'invalid-field': formErrors.area }">
-                    <label for="area">Área total (m²):</label>
-
-                    <input
-                        id="area"
-                        name="area"
-                        type="number"
-                        inputmode="decimal"
-                        min="0"
-                        step="0.1"
-                        placeholder=""
-                        autocomplete="off"
-                        v-model="form.area"
-                        @input="delete formErrors.area"
-                        required
-                    />
-
-                    <FieldError v-if="formErrors.area" :message="formErrors.area[0]" />
-                </div>
-
-                <div class="field" :class="{ 'invalid-field': formErrors.color }">
-                    <label for="identificationColor">Cor de identificação:</label>
-
-                    <input
-                        ref="color-input"
-                        id="identificationColor"
-                        name="identificationColor"
-                        type="text"
-                        placeholder=""
-                        autocomplete="off"
-                        v-model="form.color"
-                        @input="delete formErrors.color"
-                        required
-                    />
-
-                    <FieldError v-if="formErrors.color" :message="formErrors.color[0]" />
-                </div>
-
-                <button type="submit" class="btn btn-blue mx-auto mt-4" disabled>
-                    <TextLoading text="SALVAR" :isLoading="isFormLoading" class="stroke-white" />
-                </button>
-            </form>
-
-            <hr class="mt-auto border border-t border-slate-200" />
-
-            <div v-if="path.length > 0" class="py-3">
-                <h2 class="px-2.5 text-center">Resultado</h2>
-
-                <ul class="max-h-44 overflow-y-auto px-2.5">
-                    <li v-for="(cmd, index) in path" :key="index">
-                        <p class="p-1 font-mono text-gray-500">
-                            <span class="pr-0.5 font-bold text-blue-700">
-                                {{ cmd.cmd }}
+                        <p
+                            class="flex flex-row items-center justify-center gap-2 border-b border-black/10 px-4 py-3 text-xs text-gray-500"
+                        >
+                            <span
+                                class="transition-all"
+                                :class="{
+                                    'font-base text-lg text-red-600':
+                                        mousePosition.x < 0 ||
+                                        mousePosition.x > floorCanvas.config.width,
+                                }"
+                            >
+                                x: {{ mousePosition.x }}
                             </span>
 
-                            <span v-if="cmd.cmd === 'C'" class="text-xs">
-                                {{ `${cmd.x1},${cmd.y1}, ${cmd.x2} ${cmd.y2}, ${cmd.x} ${cmd.y}` }}
-                            </span>
-
-                            <span v-if="cmd.cmd === 'L'" class="text-xs">
-                                {{ `${cmd.x}, ${cmd.y}` }}
-                            </span>
-
-                            <span v-if="cmd.cmd === 'M'" class="text-xs">
-                                {{ `${cmd.x}, ${cmd.y}` }}
+                            <span
+                                class="transition-all"
+                                :class="{
+                                    'font-base text-lg text-red-600':
+                                        mousePosition.y < 0 ||
+                                        mousePosition.y > floorCanvas.config.height,
+                                }"
+                            >
+                                y: {{ mousePosition.y }}
                             </span>
                         </p>
-                    </li>
-                </ul>
+
+                        <div class="flex flex-row items-center justify-center px-4 py-3">
+                            <button
+                                type="button"
+                                class="cursor-pointer stroke-black hover:stroke-green-700"
+                                @click="floorCanvas.applyZoom(0.25)"
+                            >
+                                <Plus :size="18" :stroke-width="1.2" class="stroke-inherit" />
+                            </button>
+
+                            <button
+                                type="button"
+                                class="mx-3 w-12 cursor-pointer text-center font-mono text-sm text-yellow-700"
+                                @click="floorCanvas.resetZoom()"
+                            >
+                                {{ Math.round(zoomScale * 100) }}%
+                            </button>
+
+                            <button
+                                type="button"
+                                class="cursor-pointer stroke-black hover:stroke-red-700"
+                                @click="floorCanvas.applyZoom(-0.25)"
+                            >
+                                <Minus :size="18" :stroke-width="1.2" class="stroke-inherit" />
+                            </button>
+                        </div>
+                    </template>
+                </aside>
+
+                <div class="flex flex-1 flex-col">
+                    <div
+                        class="flex h-12 items-center justify-start gap-2 border-r border-b-2 border-slate-200 bg-slate-100 px-3"
+                    >
+                        <header class="flex flex-row gap-4">
+                            <button
+                                type="button"
+                                class="action-btn flex cursor-pointer items-center gap-1 rounded border px-2 py-1 font-semibold transition-all"
+                                :class="{
+                                    'border-black/20 bg-gray-300 text-gray-900': isGridVisible,
+                                    'border-transparent': !isGridVisible,
+                                }"
+                                @click="toggleGrid()"
+                            >
+                                <Grid2X2 :size="18" :stroke-width="1.2" /> <span>Grade</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                class="action-btn flex cursor-pointer items-center gap-1 rounded border px-2 py-1 font-semibold transition-all"
+                                :class="{
+                                    'border-black/20 bg-red-200 text-red-900': isSnapOn,
+                                    'border-transparent': !isSnapOn,
+                                }"
+                                @click="toggleSnap()"
+                            >
+                                <Magnet :size="18" :stroke-width="1.2" /> <span>Encaixe</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                class="action-btn flex cursor-pointer items-center gap-1 rounded border px-2 py-1 font-semibold transition-all"
+                                :class="{
+                                    'border-black/20 bg-blue-200 text-blue-900': isMeasuresOn,
+                                    'border-transparent': !isMeasuresOn,
+                                }"
+                                @click="toggleMeasures()"
+                            >
+                                <RulerDimensionLine :size="18" :stroke-width="1.2" />
+                                <span>Medidas</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                class="action-btn roundedpx-2 flex cursor-pointer items-center gap-1 py-1 font-semibold transition-all"
+                                @click="eraserAlertKey += 1"
+                            >
+                                <Eraser :size="18" :stroke-width="1.2" /> <span>Limpar</span>
+                            </button>
+                        </header>
+                    </div>
+
+                    <div class="relative flex-1">
+                        <div
+                            ref="container"
+                            class="size-full overflow-hidden"
+                            :class="cursorClass"
+                        ></div>
+
+                        <div
+                            class="absolute top-0 right-0 bottom-0 left-0 inset-shadow-sm inset-shadow-black/30"
+                            style="pointer-events: none"
+                        ></div>
+                    </div>
+                </div>
+
+                <aside
+                    class="relative flex w-full max-w-56 flex-1 flex-col overflow-hidden border-l border-black/10 bg-slate-100"
+                >
+                    <div class="flex min-h-12 flex-row border-b border-slate-200">
+                        <div class="flex flex-1 items-center justify-center">
+                            <h2 class="px-4 text-lg">Propriedades</h2>
+                        </div>
+
+                        <button
+                            type="button"
+                            @click="isHidden = true"
+                            class="ml-auto block cursor-pointer border-l border-black/10 stroke-gray-400 p-1 hover:stroke-black"
+                        >
+                            <X
+                                :size="36"
+                                :strokeWidth="2"
+                                aria-label="Fechar"
+                                class="stroke-inherit"
+                            />
+                        </button>
+                    </div>
+
+                    <div class="overflow-auto">
+                        <form @submit.prevent="handleSubmit()" class="px-2 pb-8">
+                            <ul
+                                v-if="path.length > 0"
+                                class="mt-3 max-h-32 overflow-auto border border-black/10 bg-gray-200 inset-shadow-sm inset-shadow-black/5"
+                            >
+                                <li v-for="(cmd, index) in path" :key="index">
+                                    <p class="p-1 font-mono text-gray-500">
+                                        <span class="pr-0.5 font-bold text-blue-700">
+                                            {{ cmd.cmd }}
+                                        </span>
+
+                                        <span v-if="cmd.cmd === 'C'" class="text-xs">
+                                            {{
+                                                `${cmd.x1},${cmd.y1}, ${cmd.x2} ${cmd.y2}, ${cmd.x} ${cmd.y}`
+                                            }}
+                                        </span>
+
+                                        <span v-if="cmd.cmd === 'L'" class="text-xs">
+                                            {{ `${cmd.x}, ${cmd.y}` }}
+                                        </span>
+
+                                        <span v-if="cmd.cmd === 'M'" class="text-xs">
+                                            {{ `${cmd.x}, ${cmd.y}` }}
+                                        </span>
+                                    </p>
+                                </li>
+                            </ul>
+
+                            <div class="field" :class="{ 'invalid-field': formErrors.name }">
+                                <label for="name">Nome:</label>
+
+                                <input
+                                    id="name"
+                                    type="text"
+                                    placeholder=""
+                                    autocomplete="off"
+                                    v-model="form.name"
+                                    @input="delete formErrors.name"
+                                    required
+                                />
+
+                                <FieldError v-if="formErrors.name" :message="formErrors.name[0]" />
+                            </div>
+
+                            <div class="field" :class="{ 'invalid-field': formErrors.description }">
+                                <label for="description">Descrição:</label>
+
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    v-model="form.description"
+                                    @input="delete formErrors.description"
+                                    required
+                                ></textarea>
+
+                                <FieldError
+                                    v-if="formErrors.description"
+                                    :message="formErrors.description[0]"
+                                />
+                            </div>
+
+                            <div class="field" :class="{ 'invalid-field': formErrors.area }">
+                                <label for="area">Área total (m²):</label>
+
+                                <input
+                                    id="area"
+                                    name="area"
+                                    type="number"
+                                    inputmode="decimal"
+                                    min="0"
+                                    step="0.1"
+                                    placeholder=""
+                                    autocomplete="off"
+                                    v-model="form.area"
+                                    @input="delete formErrors.area"
+                                    required
+                                />
+
+                                <FieldError v-if="formErrors.area" :message="formErrors.area[0]" />
+                            </div>
+
+                            <div class="field" :class="{ 'invalid-field': formErrors.color }">
+                                <label for="identificationColor">Cor de identificação:</label>
+
+                                <input
+                                    ref="color-input"
+                                    id="identificationColor"
+                                    name="identificationColor"
+                                    type="text"
+                                    placeholder=""
+                                    autocomplete="off"
+                                    v-model="form.color"
+                                    @input="delete formErrors.color"
+                                    required
+                                />
+
+                                <FieldError
+                                    v-if="formErrors.color"
+                                    :message="formErrors.color[0]"
+                                />
+                            </div>
+
+                            <button type="submit" class="btn btn-blue mx-auto mt-4">
+                                <TextLoading
+                                    text="SALVAR"
+                                    :isLoading="isFormLoading"
+                                    class="stroke-white"
+                                />
+                            </button>
+                        </form>
+                    </div>
+                </aside>
             </div>
-        </aside>
-    </section>
+        </section>
+    </Teleport>
 </template>
 
 <script lang="ts" setup>
@@ -335,6 +376,7 @@ import {
     Magnet,
     Eraser,
     RulerDimensionLine,
+    X,
 } from '@lucide/vue'
 import Coloris from '@melloware/coloris'
 import type { Point, PathCommand, ToolOptions } from '@/entities/editor/floor/types'
@@ -369,6 +411,8 @@ const form = defineModel<FormData>({
         area: 0,
     }),
 })
+
+const isHidden = ref<boolean>(false)
 const isFormLoading = ref(false)
 const container = useTemplateRef('container')
 const colorInput = useTemplateRef('color-input')
@@ -501,14 +545,21 @@ function changeTool(tool: ToolOptions) {
 }
 
 function onKeyDown(event: KeyboardEvent) {
-    const key = event.key
+    const key = event.key.toLowerCase()
 
-    if (key === 's' || key === 'S') changeTool('select')
-    if (key === 'd' || key === 'D') changeTool('line')
-    if (key === 'a' || key === 'C') changeTool('curve')
+    const target = event.target as HTMLElement
+    if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target.isContentEditable
+    ) {
+        return
+    }
+
+    if (key === 's') changeTool('select')
+    if (key === 'd') changeTool('line')
+    if (key === 'a') changeTool('curve')
     if (key === 'Escape') changeTool(null)
-
-    // if (e.key === 'Delete' || e.key === 'Backspace') deleteSelected()
 }
 
 function handleSubmit() {
