@@ -40,7 +40,7 @@ class CustomImageFieldDeleter:
             path = image_field.path
         except ValueError:
             logging.warning(
-                f'Could not find path of "{self.instance.__class__}" primary key "{self.instance.pk}"'
+                f'Could not find path of the image of "{self.instance.__class__}" primary key "{self.instance.pk}"'
             )
             return
 

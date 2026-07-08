@@ -110,22 +110,39 @@ class CustomImageField(models.ImageField):
 @deconstructible
 class UniqueUUIDGenerator:
     def __init__(
-        self, app_label: str, model_label: str, field: str, uuid_func=uuid.uuid1
+        self, app_label: str, model_name: str, field_name="id", uuid_func=uuid.uuid1
     ):
+        self.field_name = field_name
         self.app_label = app_label
-        self.model_label = model_label
-        self.field = field
+        self.model_name = model_name
         self.uuid_func = uuid_func
 
+    def _get_model(self):
+        try:
+            return apps.get_model(self.app_label, self.model_name)
+        except LookupError:
+            raise RuntimeError(
+                f'Could not found model "{self.app_label}.{self.model_name}" on UUID generator.'
+            )
+
     def __call__(self):
-        model = apps.get_model(self.app_label, self.model_label)
-        identifier = self.uuid_func()
+        model = self._get_model()
 
         # Ensure uniqueness
-        while model.objects.filter(**{self.field: identifier}).exists():
+        while model.objects.filter(**{self.field_name: identifier}).exists():
             identifier = self.uuid_func()
 
         return identifier
 
     def __eq__(self, other):
-        return self.model_label == other.model_label
+        return isinstance(other, UniqueUUIDGenerator) and (
+            self.app_label,
+            self.model_name,
+            self.field_name,
+            self.uuid_func,
+        ) == (
+            other.app_label,
+            other.model_name,
+            other.field_name,
+            self.uuid_func,
+        )
