@@ -2,6 +2,7 @@ from django.core.cache import cache
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator
+from svgpathtools import parse_path
 from apps.core import models as core_models
 from . import validator
 
@@ -85,7 +86,7 @@ class Room(models.Model):
         unique=True,
         editable=False,
         verbose_name="UUID",
-        default=core_models.UniqueUUIDGenerator("construction", "Room"),
+        default=core_models.UniqueUUIDGenerator("constructions", "Room"),
     )
 
     floor = models.ForeignKey(
@@ -101,6 +102,8 @@ class Room(models.Model):
         verbose_name="SVG path",
         help_text="Valor do atributo 'd' do elemento <path>.",
         validators=[validator.SVGPathValidator()],
+        null=False,
+        blank=False,
     )
 
     svg_view_box = models.CharField(
@@ -108,6 +111,8 @@ class Room(models.Model):
         max_length=64,
         help_text="Valor do atributo 'viewBox' (ex.: '0 0 1024 768').",
         validators=[validator.SVGViewBoxValidator()],
+        null=False,
+        blank=True,
     )
 
     name = models.CharField(
@@ -159,6 +164,22 @@ class Room(models.Model):
         help_text="Rotação em graus (0-360).",
         validators=[validator.validate_rotation],
     )
+
+    def save(self, *args, **kwargs):
+        self._update_svg_view_box()
+        super().save(*args, **kwargs)
+
+    def _update_svg_view_box(self):
+        if not self.svg_path:
+            return
+        path = parse_path(self.svg_path)
+
+        xmin, xmax, ymin, ymax = path.bbox()
+        width = xmax - xmin
+        height = ymax - ymin
+
+        viewbox = f"{xmin:.2f} {ymin:.2f} {width:.2f} {height:.2f}"
+        self.svg_view_box = viewbox
 
     class Meta:
         managed = True
