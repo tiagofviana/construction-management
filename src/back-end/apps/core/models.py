@@ -127,6 +127,7 @@ class UniqueUUIDGenerator:
 
     def __call__(self):
         model = self._get_model()
+        identifier = self.uuid_func()
 
         # Ensure uniqueness
         while model.objects.filter(**{self.field_name: identifier}).exists():
