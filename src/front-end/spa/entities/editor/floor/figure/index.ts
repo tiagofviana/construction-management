@@ -12,8 +12,8 @@ export class Figure {
 
     constructor(stage: Stage, layer: Layer, config: Config) {
         this.pathRenderer = new PathRenderer(layer)
-        this.curveControlRenderer = new CurveControlRenderer(stage, config)
         this.vertexRenderer = new VertexRenderer(stage, config)
+        this.curveControlRenderer = new CurveControlRenderer(stage, config)
     }
 
     public destroy(): void {
@@ -41,12 +41,12 @@ export class Figure {
             return
         }
 
-        this.curveControlRenderer.draw(path, () => {
+        this.vertexRenderer.draw(path, () => {
             this.pathRenderer.redraw(path)
             onDrag(path)
         })
 
-        this.vertexRenderer.draw(path, () => {
+        this.curveControlRenderer.draw(path, () => {
             this.pathRenderer.redraw(path)
             onDrag(path)
         })
