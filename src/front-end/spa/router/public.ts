@@ -1,4 +1,4 @@
-import { useRouter, type RouteRecordRaw } from 'vue-router'
+import { type RouteRecordRaw } from 'vue-router'
 import { MenuContent } from '@/types/components/menu'
 import { accountStore } from '@/stores/account'
 
@@ -32,8 +32,7 @@ export const publicRoutes: RouteRecordRaw[] = [
                     const info = await account.getInfo()
 
                     if (info !== null) {
-                        useRouter().replace({ name: 'public.redirect' })
-                        return false
+                        return { name: 'public.redirect' }
                     }
 
                     return true
