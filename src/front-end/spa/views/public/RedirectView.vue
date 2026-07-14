@@ -29,8 +29,8 @@
                     fill="#EF4D4D"
                 />
 
-                <path d="M64 96h896v32H64z" />
-                <path d="M64 576h896v32H64z" />
+                <path class="house-shadow" d="M64 96h896v32H64z" />
+                <path class="house-shadow" d="M64 576h896v32H64z" />
             </g>
         </svg>
 
@@ -69,11 +69,10 @@ onMounted(async () => {
         },
     })
 
-    const paths = svgHouse.value?.querySelectorAll('path')
+    const housePaths = svgHouse.value?.querySelectorAll('path:not(.house-shadow)') as NodeList
+    const shadowPaths = svgHouse.value?.querySelectorAll('path.house-shadow') as NodeList
 
-    if (!paths) return
-
-    gsap.set(paths, {
+    gsap.set(housePaths, {
         stroke: '#1e293b',
         strokeWidth: 4,
         fillOpacity: 0,
@@ -81,20 +80,30 @@ onMounted(async () => {
         strokeDashoffset: (index, target: SVGPathElement) => target.getTotalLength(),
     })
 
-    tl.to(paths, {
+    tl.to(housePaths, {
         strokeDashoffset: 0,
         duration: 1.4,
         stagger: 0.2,
         ease: 'none',
     })
 
-    tl.to(paths, {
+    tl.to(housePaths, {
         fillOpacity: 1,
         strokeWidth: 0,
         duration: 0.6,
         stagger: 0.1,
         ease: 'power4.inOut',
     })
+
+    tl.from(
+        shadowPaths,
+        {
+            opacity: 0,
+            duration: 0.6,
+            ease: 'power4.inOut',
+        },
+        '<',
+    )
 })
 
 async function redirectPage() {
