@@ -1,6 +1,5 @@
 <template>
     <div
-        ref="container"
         class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden py-8"
         style="background: #0a0a0f"
     >
@@ -20,7 +19,7 @@
                 class="text-center leading-none font-black tracking-tighter text-white select-none"
                 style="font-family: 'Inter', sans-serif; font-size: clamp(120px, 20vw, 220px)"
             >
-                4<span class="text-indigo-500">0</span>4
+                4<span class="text-rose-500">0</span>3
             </h1>
 
             <div class="mx-auto table">
@@ -28,9 +27,9 @@
                     class="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1.5"
                     style="background: #171724"
                 >
-                    <span class="size-1.5 animate-pulse rounded-full bg-indigo-400"></span>
+                    <span class="size-1.5 animate-pulse rounded-full bg-rose-400"></span>
                     <span class="text-xs font-medium tracking-widest text-white">
-                        Página não encontrada
+                        Acesso proibido
                     </span>
                 </p>
             </div>
@@ -39,28 +38,27 @@
                 class="mx-auto mb-10 max-w-xs text-center text-sm leading-relaxed text-white opacity-50"
                 style="font-family: 'Inter', sans-serif"
             >
-                A página que você está procurando foi movida, removida ou nunca existiu por aqui.
+                Você não tem privilégios suficientes para acessar este recurso.
             </p>
 
             <RouterLink
                 :to="{ name: 'public.home' }"
                 class="btn mx-auto px-5 py-2.5 text-sm font-medium text-white no-underline"
                 style="
-                    background: linear-gradient(135deg, #6366f1, #4f46e5);
+                    background: linear-gradient(135deg, #f43f5e, #e11d48);
                     box-shadow:
-                        0 0 0 1px rgba(99, 102, 241, 0.4),
-                        0 4px 24px rgba(99, 102, 241, 0.25);
+                        0 0 0 1px rgba(244, 63, 94, 0.4),
+                        0 4px 24px rgba(244, 63, 94, 0.25);
                 "
             >
                 Ir para o início
             </RouterLink>
         </div>
 
-        <!-- Bottom code line -->
         <div class="absolute right-0 bottom-8 left-0 flex items-center justify-center">
             <span class="text-center font-mono text-sm tracking-widest text-white opacity-20">
-                ERROR_CODE: 0x404
-                <span class="mx-auto table">RESOURCE_NOT_FOUND</span>
+                ERROR_CODE: 0x403
+                <span class="mx-auto table">FORBIDDEN</span>
             </span>
         </div>
     </div>
