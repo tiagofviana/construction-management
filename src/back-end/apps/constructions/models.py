@@ -1,10 +1,13 @@
 from django.core.cache import cache
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.core.validators import MinValueValidator
 from svgpathtools import parse_path
 from apps.core import models as core_models
 from . import validator
+
+User = get_user_model()
 
 
 class Construction(models.Model):
@@ -45,6 +48,42 @@ class Construction(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Employee(models.Model):
+    id = models.AutoField(
+        auto_created=True,
+        primary_key=True,
+        verbose_name="ID",
+    )
+
+    construction = models.ForeignKey(
+        Construction,
+        on_delete=models.CASCADE,
+        verbose_name="construção",
+        null=False,
+        blank=False,
+        db_index=True,
+    )
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="usuário",
+        null=False,
+        blank=False,
+        db_index=True,
+    )
+
+    class Meta:
+        managed = True
+        constraints = [
+            models.UniqueConstraint(
+                fields=["construction", "user"], name="unique_employee"
+            )
+        ]
+        verbose_name = "funcionário"
+        verbose_name_plural = "funcionários"
 
 
 class Floor(models.Model):
