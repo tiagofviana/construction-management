@@ -1,35 +1,24 @@
 import axios from 'axios'
 import router from '@/router'
-import { authStore } from '@/stores/auth'
 import { resetAll } from '@/plugins/piniaReset'
 
-export function getCSRFTokenInput(): HTMLInputElement {
-    const input = document.querySelector('input[name=csrfmiddlewaretoken]') as HTMLInputElement
-
-    if (input == null) {
-        throw new Error('Csrf token not found')
-    }
-
-    return input
-}
-
-export function setAxiosTokens(authorization: string, csrf: string) {
-    if (authorization) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${authorization}`
-    }
-    axios.defaults.headers.common['X-CSRFToken'] = csrf
-}
-
-export function clearAxiosAuthorization() {
-    delete axios.defaults.headers.common['Authorization']
+function getCookie(name: string): string {
+    const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))
+    return match ? decodeURIComponent(match[2]) : ''
 }
 
 export default {
     install() {
-        const auth = authStore()
-
-        setAxiosTokens(auth.token, getCSRFTokenInput().value)
+        axios.defaults.withCredentials = true
         axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
+
+        axios.interceptors.request.use((config) => {
+            const csrfToken = getCookie('csrftoken')
+            if (csrfToken) {
+                config.headers['X-CSRFToken'] = csrfToken
+            }
+            return config
+        })
 
         axios.interceptors.response.use(
             (response) => {
