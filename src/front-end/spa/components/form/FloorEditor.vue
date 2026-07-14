@@ -288,7 +288,7 @@
                                     required
                                 />
 
-                                <FieldError v-if="formErrors.name" :message="formErrors.name[0]" />
+                                <FieldErrors v-if="formErrors.name" :messages="formErrors.name" />
                             </div>
 
                             <div class="field" :class="{ 'invalid-field': formErrors.description }">
@@ -302,9 +302,9 @@
                                     required
                                 ></textarea>
 
-                                <FieldError
+                                <FieldErrors
                                     v-if="formErrors.description"
-                                    :message="formErrors.description[0]"
+                                    :messages="formErrors.description"
                                 />
                             </div>
 
@@ -325,7 +325,7 @@
                                     required
                                 />
 
-                                <FieldError v-if="formErrors.area" :message="formErrors.area[0]" />
+                                <FieldErrors v-if="formErrors.area" :messages="formErrors.area" />
                             </div>
 
                             <div class="field" :class="{ 'invalid-field': formErrors.color }">
@@ -343,10 +343,7 @@
                                     required
                                 />
 
-                                <FieldError
-                                    v-if="formErrors.color"
-                                    :message="formErrors.color[0]"
-                                />
+                                <FieldErrors v-if="formErrors.color" :messages="formErrors.color" />
                             </div>
 
                             <button type="submit" class="btn btn-blue mx-auto mt-4">
@@ -382,7 +379,7 @@ import Coloris from '@melloware/coloris'
 import type { Point, PathCommand, ToolOptions } from '@/entities/editor/floor/types'
 import { FloorCanvas } from '@/entities/editor/floor'
 import AlertModal from '@/components/alerts/AlertModal.vue'
-import FieldError from '@/components/form/FieldError.vue'
+import FieldErrors from '@/components/form/FieldErrors.vue'
 import TextLoading from '@/components/loading/TextLoading.vue'
 import { PathSerializer } from '@/entities/editor/floor/serializers'
 
