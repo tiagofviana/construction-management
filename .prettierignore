@@ -25,6 +25,9 @@ src/temp
 # Media directory
 src/media
 
+# Html files
+**/*.html
+
 # Tailwind
 **/tailwind/**/output.css
 
