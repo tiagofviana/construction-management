@@ -3,7 +3,7 @@
         <section
             class="fixed top-0 left-0 z-100 flex h-full max-h-dvh w-full overflow-hidden bg-black/40 py-8 shadow-2xl shadow-black/10 backdrop-blur-sm select-none"
         >
-            <AlertModal
+            <ModalAlert
                 v-if="eraserAlertKey > 0"
                 type="info"
                 title="Deseja continuar?"
@@ -378,7 +378,7 @@ import {
 import Coloris from '@melloware/coloris'
 import type { Point, PathCommand, ToolOptions } from '@/entities/editor/floor/types'
 import { FloorCanvas } from '@/entities/editor/floor'
-import AlertModal from '@/components/alerts/AlertModal.vue'
+import ModalAlert from '@/components/alerts/ModalAlert.vue'
 import FieldErrors from '@/components/form/FieldErrors.vue'
 import TextLoading from '@/components/loading/TextLoading.vue'
 import { PathSerializer } from '@/entities/editor/floor/serializers'

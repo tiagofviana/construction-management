@@ -112,10 +112,12 @@ async function redirectPage() {
             router.replace({ name: 'public.home' })
             return
         }
+
         if (data.isStaff === true) {
             window.location.href = '/z/'
             return
         }
+
         // router.replace({ name: 'employee.establishments' })
     })
 }

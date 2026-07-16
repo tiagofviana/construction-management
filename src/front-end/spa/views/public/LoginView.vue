@@ -1,6 +1,6 @@
 <template>
     <section class="flex h-full items-center justify-center py-6">
-        <AsyncAlertModal
+        <AsyncModalAlert
             v-if="alertModal.message"
             :type="alertModal.type"
             :title="alertModal.title"
@@ -17,7 +17,7 @@
         >
             <h1 class="py-4 text-center font-serif text-4xl font-bold">Login</h1>
 
-            <AlertInline
+            <InlineAlert
                 v-if="alertInline.message"
                 :message="alertInline.message"
                 :type="alertInline.type"
@@ -77,12 +77,12 @@
 import { ref, reactive, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import type { ModalType } from '@/components/alerts/AlertModal.vue'
-import AlertInline, { type InlineType } from '@/components/alerts/AlertInline.vue'
+import type { ModalType } from '@/components/alerts/ModalAlert.vue'
+import InlineAlert, { type InlineType } from '@/components/alerts/InlineAlert.vue'
 import FieldErrors from '@/components/form/FieldErrors.vue'
 import TextLoading from '@/components/loading/TextLoading.vue'
 
-const AsyncAlertModal = defineAsyncComponent(() => import('@/components/alerts/AlertModal.vue'))
+const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 
 interface LoginForm {
     email: string
