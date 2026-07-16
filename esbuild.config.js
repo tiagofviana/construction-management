@@ -116,6 +116,11 @@ const entries = [
     },
 
     // MPA
+    {
+        ...defaultOption,
+        entryPoints: ['src\\front-end\\mpa\\image\\cropper\\main.ts'],
+        outdir: 'src\\back-end\\apps\\core\\static\\core\\_js\\widgets\\image_cropper\\bundled\\',
+    },
 ]
 
 entries.forEach(function (item) {

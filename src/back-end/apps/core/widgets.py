@@ -6,5 +6,5 @@ class ImageCropperInputWidget(widgets.ClearableFileInput):
 
     class Media:
         css = {
-            "all": ("core/_css/tailwind/output.css", "core/_css/admin.css"),
+            "all": ("core/_css/tailwind/output.css",),
         }
