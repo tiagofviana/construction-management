@@ -21,7 +21,7 @@ class Construction(models.Model):
         verbose_name="Foto",
         subdir="uploads/images/contruction/photo/",
         width=512,
-        height=512,
+        height=288,  # 16/9
         null=True,
         blank=True,
     )
@@ -31,14 +31,12 @@ class Construction(models.Model):
         max_length=100,
         null=False,
         blank=False,
-        db_index=True,
     )
 
     address = models.TextField(
         verbose_name="endereço",
         null=False,
         blank=False,
-        db_index=True,
     )
 
     class Meta:
@@ -79,11 +77,14 @@ class Employee(models.Model):
         managed = True
         constraints = [
             models.UniqueConstraint(
-                fields=["construction", "user"], name="unique_employee"
+                fields=["construction", "user"], name="unique_construction_employee"
             )
         ]
         verbose_name = "funcionário"
         verbose_name_plural = "funcionários"
+
+    def __str__(self):
+        return f"{self.construction} <-> {self.user}"
 
 
 class Floor(models.Model):
@@ -98,7 +99,13 @@ class Floor(models.Model):
         max_length=100,
         null=False,
         blank=False,
-        db_index=True,
+    )
+
+    order = models.PositiveSmallIntegerField(
+        verbose_name="ordem",
+        help_text="Posição no qual os andarems serão exibidos.",
+        null=False,
+        blank=False,
     )
 
     construction = models.ForeignKey(
@@ -112,6 +119,11 @@ class Floor(models.Model):
 
     class Meta:
         managed = True
+        constraints = [
+            models.UniqueConstraint(
+                fields=["construction", "order"], name="unique_construction_order"
+            )
+        ]
         verbose_name = "piso"
         verbose_name_plural = "pisos"
 
