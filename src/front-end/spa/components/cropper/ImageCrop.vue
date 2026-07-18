@@ -1,7 +1,7 @@
 <template>
     <section
         v-if="!isHidden"
-        class="fixed top-0 left-0 z-90 h-dvh w-full overflow-auto bg-black/80 py-12"
+        class="fixed top-0 left-0 z-90 h-dvh w-full overflow-auto bg-black/40 py-12 backdrop-blur-sm"
     >
         <div class="mx-auto w-11/12 max-w-xl rounded bg-white pb-4">
             <button type="button" @click="isHidden = true" class="ml-auto block">
