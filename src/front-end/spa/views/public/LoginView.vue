@@ -1,8 +1,8 @@
 <template>
-    <section class="flex h-full items-center justify-center py-6">
+    <section class="flex min-h-dvh items-center justify-center py-6">
         <AsyncModalAlert
             v-if="alertModal.message"
-            :type="alertModal.type"
+            type="error"
             :title="alertModal.title"
             :message="alertModal.message"
             ok-label="Confirmar"
@@ -77,7 +77,6 @@
 import { ref, reactive, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import type { ModalType } from '@/components/alerts/ModalAlert.vue'
 import InlineAlert, { type InlineType } from '@/components/alerts/InlineAlert.vue'
 import FieldErrors from '@/components/form/FieldErrors.vue'
 import TextLoading from '@/components/loading/TextLoading.vue'
@@ -105,10 +104,9 @@ const formErrors = ref<{
     password?: string[]
 }>({})
 
-const alertModal = reactive<{ message: string; key: number; title: string; type: ModalType }>({
+const alertModal = reactive<{ message: string; key: number; title: string }>({
     message: '',
     key: 0,
-    type: 'error',
     title: '',
 })
 
@@ -118,11 +116,10 @@ const alertInline = reactive<{ message: string; key: number; type: InlineType }>
     type: 'error',
 })
 
-function setAlertModal(msg: string, title: string, type: ModalType) {
+function setAlertModal(msg: string, title: string) {
     alertModal.message = msg
     alertModal.key++
     alertModal.title = title
-    alertModal.type = type
 }
 
 function setAlertInline(msg: string, type: InlineType) {
@@ -146,11 +143,12 @@ function handleSubmit() {
             router.replace({ name: 'public.redirect', params: { animate: 1 } })
         })
         .catch((error) => {
+            isFormLoading.value = false
+
             if (error.code === 'ERR_NETWORK') {
                 setAlertModal(
                     'Não foi possível conectar com servidor, por favor, tente novamente mais tarde.',
                     'Conexão instável',
-                    'error',
                 )
                 return
             }
@@ -174,11 +172,7 @@ function handleSubmit() {
             setAlertModal(
                 'O servidor não conseguiu processar a solicitação, por favor, contacte a nossa equipe.',
                 'Erro inesperado',
-                'error',
             )
-        })
-        .finally(() => {
-            isFormLoading.value = false
         })
 }
 </script>

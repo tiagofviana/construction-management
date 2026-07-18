@@ -34,16 +34,16 @@
             </g>
         </svg>
 
-        <div :class="{ invisible: !isLoading }" class="loader mt-4"></div>
+        <SimpleLoader :class="{ invisible: !isLoading }" class="mt-4 stroke-white" />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, useTemplateRef, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-
 import { gsap } from 'gsap'
 import { accountStore } from '@/stores/account'
+import SimpleLoader from '@/components/loading/SimpleLoader.vue'
 
 const router = useRouter()
 const svgHouse = useTemplateRef<SVGElement>('svg-house')
@@ -100,6 +100,7 @@ onMounted(async () => {
         {
             opacity: 0,
             duration: 0.6,
+            delay: 0.6,
             ease: 'power4.inOut',
         },
         '<',
@@ -118,23 +119,7 @@ async function redirectPage() {
             return
         }
 
-        // router.replace({ name: 'employee.establishments' })
+        router.replace({ name: 'employee.contructions-list' })
     })
 }
 </script>
-
-<style scoped>
-/* HTML: <div class="loader"></div> */
-.loader {
-    width: 60px;
-    aspect-ratio: 4;
-    background: radial-gradient(circle closest-side, #fff 90%, #0000) 0 / calc(100% / 3) 100% space;
-    clip-path: inset(0 100% 0 0);
-    animation: l1 1s steps(4) infinite;
-}
-@keyframes l1 {
-    to {
-        clip-path: inset(0 -34% 0 0);
-    }
-}
-</style>
