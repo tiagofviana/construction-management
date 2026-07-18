@@ -14,7 +14,7 @@
                     />
                 </button>
 
-                <div class="border-t bg-gray-200"></div>
+                <hr class="h-px bg-gray-200" />
 
                 <div class="mx-auto w-11/12 pt-2">
                     <InlineAlert
