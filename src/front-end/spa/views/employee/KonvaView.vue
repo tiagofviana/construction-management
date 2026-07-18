@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>Teste</h1>
-        <FloorEditor class="mx-auto" />
+        <FloorEditor />
     </div>
 </template>
 

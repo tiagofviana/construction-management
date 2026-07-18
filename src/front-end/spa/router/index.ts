@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { publicRoutes } from '@/router/public'
-import { privateRoutes } from '@/router/private'
 import { errorRoutes } from '@/router/error'
+import { employeeRoutes } from '@/router/employee'
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: [...publicRoutes, ...privateRoutes, ...errorRoutes],
+    routes: [...publicRoutes, ...employeeRoutes, ...errorRoutes],
 })
 
 export default router
