@@ -12,8 +12,8 @@ class CustomImageField(models.ImageField):
     _formats = ("WEBP",)
 
     error_messages = {
-        "invalid_height": "A altura da imagem esperada é %(height)spx",
-        "invalid_width": "A largura da imagem esperada é  %(width)spx",
+        "invalid_height": "A altura da imagem é %(current_height)s, espera-se econtrar%(expected_height)spx",
+        "invalid_width": "A largura da imagem é %(current_width)spx, espera-se econtrar %(expected_width)spx.",
         "invalid_format": f"Formato inválido. Formatos suportados: {', '.join(_formats)}",
         "invalid_image": "O arquivo enviado não era uma imagem ou era estava corrompido",
     }
@@ -53,7 +53,10 @@ class CustomImageField(models.ImageField):
             raise ValidationError(
                 self.error_messages["invalid_height"],
                 code="invalid_height",
-                params={"height": self.height},
+                params={
+                    "expected_height": self.height,
+                    "current_height": value.height,
+                },
             )
 
         # Validate width
@@ -61,7 +64,10 @@ class CustomImageField(models.ImageField):
             raise ValidationError(
                 self.error_messages["invalid_width"],
                 code="invalid_width",
-                params={"width": self.width},
+                params={
+                    "expected_width": self.width,
+                    "current_width": value.width,
+                },
             )
 
         return super().validate(value, model_instance)
