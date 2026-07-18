@@ -73,6 +73,7 @@ onMounted(() => {
     const image = new Image()
     image.src = props.data
     const containerElmt = container.value as HTMLDivElement
+    const aspectRatio = Math.round((props.width / props.height) * 1000) / 1000
 
     cropper = new Cropper(image, {
         container: containerElmt,
@@ -90,7 +91,7 @@ onMounted(() => {
             <cropper-handle action="select" plain></cropper-handle>
             
             <cropper-selection
-                aspect-ratio="${props.width / props.height}"
+                aspect-ratio="${aspectRatio}"
                 initial-coverage="0.5"
                 movable="true"
                 resizable="true"
@@ -154,13 +155,32 @@ function crop() {
             height: props.height,
         })
         .then((canvasElmt) => {
-            const file = createFile(canvasElmt.toDataURL('image/webp'))
+            const finalCanvas = ensureExactSize(canvasElmt)
+            const file = createFile(finalCanvas.toDataURL('image/webp'))
             emit('file', file)
             isHidden.value = true
         })
         .catch((error) => {
             setAlertMessage(`Não foi possível cortar a imagem. Erro: ${error}.`)
         })
+}
+
+function ensureExactSize(canvas: HTMLCanvasElement): HTMLCanvasElement {
+    const width = props.width
+    const height = props.height
+
+    if (canvas.width === width && canvas.height === height) {
+        return canvas
+    }
+
+    const fixedCanvas = document.createElement('canvas')
+    fixedCanvas.width = width
+    fixedCanvas.height = height
+
+    const ctx = fixedCanvas.getContext('2d')
+    ctx?.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, width, height)
+
+    return fixedCanvas
 }
 
 function createFile(data: string): File {
