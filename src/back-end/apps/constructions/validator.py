@@ -4,31 +4,12 @@ from django.utils.deconstruct import deconstructible
 
 HEX_COLOR_PATTERN = re.compile(r"^#[0-9A-Fa-f]{6}$")
 
-VIEW_BOX_PATTERN = re.compile(
-    r"^-?\d+(?:\.\d+)?\s+-?\d+(?:\.\d+)?\s+\d+(?:\.\d+)?\s+\d+(?:\.\d+)?$"
-)
+COORD = r"\d+(?:\.\d+)?\s\d+(?:\.\d+)?"
 
 SVG_PATH_PATTERN = re.compile(
-    r"^"
-    # MoveTo: M x y
-    r"M\s*-?\d+(?:\.\d+)?(?:\s*,?\s*-?\d+(?:\.\d+)?){1}"
-    # Zero or more LineTo or CurveTo
-    r"(?:"
-    # L x y
-    r"\s+L\s*-?\d+(?:\.\d+)?(?:\s*,?\s*-?\d+(?:\.\d+)?){1}"
-    r"|"
-    # C x1 y1 x2 y2 x y
-    r"\s+C\s*-?\d+(?:\.\d+)?(?:\s*,?\s*-?\d+(?:\.\d+)?){5}"
-    r")*"
-    r"$"
-)
-
-COORD = r"\d+(?:\.\d+)?,\s\d+(?:\.\d+)?"
-
-SVG_PATH_PATTERN = re.compile(
-    rf"^M {COORD}"  # M x, y
-    rf"(?: L {COORD}"  # L x, y
-    rf"| C {COORD} {COORD} {COORD})*$"  # C x1, y1 x2, y2 x, y
+    rf"^M {COORD}"  # M x y
+    rf"(?: L {COORD}"  # L x y
+    rf"| C {COORD} {COORD} {COORD})*$"  # C x1 y1 x2 y2 x y
 )
 
 
@@ -41,12 +22,12 @@ def validate_hex_color(value):
 
 
 def validate_position(value):
-    if value <= 0:
+    if value < 0:
         raise ValidationError("A posição deve ser maior ou igual a 0.")
 
 
 def validate_rotation(value):
-    if value < 0 or value >= 360:
+    if value < 0 or value > 360:
         raise ValidationError("A rotação deve estar entre 0 e 360.")
 
 
