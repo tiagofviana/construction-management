@@ -1,6 +1,7 @@
 <template>
     <div ref="select" :aria-label="props.label" class="relative">
         <span
+            v-if="props.label"
             class="px-1 text-xs leading-none tracking-tight text-balance"
             :class="[isDropdownHidden ? 'text-gray-600' : 'font-bold text-blue-400']"
         >
@@ -82,7 +83,7 @@ export interface Option {
 }
 
 const props = defineProps<{
-    label: string
+    label?: string
     inputName: string
     placeholder?: string
     options: Array<Option>
