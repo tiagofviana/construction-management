@@ -2,7 +2,7 @@
     <component v-if="route.meta.renderMenu !== false" :is="menuComponent" />
 
     <main
-        class="bg-gray-100"
+        class="bg-gray-100 py-px"
         style="padding: -1px 0"
         :class="[menuComponent ? 'min-h-content' : 'min-h-dvh']"
     >
