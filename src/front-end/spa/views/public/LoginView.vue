@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, defineAsyncComponent } from 'vue'
+import { ref, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import InlineAlert, { type InlineType } from '@/components/alerts/InlineAlert.vue'
@@ -92,8 +92,8 @@ interface LoginForm {
 const form = defineModel<LoginForm>({
     required: true,
     default: () => ({
-        email: 'admin@admin.com',
-        password: '1234',
+        email: 'func@email.com',
+        password: '1234asdf1',
         stayConnected: false,
     }),
 })
@@ -104,28 +104,30 @@ const formErrors = ref<{
     password?: string[]
 }>({})
 
-const alertModal = reactive<{ message: string; key: number; title: string }>({
+const alertModal = ref<{ message: string; key: number; title: string }>({
     message: '',
     key: 0,
     title: '',
 })
 
-const alertInline = reactive<{ message: string; key: number; type: InlineType }>({
+const alertInline = ref<{ message: string; key: number; type: InlineType }>({
     message: '',
     key: 0,
     type: 'error',
 })
 
 function setAlertModal(msg: string, title: string) {
-    alertModal.message = msg
-    alertModal.key++
-    alertModal.title = title
+    alertModal.value = {
+        message: msg,
+        key: alertModal.value.key + 1,
+        title: title,
+    }
 }
 
 function setAlertInline(msg: string, type: InlineType) {
-    alertInline.message = msg
-    alertInline.key++
-    alertInline.type = type
+    alertInline.value.message = msg
+    alertInline.value.key++
+    alertInline.value.type = type
 }
 
 function handleSubmit() {
