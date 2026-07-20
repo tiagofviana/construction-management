@@ -63,3 +63,12 @@
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+import { onBeforeMount } from 'vue'
+import { resetAll } from '@/plugins/piniaReset'
+
+onBeforeMount(() => {
+    resetAll()
+})
+</script>
