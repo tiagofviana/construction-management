@@ -1,4 +1,5 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpRequest
+from django.contrib.auth import logout
 
 
 class Success(JsonResponse):
@@ -38,7 +39,8 @@ class Unauthorized(JsonResponse):
     # The request was not processed because the user does not have valid authentication credentials.
     status_code = 401
 
-    def __init__(self, data: dict = {}, *args, **kwargs):
+    def __init__(self, request: HttpRequest, data: dict, *args, **kwargs):
+        logout(request)
         super().__init__(data, *args, **kwargs)
 
 
@@ -46,7 +48,8 @@ class Forbidden(JsonResponse):
     # The server understood your request but denied access. Insufficient permissions.
     status_code = 403
 
-    def __init__(self, data: dict, *args, **kwargs):
+    def __init__(self, request: HttpRequest, data: dict, *args, **kwargs):
+        logout(request)
         super().__init__(data, *args, **kwargs)
 
 
