@@ -2,9 +2,10 @@
     <MenuLayout>
         <template #nav>
             <p
+                v-if="info"
                 class="line-clamp-1 px-4 pb-6 text-center font-sans text-xl font-medium text-yellow-300"
             >
-                {{ info?.firstName }}1
+                {{ info.firstName }}
             </p>
 
             <MenuItem
@@ -12,14 +13,14 @@
                 :location="{ name: 'employee.contructions-list' }"
                 :icon="House"
                 class="stroke-white"
-            ></MenuItem>
+            />
 
             <MenuItem
                 label="Sair"
                 :location="{ name: 'public.logout' }"
                 :icon="LogOut"
                 class="stroke-red-300"
-            ></MenuItem>
+            />
         </template>
     </MenuLayout>
 </template>
