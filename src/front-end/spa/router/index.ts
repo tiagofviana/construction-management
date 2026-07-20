@@ -8,4 +8,8 @@ const router = createRouter({
     routes: [...publicRoutes, ...employeeRoutes, ...errorRoutes],
 })
 
+router.beforeEach(() => {
+    console.clear()
+})
+
 export default router
