@@ -24,6 +24,11 @@ export const employeeRoutes: RouteRecordRaw[] = [
                 name: 'employee.floor-editor',
                 component: () => import('@/views/employee/FloorEditorView.vue'),
             },
+            {
+                path: ':employeeId/mapa',
+                name: 'employee.contruction-map',
+                component: () => import('@/views/employee/ContructionMapView.vue'),
+            },
         ],
     },
 ]

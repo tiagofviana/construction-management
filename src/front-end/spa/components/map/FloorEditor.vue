@@ -317,7 +317,6 @@ onMounted(async () => {
     }
 
     fc.setup()
-    fc.setRooms(rooms.value)
 
     floorCanvas.value = fc
 
