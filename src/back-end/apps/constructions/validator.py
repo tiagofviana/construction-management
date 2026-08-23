@@ -9,7 +9,7 @@ COORD = r"\d+(?:\.\d+)?\s\d+(?:\.\d+)?"
 SVG_PATH_PATTERN = re.compile(
     rf"^M {COORD}"  # M x y
     rf"(?: L {COORD}"  # L x y
-    rf"| C {COORD} {COORD} {COORD})*$"  # C x1 y1 x2 y2 x y
+    rf"| C {COORD}, {COORD}, {COORD})*$"  # C x1 y1 x2 y2 x y
 )
 
 
