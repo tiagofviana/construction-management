@@ -28,5 +28,7 @@
         "editor.defaultFormatter": "ms-python.black-formatter"
     },
     "prettier.configPath": ".prettierrc.json",
-    "svg.preview.mode": "svg"
+    "svg.preview.mode": "svg",
+    "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+    "js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }
