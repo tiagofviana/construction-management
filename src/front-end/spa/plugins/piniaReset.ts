@@ -5,7 +5,6 @@ const stores: Store[] = []
 export function resetAll() {
     stores.forEach((item) => {
         console.debug(`Reseting ${item.$id} store`)
-        item.$reset()
 
         if (!('reset' in item)) return
 
