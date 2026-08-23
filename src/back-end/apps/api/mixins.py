@@ -58,27 +58,23 @@ class EmployeePermissionMixin(AccessMixin):
 
     login_url = settings.LOGIN_URL
 
-    @property
-    def employeeId(self) -> str:
-        return self.request.POST.get("employeeId", "")
-
     def has_employee_permission(self) -> bool:
-        if not self.employeeId:
-            return False
+        employee = self.get_employee_queryset()
+        if employee:
+            return True
 
-        return constructions_models.Employee.objects.filter(
-            id=self.employeeId,
-        ).exists()
+        return False
 
-    def get_contruction_queryset(self) -> QuerySet[constructions_models.Construction]:
+    def get_employee_queryset(self) -> constructions_models.Employee:
         return (
             constructions_models.Employee.objects.select_related("construction")
-            .get(id=self.employeeId)
-            .construction
+            .filter(id=self.employee_id, user=self.request.user)
+            .first()
         )
 
     def dispatch(self, request: http.HttpRequest, *args, **kwargs):
         self.request = request
+        self.employee_id = kwargs.get("employee_id", None)
 
         if not self.has_employee_permission():
             return responses.Unauthorized(
