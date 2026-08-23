@@ -1,6 +1,6 @@
 @layer components {
     .btn {
-        @apply table cursor-pointer items-center justify-center gap-2 rounded-lg border border-transparent px-5 py-2.5 text-sm font-medium tracking-wide no-underline transition-all duration-150 ease-in-out select-none focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+        @apply table cursor-pointer items-center justify-center gap-2 rounded-lg border border-transparent px-5 py-2.5 text-center text-sm font-medium tracking-wide no-underline transition-all duration-150 ease-in-out select-none focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
     }
 
     .btn-black {

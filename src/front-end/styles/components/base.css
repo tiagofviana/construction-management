@@ -19,3 +19,28 @@ hr {
 a {
     @apply cursor-pointer text-blue-700 underline;
 }
+
+details {
+    @apply mt-2 w-full rounded-lg transition-all duration-500 open:p-2;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    summary {
+        @apply cursor-pointer list-none;
+    }
+
+    &[open]::details-content {
+        opacity: 1;
+        block-size: auto;
+    }
+}
+
+/* Estilo para navegadores modernos que suportam animação nativa do details */
+::details-content {
+    opacity: 0;
+    block-size: 0;
+    overflow: hidden;
+    transition:
+        block-size 0.3s ease,
+        opacity 0.3s ease;
+}

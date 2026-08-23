@@ -24,6 +24,10 @@
     min-height: calc(100dvh - var(--menu-height));
 }
 
+@utility max-h-content {
+    max-height: calc(100dvh - var(--menu-height));
+}
+
 @layer base {
     @import './components/base.css';
 }
