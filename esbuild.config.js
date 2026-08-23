@@ -76,6 +76,10 @@ const loggerPlugin = {
 const defaultOption = {
     charset: 'utf8',
     tsconfig: '.\\tsconfig.json',
+    define: {
+        'process.env.NODE_ENV': JSON.stringify('development'),
+        __VUE_PROD_DEVTOOLS__: JSON.stringify(isDevMode),
+    },
     bundle: true,
     minify: true,
     sourcemap: isDevMode,
