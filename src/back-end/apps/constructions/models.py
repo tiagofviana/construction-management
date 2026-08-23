@@ -45,7 +45,7 @@ class Construction(models.Model):
         verbose_name_plural = "Construções"
 
     def __str__(self):
-        return self.name
+        return f"{self.name} #{self.id}"
 
 
 class Employee(models.Model):
@@ -101,6 +101,18 @@ class Floor(models.Model):
         blank=False,
     )
 
+    width = models.PositiveSmallIntegerField(
+        verbose_name="largura do mapa",
+        null=False,
+        default=200,
+    )
+
+    height = models.PositiveSmallIntegerField(
+        verbose_name="altura do mapa",
+        null=False,
+        default=200,
+    )
+
     order = models.PositiveSmallIntegerField(
         verbose_name="ordem",
         help_text="Posição no qual os andarems serão exibidos.",
@@ -135,7 +147,6 @@ class Room(models.Model):
     id = models.UUIDField(
         primary_key=True,
         unique=True,
-        editable=False,
         verbose_name="UUID",
         default=core_models.UniqueUUIDGenerator("constructions", "Room"),
     )
@@ -238,4 +249,4 @@ class Room(models.Model):
         verbose_name_plural = "cômodos"
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} #{self.id}"
