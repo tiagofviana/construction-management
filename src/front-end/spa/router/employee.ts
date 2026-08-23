@@ -14,15 +14,15 @@ export const employeeRoutes: RouteRecordRaw[] = [
             },
 
             {
-                path: '/:employeeId/dashboard/',
+                path: ':employeeId/dashboard/',
                 name: 'employee.contruction-dashboard',
                 component: () => import('@/views/employee/DashboardView.vue'),
             },
 
             {
-                path: '/:employeeId/mapa/',
-                name: 'employee.contruction-map',
-                component: () => import('@/views/employee/ConstructionMapView.vue'),
+                path: ':employeeId/andar/:floorId/editor',
+                name: 'employee.floor-editor',
+                component: () => import('@/views/employee/FloorEditorView.vue'),
             },
         ],
     },

@@ -14,9 +14,17 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 @admin.register(models.Floor)
 class FloorAdmin(admin.ModelAdmin):
-    ordering = ("construction", "name")
+    list_display = ("name", "order", "construction")
+    ordering = ("construction", "order")
+    readonly_fields = ("id",)
+    fields = ("id", "name", "order", "width", "height", "construction")
 
 
 @admin.register(models.Room)
 class RoomAdmin(admin.ModelAdmin):
-    ordering = ("floor",)
+    list_display = ("id", "name", "floor", "get_construction")
+    ordering = ("floor__construction", "floor", "name")
+
+    @admin.display(description="Construção", ordering="floor__construction")
+    def get_construction(self, obj: models.Room):
+        return obj.floor.construction

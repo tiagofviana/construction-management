@@ -89,13 +89,10 @@ interface LoginForm {
     stayConnected: boolean
 }
 
-const form = defineModel<LoginForm>({
-    required: true,
-    default: () => ({
-        email: 'func@email.com',
-        password: '1234asdf1',
-        stayConnected: false,
-    }),
+const form = ref<LoginForm>({
+    email: 'func@email.com',
+    password: '1234asdf1',
+    stayConnected: false,
 })
 const router = useRouter()
 const isFormLoading = ref(false)

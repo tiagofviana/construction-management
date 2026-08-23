@@ -91,7 +91,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = "usuários"
 
     def __str__(self):
-        return f"{self.fullname}"
+        return f"{self.fullname} #{self.id}"
 
     @property
     def fullname(self):

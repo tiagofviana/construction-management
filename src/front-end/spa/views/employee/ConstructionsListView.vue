@@ -97,7 +97,7 @@ const alertModal = reactive<{ message: string; key: number; title: string }>({
 
 onBeforeMount(() => {
     axios
-        .get(`/api/employee/constructions/list`)
+        .get(`/api/employee/constructions-list`)
         .then((respose) => {
             const data = respose.data as Array<Construction>
             constructions.value = data
