@@ -92,7 +92,7 @@ import {
 } from 'vue'
 import axios from 'axios'
 import { Map } from '@lucide/vue'
-import RoomList from '@/components/map/mapViewer/RoomList.vue'
+import RoomList from '@/components/map/modules/viewer/RoomList.vue'
 import SelectField, { Option } from '@/components/form/SelectField.vue'
 import type { ModalType } from '@/components/alerts/ModalAlert.vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'

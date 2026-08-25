@@ -130,8 +130,8 @@ import Coloris from '@melloware/coloris'
 import ModalAlert, { type ModalType } from '@/components/alerts/ModalAlert.vue'
 import FieldErrors from '@/components/form/FieldErrors.vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'
-import { PathSerializer } from '../modules/serializers'
-import type { Room, PathCommand } from '../modules/types'
+import { PathSerializer } from '../serializers'
+import type { Room, PathCommand } from '../types'
 
 interface FormData {
     name: string

@@ -221,8 +221,8 @@ import {
 } from 'vue'
 import axios from 'axios'
 import { SquareMousePointer, Plus, Minus, Grid2x2Plus, Save, Grid2X2, Magnet } from '@lucide/vue'
-import RoomList from '@/components/map/floorEditor/RoomList.vue'
-import CanvasFloorSize, { type Size } from '@/components/map/floorEditor/CanvasFloorSize.vue'
+import RoomList from '@/components/map/modules/floor/RoomList.vue'
+import CanvasFloorSize, { type Size } from '@/components/map/modules/floor/CanvasFloorSize.vue'
 import type { ModalType } from '@/components/alerts/ModalAlert.vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'
 import type { Room, Point } from '@/components/map/modules/types'
@@ -399,6 +399,8 @@ function loadRooms() {
 
             rooms.value = data.rooms as Array<Room>
             floorCanvas.value?.setRooms(rooms.value)
+
+            floorCanvas.value?.centralize()
         })
         .finally(() => {
             isLoadingRooms.value = false

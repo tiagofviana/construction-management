@@ -1,5 +1,13 @@
 <template>
     <div class="w-full max-w-56 p-3">
+        <AsyncRoomEditor
+            v-if="roomEditor.key > 0"
+            :key="roomEditor.key"
+            :room="roomEditor.room"
+            :is-update="true"
+            @saved="emit('roomChanged')"
+        />
+
         <ul
             ref="rooms-list"
             class="flex flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden scroll-smooth border border-black/10"
@@ -62,6 +70,21 @@
                         {{ item.description }}
                     </p>
                 </details>
+
+                <button type="button" class="btn btn-gray mt-2 w-full" @click="setRoomEditor(item)">
+                    Editar
+                </button>
+
+                <p
+                    class="mt-2 flex flex-row items-center justify-center gap-2 text-sm text-gray-500"
+                >
+                    <span class="whitespace-nowrap"> x: {{ item.positionX }} </span>
+                    <span class="whitespace-nowrap"> y: {{ item.positionY }} </span>
+                </p>
+
+                <p class="text-center text-sm whitespace-nowrap text-gray-500">
+                    Rotação: {{ item.rotation }}
+                </p>
             </li>
         </ul>
 
@@ -88,12 +111,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useTemplateRef, onMounted, onBeforeUnmount } from 'vue'
+import {
+    ref,
+    defineAsyncComponent,
+    computed,
+    useTemplateRef,
+    onMounted,
+    onBeforeUnmount,
+} from 'vue'
 import { MoveRight, MoveLeft } from '@lucide/vue'
-import { computeCentroid } from '../modules/utils'
-import { Room, Point } from '../modules/types'
+import { computeCentroid } from '../utils'
+import { Room, Point } from '../types'
+
+const AsyncRoomEditor = defineAsyncComponent(() => import('@/components/map/RoomEditor.vue'))
 
 type Direction = 'left' | 'right'
+
+const emit = defineEmits<{
+    roomChanged: []
+    editingRoom: []
+}>()
 
 const props = defineProps({
     rooms: {
@@ -111,6 +148,10 @@ const roomsCentroid = computed(() => {
 })
 
 const roomsList = useTemplateRef('rooms-list')
+const roomEditor = ref<{ key: number; room: Room | undefined }>({
+    key: 0,
+    room: undefined,
+})
 
 onMounted(() => {
     roomsList.value?.addEventListener('wheel', handleWheel, { passive: false })
@@ -119,6 +160,14 @@ onMounted(() => {
 onBeforeUnmount(() => {
     roomsList.value?.removeEventListener('wheel', handleWheel)
 })
+
+function setRoomEditor(room: Room) {
+    roomEditor.value = {
+        key: roomEditor.value.key + 1,
+        room: room,
+    }
+    emit('editingRoom')
+}
 
 function scrollRooms(direction: Direction) {
     const elmt = roomsList.value as HTMLUListElement

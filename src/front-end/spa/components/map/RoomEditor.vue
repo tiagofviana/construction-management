@@ -311,7 +311,7 @@ import {
 } from '@lucide/vue'
 import gsap from 'gsap'
 import ModalAlert, { type ModalType } from '@/components/alerts/ModalAlert.vue'
-import SaveForm from './roomEditor/SaveForm.vue'
+import SaveForm from '@/components/map/modules/room/SaveForm.vue'
 import { RoomCanvas } from './modules/room/index.js'
 import type { Point, PathCommand, Room } from './modules/types.js'
 import type { ToolOptions } from './modules/room/core/index.js'
