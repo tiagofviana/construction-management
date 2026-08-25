@@ -1,7 +1,7 @@
 import type { Layer } from 'konva/lib/Layer'
 import { Group } from 'konva/lib/Group'
 import { Shape } from './shape'
-import { rooms } from '../../core/room'
+import { rooms, settings } from '../../core'
 import { RotationHandler } from './rotation'
 
 export class Floor {
@@ -36,6 +36,12 @@ export class Floor {
             const shape = new Shape(item, this.group, this.rotationHandler)
             shape.draw()
             this.shapes.set(item.id, shape)
+        })
+
+        const rect = this.group.getClientRect({ relativeTo: this.group })
+        this.group.position({
+            x: settings.map.width / 2 - (rect.x + rect.width / 2),
+            y: settings.map.height / 2 - (rect.y + rect.height / 2),
         })
     }
 

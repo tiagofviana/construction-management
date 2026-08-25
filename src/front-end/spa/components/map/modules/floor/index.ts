@@ -4,7 +4,7 @@ import { DrawManager } from './figure'
 import { EventsHandler } from './events'
 import { settings, ToolOptions, tool, rooms } from './core'
 import type { Room } from '../types'
-import type { Size } from '../../floorEditor/CanvasFloorSize.vue'
+import type { Size } from './CanvasFloorSize.vue'
 
 export class FloorCanvas {
     private stage: Stage
