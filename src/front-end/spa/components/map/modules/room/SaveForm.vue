@@ -297,7 +297,6 @@ function handleSubmit() {
     axios
         .post(url, formData)
         .then(() => {
-            emit('saved')
             setModalAlert({
                 type: 'info',
                 title: 'Sucesso',
@@ -305,7 +304,9 @@ function handleSubmit() {
                 okLabel: 'Confirmar',
                 hasCancelButton: false,
                 cancelLabel: '',
-                okFunction: () => {},
+                okFunction: () => {
+                    emit('saved')
+                },
             })
         })
         .catch((error) => {

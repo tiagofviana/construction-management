@@ -6,6 +6,7 @@ employee_patterns = [
     path("floor/<int:floor_id>/data", employee.FloorDataView.as_view()),
     path(
         "floor/<int:floor_id>/update/form",
+        
         employee.UpdateFloorFormView.as_view(),
     ),
     path("room-create/form", employee.RoomCreateView.as_view()),

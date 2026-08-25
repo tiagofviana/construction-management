@@ -2,7 +2,8 @@
     <div class="w-full max-w-56 p-3">
         <ul
             ref="rooms-list"
-            class="flex flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden scroll-smooth border border-black/10"
+            class="flex flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden scroll-smooth"
+            :class="{ 'border border-black/10': props.rooms.length > 0 }"
             style="scrollbar-width: none; -ms-overflow-style: none"
         >
             <li

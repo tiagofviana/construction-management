@@ -1,6 +1,7 @@
 <template>
     <Teleport to="body">
         <section
+            ref="section"
             v-if="!isHidden"
             class="fixed top-0 left-0 z-100 flex h-full max-h-dvh w-full overflow-hidden bg-black/40 py-8 shadow-2xl shadow-black/10 backdrop-blur-sm select-none"
         >
@@ -17,8 +18,8 @@
             />
 
             <div
-                class="mx-auto flex h-full w-11/12 overflow-hidden rounded-lg border border-black/20 bg-slate-100"
                 ref="editor"
+                class="mx-auto flex h-full w-11/12 overflow-hidden rounded-lg border border-black/20 bg-slate-100"
             >
                 <aside
                     class="flex w-full max-w-44 flex-1 flex-col overflow-y-auto border-r border-black/10 bg-slate-100"
@@ -256,7 +257,7 @@
 
                         <button
                             type="button"
-                            @click="isHidden = true"
+                            @click="animateOut()"
                             class="ml-auto block cursor-pointer border-l border-black/10 stroke-gray-400 p-1 hover:stroke-black"
                         >
                             <X
@@ -385,6 +386,7 @@ const controller = reactive<RoomOptions>({
 const path = ref<Array<PathCommand>>([])
 const saveForm = useTemplateRef('saveForm')
 const editor = useTemplateRef('editor')
+const section = useTemplateRef('section')
 
 onMounted(() => {
     animateIn()
@@ -436,12 +438,48 @@ onBeforeUnmount(() => {
 })
 
 function animateIn() {
-    gsap.from(editor.value, {
-        opacity: 0,
-        y: '20%',
-        duration: 0.5,
+    const tl = gsap.timeline({
         ease: 'power1.in',
     })
+
+    tl.from(section.value, {
+        duration: 0.5,
+        opacity: 0,
+    })
+
+    tl.from(
+        editor.value,
+        {
+            duration: 0.7,
+            opacity: 0,
+            y: '20%',
+        },
+        '<',
+    )
+}
+
+function animateOut() {
+    const tl = gsap.timeline({
+        ease: 'power1.in',
+        onComplete: () => {
+            isHidden.value = true
+        },
+    })
+
+    tl.to(section.value, {
+        duration: 0.7,
+        opacity: 0,
+    })
+
+    tl.to(
+        editor.value,
+        {
+            duration: 0.5,
+            opacity: 0,
+            y: '20%',
+        },
+        '<',
+    )
 }
 
 function setModalAlert(settings: ModalSettings) {
