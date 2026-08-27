@@ -2,7 +2,7 @@ import logging, hashlib
 from django import http
 from django.conf import settings
 from django.core.cache import cache
-from django.db.models import QuerySet, F
+from django.db.models import Count, QuerySet, F
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from apps.users.models import User
@@ -46,6 +46,27 @@ class ConstructionsListView(mixins.AccountVerificationMixin, View):
             )
 
         return data
+
+
+class DashboardDataView(
+    mixins.AccountVerificationMixin, mixins.EmployeePermissionMixin, View
+):
+    http_method_names = ["get"]
+
+    def get(self, *args, **kwargs) -> http.JsonResponse:
+        data = {"map": self.map_data()}
+
+        return responses.Success(data, safe=False)
+
+    def map_data(self) -> list:
+        construction = self.get_employee_queryset().construction
+        result = (
+            constructions_models.Floor.objects.filter(construction=construction)
+            .annotate(roomCount=Count("room"))
+            .values("name", "roomCount")
+            .order_by("order")
+        )
+        return list(result)
 
 
 class FloorListView(
