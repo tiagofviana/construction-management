@@ -9,7 +9,9 @@ const router = createRouter({
 })
 
 router.beforeEach(() => {
-    console.clear()
+    if (process.env.NODE_ENV === 'production') {
+        console.clear()
+    }
 })
 
 export default router
