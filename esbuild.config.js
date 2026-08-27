@@ -77,8 +77,10 @@ const defaultOption = {
     charset: 'utf8',
     tsconfig: '.\\tsconfig.json',
     define: {
-        'process.env.NODE_ENV': JSON.stringify('development'),
+        'process.env.NODE_ENV': JSON.stringify(isDevMode ? 'development' : 'production'),
         __VUE_PROD_DEVTOOLS__: JSON.stringify(isDevMode),
+        __VUE_OPTIONS_API__: JSON.stringify(false),
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
     },
     bundle: true,
     minify: true,
