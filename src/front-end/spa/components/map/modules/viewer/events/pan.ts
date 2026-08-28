@@ -22,7 +22,7 @@ export class Pan {
         this.stage.on('mousedown touchstart', () => this.onMouseDown())
         this.stage.on('mousemove touchmove', () => this.onMouseMove())
         this.stage.on('mouseup touchend', () => this.onMouseUp())
-        this.stage.on('pointerout', () => this.onPointerOut())
+        this.stage.on('mouseleave', () => this.onMouseLeave())
     }
 
     private onMouseDown(): void {
@@ -47,7 +47,7 @@ export class Pan {
         this.motionPoints = null
     }
 
-    private onPointerOut(): void {
+    private onMouseLeave(): void {
         this.motionPoints = null
     }
 
