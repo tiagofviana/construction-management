@@ -16,7 +16,7 @@
             </li>
 
             <li
-                v-for="(item, index) in rooms"
+                v-for="(item, index) in props.rooms"
                 :key="index"
                 class="w-full shrink-0 snap-center px-4 py-2"
             >
@@ -121,13 +121,17 @@ onBeforeUnmount(() => {
     roomsList.value?.removeEventListener('wheel', handleWheel)
 })
 
-function scrollRooms(direction: Direction) {
+function closeOpenDetails() {
     const elmt = roomsList.value as HTMLUListElement
     const openDetails = elmt.querySelectorAll('details[open]') as NodeListOf<HTMLDetailsElement>
-
     openDetails.forEach((item) => {
         item.open = false
     })
+}
+
+function scrollRooms(direction: Direction) {
+    const elmt = roomsList.value as HTMLUListElement
+    closeOpenDetails()
 
     const width = elmt.clientWidth
     const left = direction === 'left' ? -width : width
@@ -145,4 +149,25 @@ function handleWheel(event: WheelEvent) {
         elmt.scrollBy({ left: event.deltaY, behavior: 'auto' })
     }
 }
+
+function goTo(roomId: string) {
+    const elmt = roomsList.value as HTMLUListElement
+
+    const index = props.rooms.findIndex((item) => item.id === roomId)
+    if (index === -1) return
+
+    const items = elmt.querySelectorAll('li') as NodeListOf<HTMLLIElement>
+    const targetItem = items[index]
+
+    if (targetItem) {
+        closeOpenDetails()
+
+        targetItem.scrollIntoView({
+            behavior: 'smooth',
+            inline: 'center',
+            block: 'nearest',
+        })
+    }
+}
+defineExpose({ goTo })
 </script>

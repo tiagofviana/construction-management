@@ -69,7 +69,7 @@ export class FloorCanvas {
         this.setRooms([])
     }
 
-    public centralize() {
+    public centralizeZoom() {
         this.eventsHandler.zoom.reset()
         const scale = this.stage.scaleX()
         const centerX = (this.stage.width() - settings.map.width * scale) / 2
@@ -87,5 +87,13 @@ export class FloorCanvas {
 
         this.drawManager.clear()
         this.drawManager.init()
+    }
+
+    public setShapeDoubleClick(callback: (value: string) => void) {
+        this.drawManager.floor.onShapeDoubleClick = callback
+    }
+
+    public centralizeShape() {
+        this.drawManager.floor.centerShapes()
     }
 }

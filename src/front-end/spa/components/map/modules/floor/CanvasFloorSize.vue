@@ -31,7 +31,7 @@
                     <ChevronLeft class="size-4" />
                 </button>
 
-                <span class="text-center text-sm text-gray-900">{{ floorSize.width / 10 }}</span>
+                <span class="text-center text-sm text-gray-900">{{ floorSize.width }}</span>
 
                 <button
                     type="button"
@@ -88,7 +88,7 @@
                     <ChevronLeft class="size-4" />
                 </button>
 
-                <span class="text-center text-sm text-gray-900">{{ floorSize.height / 10 }}</span>
+                <span class="text-center text-sm text-gray-900">{{ floorSize.height }}</span>
 
                 <button
                     type="button"

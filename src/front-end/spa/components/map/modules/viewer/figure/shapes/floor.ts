@@ -1,15 +1,17 @@
 import type { Layer } from 'konva/lib/Layer'
 import { Group } from 'konva/lib/Group'
 import { Shape } from './shape'
-import { rooms, settings } from '../../core'
+import { rooms } from '../../core'
 
 export class Floor {
     private shapes: Map<string, Shape>
-    private group = new Group({ listening: false })
+    private group = new Group({ listening: true })
+    public onShapeDoubleClick: (roomId: string) => void
 
     constructor(layer: Layer) {
         layer.add(this.group)
         this.shapes = new Map()
+        this.onShapeDoubleClick = () => {}
     }
 
     public clear() {
@@ -32,13 +34,8 @@ export class Floor {
 
             const shape = new Shape(item, this.group)
             shape.draw()
+            shape.onDoubleClick = this.onShapeDoubleClick
             this.shapes.set(item.id, shape)
-        })
-
-        const rect = this.group.getClientRect({ relativeTo: this.group })
-        this.group.position({
-            x: settings.map.width / 2 - (rect.x + rect.width / 2),
-            y: settings.map.height / 2 - (rect.y + rect.height / 2),
         })
     }
 }

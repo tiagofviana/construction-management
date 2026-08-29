@@ -29,6 +29,10 @@ export class MouseTracker {
     }
 
     private onDragMove(e: KonvaEventObject<MouseEvent>): void {
-        this.onDragChange(e.target.getPosition())
+        const point = e.target.getPosition()
+        const offset = e.target.offset()
+        point.x = point.x - offset.x
+        point.y = point.y - offset.y
+        this.onDragChange(point)
     }
 }

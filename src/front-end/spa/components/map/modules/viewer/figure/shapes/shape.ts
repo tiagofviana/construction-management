@@ -7,9 +7,11 @@ export class Shape {
     private room: Room
     private group: Group
     private textCentroid: Point | null = null
+    public onDoubleClick: (roomId: string) => void
 
     constructor(room: Room, group: Group) {
         this.room = room
+        this.onDoubleClick = () => {}
 
         const center = this.getCenterPoint()
 
@@ -19,8 +21,10 @@ export class Shape {
             offsetX: center.x,
             offsetY: center.y,
             rotation: this.room.rotation,
-            draggable: true,
+            listening: true,
+            draggable: false,
         })
+        this.group.on('dblclick', () => this.onDoubleClick(this.room.id))
         group.add(this.group)
     }
 

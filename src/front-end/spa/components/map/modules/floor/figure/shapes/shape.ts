@@ -11,27 +11,55 @@ export class Shape {
     private group: Group
     private textCentroid: Point | null = null
     private rotationHandler: RotationHandler
+    public onDoubleClick: (roomId: string) => void
 
     constructor(room: Room, group: Group, rotationHandler: RotationHandler) {
         this.rotationHandler = rotationHandler
         this.room = room
+        this.onDoubleClick = () => {}
 
         const center = this.getCenterPoint()
 
         this.group = new Konva.Group({
+            name: `shape_#${room.id}`,
             x: this.room.positionX + center.x,
             y: this.room.positionY + center.y,
             offsetX: center.x,
             offsetY: center.y,
             rotation: this.room.rotation,
-            draggable: true,
+            draggable: false,
         })
         group.add(this.group)
         this.setGroupEvents()
     }
 
+    public getPosition(): Point {
+        const center = this.getCenterPoint()
+
+        return {
+            x: this.group.x() - center.x,
+            y: this.group.y() - center.y,
+        }
+    }
+
+    public setPosition(point: Point) {
+        const center = this.getCenterPoint()
+
+        this.group.position({
+            x: point.x + center.x,
+            y: point.y + center.y,
+        })
+
+        this.room.positionX = point.x
+        this.room.positionY = point.y
+
+        rooms.updateRoomPosition(this.room.id, point)
+    }
+
     private setGroupEvents() {
         const container = this.group.getStage()!.container() as HTMLDivElement
+
+        this.group.on('dblclick', () => this.onDoubleClick(this.room.id))
 
         this.group.on('dragmove', () => {
             this.rotationHandler.clear()
@@ -39,8 +67,8 @@ export class Shape {
         })
 
         this.group.on('click', () => {
-            this.rotationHandler.draw(this)
-            this.rotationHandler.moveToTop()
+            // this.rotationHandler.draw(this)
+            // this.rotationHandler.moveToTop()
             this.group.moveToTop()
         })
 
@@ -191,13 +219,14 @@ export class Shape {
     }
 
     public getDimentions(): IRect {
-        const rect = this.group.getClientRect({ relativeTo: this.group })
+        const rect = this.group.getClientRect()
+        const position = this.group.getPosition()
 
         return {
             width: rect.width,
             height: rect.height,
-            x: this.room.positionX,
-            y: this.room.positionY,
+            x: position.x - rect.width / 2,
+            y: position.y - rect.height / 2,
         }
     }
 
@@ -211,5 +240,12 @@ export class Shape {
 
     public setRotation(rotation: number) {
         this.group.rotation(rotation)
+    }
+    public setDraggable(isDraggable: boolean) {
+        this.group.draggable(isDraggable)
+
+        if (isDraggable === false) {
+            this.rotationHandler.clear()
+        }
     }
 }

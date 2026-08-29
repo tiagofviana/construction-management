@@ -109,7 +109,7 @@
                         <button
                             type="button"
                             class="mx-3 w-12 cursor-pointer text-center font-mono text-sm text-yellow-700"
-                            @click="floorCanvas.centralize()"
+                            @click="floorCanvas.centralizeZoom()"
                         >
                             {{ Math.round(controller.zoom.scale * 100) }}%
                         </button>
@@ -172,12 +172,23 @@
 
                     <div class="flex flex-1 flex-col">
                         <RoomList
+                            ref="room-list"
                             :rooms="rooms"
                             @editing-room="floorCanvas.setTool(null)"
                             @roomChanged="loadRooms()"
                         />
 
-                        <div class="mt-auto flex shrink-0 flex-col gap-2 p-4">
+                        <div
+                            class="mt-auto flex shrink-0 flex-col gap-2 border-t border-black/10 p-4"
+                        >
+                            <button
+                                type="button"
+                                class="btn btn-orange flex items-center"
+                                @click="floorCanvas.centralizeShape()"
+                            >
+                                Centralizar
+                            </button>
+
                             <button
                                 type="button"
                                 class="btn btn-green flex items-center"
@@ -263,6 +274,7 @@ const floorSettings = reactive({
     },
 })
 const container = useTemplateRef('container')
+const roomList = useTemplateRef('room-list')
 const floorCanvas = shallowRef<null | FloorCanvas>(null)
 const controller = reactive<FloorOptions>({
     tool: null,
@@ -293,6 +305,10 @@ onMounted(async () => {
 
     const elm = container.value as HTMLDivElement
     const fc = new FloorCanvas(elm)
+
+    fc.setShapeDoubleClick((value) => {
+        roomList.value?.goTo(value)
+    })
 
     fc.onRoomsChange = (value) => {
         rooms.value = value
@@ -400,7 +416,7 @@ function loadRooms() {
             rooms.value = data.rooms as Array<Room>
             floorCanvas.value?.setRooms(rooms.value)
 
-            floorCanvas.value?.centralize()
+            floorCanvas.value?.centralizeZoom()
         })
         .finally(() => {
             isLoadingRooms.value = false

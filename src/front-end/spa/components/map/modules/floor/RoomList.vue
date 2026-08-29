@@ -162,6 +162,14 @@ onBeforeUnmount(() => {
     roomsList.value?.removeEventListener('wheel', handleWheel)
 })
 
+function closeOpenDetails() {
+    const elmt = roomsList.value as HTMLUListElement
+    const openDetails = elmt.querySelectorAll('details[open]') as NodeListOf<HTMLDetailsElement>
+    openDetails.forEach((item) => {
+        item.open = false
+    })
+}
+
 function setRoomEditor(room: Room) {
     roomEditor.value = {
         key: roomEditor.value.key + 1,
@@ -172,11 +180,7 @@ function setRoomEditor(room: Room) {
 
 function scrollRooms(direction: Direction) {
     const elmt = roomsList.value as HTMLUListElement
-    const openDetails = elmt.querySelectorAll('details[open]') as NodeListOf<HTMLDetailsElement>
-
-    openDetails.forEach((item) => {
-        item.open = false
-    })
+    closeOpenDetails()
 
     const width = elmt.clientWidth
     const left = direction === 'left' ? -width : width
@@ -194,4 +198,25 @@ function handleWheel(event: WheelEvent) {
         elmt.scrollBy({ left: event.deltaY, behavior: 'auto' })
     }
 }
+
+function goTo(roomId: string) {
+    const elmt = roomsList.value as HTMLUListElement
+
+    const index = props.rooms.findIndex((item) => item.id === roomId)
+    if (index === -1) return
+
+    const items = elmt.querySelectorAll('li') as NodeListOf<HTMLLIElement>
+    const targetItem = items[index]
+
+    if (targetItem) {
+        closeOpenDetails()
+
+        targetItem.scrollIntoView({
+            behavior: 'smooth',
+            inline: 'center',
+            block: 'nearest',
+        })
+    }
+}
+defineExpose({ goTo })
 </script>

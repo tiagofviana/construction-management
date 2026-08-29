@@ -43,4 +43,8 @@ export class ViewerCanvas {
         this.drawManager.clear()
         this.drawManager.init()
     }
+
+    public setShapeDoubleClick(callback: (value: string) => void) {
+        this.drawManager.floor.onShapeDoubleClick = callback
+    }
 }

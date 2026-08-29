@@ -49,6 +49,7 @@
 
                         <div class="flex flex-1 flex-col">
                             <RoomList
+                                ref="room-list"
                                 v-if="isLoadingRooms === false"
                                 :rooms="rooms"
                                 :floor-id="Number(selectedFloor)"
@@ -118,6 +119,7 @@ const selectedFloor = ref<string>('')
 const rooms = ref<Array<Room>>([])
 const isLoadingRooms = ref<boolean>(false)
 const container = useTemplateRef('container')
+const roomList = useTemplateRef('room-list')
 const viewerCanvas = shallowRef<null | ViewerCanvas>(null)
 
 const isMapReady = computed(() => {
@@ -141,7 +143,12 @@ const modalAlert = ref<{ message: string; key: number; title: string; type: Moda
 
 onMounted(async () => {
     const elm = container.value as HTMLDivElement
-    viewerCanvas.value = new ViewerCanvas(elm)
+    const vc = new ViewerCanvas(elm)
+    vc.setShapeDoubleClick((value) => {
+        roomList.value?.goTo(value)
+    })
+
+    viewerCanvas.value = vc
 
     axios.get(`/api/employee/${props.employeeId}/floors-list`).then((response) => {
         const data = response.data as Array<Floor>
