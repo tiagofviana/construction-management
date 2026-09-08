@@ -163,10 +163,12 @@
             </header>
 
             <aside
-                class="relative flex h-full w-full max-w-56 flex-col overflow-hidden border-l border-black/10"
+                class="relative flex h-full w-full max-w-56 flex-col overflow-auto border-l border-black/10"
             >
                 <template v-if="floorCanvas">
-                    <div class="flex h-12 items-center justify-center border-b border-slate-200">
+                    <div
+                        class="flex h-12 shrink-0 items-center justify-center border-b border-slate-200"
+                    >
                         <h2 class="px-4 text-lg">Cômodos</h2>
                     </div>
 
@@ -186,6 +188,7 @@
                                 class="btn btn-orange flex items-center"
                                 @click="floorCanvas.centralizeShape()"
                             >
+                                <Sparkle :size="18" />
                                 Centralizar
                             </button>
 
@@ -231,7 +234,16 @@ import {
     provide,
 } from 'vue'
 import axios from 'axios'
-import { SquareMousePointer, Plus, Minus, Grid2x2Plus, Save, Grid2X2, Magnet } from '@lucide/vue'
+import {
+    SquareMousePointer,
+    Plus,
+    Minus,
+    Grid2x2Plus,
+    Save,
+    Grid2X2,
+    Magnet,
+    Sparkle,
+} from '@lucide/vue'
 import RoomList from '@/components/map/modules/floor/RoomList.vue'
 import CanvasFloorSize, { type Size } from '@/components/map/modules/floor/CanvasFloorSize.vue'
 import type { ModalType } from '@/components/alerts/ModalAlert.vue'

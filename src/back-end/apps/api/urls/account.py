@@ -1,7 +1,6 @@
 from django.urls import path
 from apps.api.views import account
 
-
 urlpatterns = [
     path("login/form", account.LoginFormView.as_view()),
     # path("create", account.UserCreateView.as_view()),

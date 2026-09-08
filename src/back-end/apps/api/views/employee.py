@@ -54,11 +54,27 @@ class DashboardDataView(
     http_method_names = ["get"]
 
     def get(self, *args, **kwargs) -> http.JsonResponse:
-        data = {"map": self.map_data()}
+        data = {
+            "construction": self.construction_data(),
+            "atlas": self.atlas_data(),
+        }
 
         return responses.Success(data, safe=False)
 
-    def map_data(self) -> list:
+    def construction_data(self) -> dict:
+        construction = self.get_employee_queryset().construction
+        photo_url = ""
+
+        if construction.photo:
+            photo_url = f"/media/{construction.photo}"
+
+        return {
+            "name": construction.name,
+            "address": construction.address,
+            "photoUrl": photo_url,
+        }
+
+    def atlas_data(self) -> list:
         construction = self.get_employee_queryset().construction
         result = (
             constructions_models.Floor.objects.filter(construction=construction)

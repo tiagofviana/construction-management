@@ -1,5 +1,5 @@
 import { type RouteRecordRaw } from 'vue-router'
-import { MenuContent } from '@/types/components/menu'
+import { Content } from '@/types/content'
 import { accountStore } from '@/stores/account'
 
 export const publicRoutes: RouteRecordRaw[] = [
@@ -21,7 +21,7 @@ export const publicRoutes: RouteRecordRaw[] = [
 
     {
         path: '',
-        meta: { menuContent: MenuContent.Public },
+        meta: { content: Content.Public },
         children: [
             {
                 path: '/login',

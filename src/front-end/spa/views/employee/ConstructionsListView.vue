@@ -32,39 +32,37 @@
                     class="group table max-w-xs overflow-hidden rounded-md bg-white no-underline shadow shadow-black/20"
                 >
                     <div
-                        class="relative flex aspect-video w-full scale-105 items-center justify-center overflow-hidden border-b border-black/10 bg-gray-50"
+                        class="relative flex aspect-video w-full items-center justify-center overflow-hidden border-b border-black/10 bg-gray-50"
                     >
                         <img
                             v-if="construction.photoUrl"
                             :src="construction.photoUrl"
                             :alt="construction.name"
-                            class="h-full object-contain object-center"
+                            class="size-full object-cover object-center transition-all duration-200 group-hover:scale-105"
                         />
                         <ImageOff v-else :size="56" class="stroke-gray-300" />
+
+                        <div
+                            class="absolute top-2 right-2 rounded-md border border-white/20 bg-orange-500 p-1 opacity-0 transition-all duration-400 group-hover:opacity-100"
+                        >
+                            <ArrowUpRight
+                                :stroke-width="1.8"
+                                :size="20"
+                                class="stroke-white drop-shadow drop-shadow-black/20"
+                            />
+                        </div>
                     </div>
 
-                    <div class="relative overflow-hidden p-5">
-                        <h2
-                            class="relative z-2 line-clamp-1 text-xl font-medium text-gray-900 transition-all delay-100 duration-400 group-hover:text-orange-900"
-                        >
+                    <div class="p-5">
+                        <h2 class="line-clamp-1 text-xl font-medium text-gray-900">
                             {{ construction.name }}
                         </h2>
 
                         <p
-                            class="relative z-2 mt-1.5 line-clamp-3 h-15 text-justify text-sm text-gray-500 transition-all delay-100 duration-400 group-hover:text-orange-900"
+                            class="mt-1.5 line-clamp-3 h-15 text-justify text-sm text-balance text-gray-500"
                         >
                             {{ construction.address }}
                         </p>
-
-                        <div
-                            class="absolute top-full left-full z-1 table size-7 -translate-full rounded-tl-4xl bg-amber-600 transition-all duration-400 group-hover:size-full group-hover:rounded-none"
-                        ></div>
-
-                        <ArrowUpRight
-                            :stroke-width="1.6"
-                            :size="24"
-                            class="absolute top-full left-full z-1 table -translate-full stroke-white drop-shadow-sm drop-shadow-black/20"
-                        />
                     </div>
                 </RouterLink>
             </li>

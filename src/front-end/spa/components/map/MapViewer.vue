@@ -11,7 +11,7 @@
         />
 
         <div class="max-h-content min-h-content relative h-full pt-px">
-            <div class="absolute top-0 left-0 z-10 m-2 w-full max-w-46">
+            <div class="absolute top-0 left-0 z-10 mt-2.5 ml-2 w-full max-w-46">
                 <SelectField
                     @value="(v) => (selectedFloor = v)"
                     inputName="floor"
@@ -26,7 +26,10 @@
                     <div ref="container" class="size-full"></div>
 
                     <div
-                        class="absolute top-0 right-0 bottom-0 left-0 inset-shadow-sm inset-shadow-black/30"
+                        class="absolute top-0 right-0 bottom-0 left-0"
+                        :class="{
+                            'inset-shadow-sm inset-shadow-black/30': isMapReady,
+                        }"
                         style="pointer-events: none"
                     ></div>
 
@@ -39,10 +42,11 @@
 
                 <aside
                     class="flex h-full w-full max-w-56 flex-col overflow-hidden border-l border-black/10 bg-white"
+                    :class="{ invisible: !isMapReady }"
                 >
                     <template v-if="isMapReady && viewerCanvas">
                         <div
-                            class="flex h-12 items-center justify-center border-b border-slate-200"
+                            class="flex h-12 shrink-0 items-center justify-center border-b border-slate-200"
                         >
                             <h2 class="px-4 text-lg">Cômodos</h2>
                         </div>

@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
-import { MenuContent } from '@/types/components/menu'
+import { Content } from '@/types/content'
 
 const AsyncEmplyeeMenu = defineAsyncComponent(
     () => import('@/components/menu/content/EmployeeMenu.vue'),
@@ -22,7 +22,7 @@ const AsyncEmplyeeMenu = defineAsyncComponent(
 const route = useRoute()
 
 const menuComponent = computed(() => {
-    if (route.meta.menuContent === MenuContent.Employee) {
+    if (route.meta.content === Content.Employee) {
         return AsyncEmplyeeMenu
     }
 

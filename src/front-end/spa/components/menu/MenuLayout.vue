@@ -1,14 +1,14 @@
 <template>
     <header
         aria-label="Menu principal"
-        class="menu-height sticky top-0 right-0 z-60 w-full border-b border-black/5 bg-white shadow shadow-black/20 transition-all duration-600 ease-in-out hover:shadow-md"
+        class="menu-height relative top-0 z-60 flex w-full flex-row items-center border-b border-black/5 bg-white shadow shadow-black/20 transition-all duration-300 ease-in-out hover:shadow-md"
     >
         <slot name="bar"></slot>
 
         <button
             @click="toggle"
             type="button"
-            class="absolute top-0 right-0 z-60 table h-full cursor-pointer"
+            class="relative z-60 ml-auto table h-full cursor-pointer"
         >
             <svg
                 viewBox="0 0 32 32"
@@ -48,7 +48,7 @@
             <div
                 ref="container"
                 @click="handleContainer"
-                class="hidden flex-1 flex-col items-center justify-center overflow-hidden bg-black/20 backdrop-blur-xs transition-all delay-200 duration-1000 sm:flex"
+                class="hidden flex-1 flex-col items-center justify-center overflow-hidden bg-black/20 backdrop-blur-xs transition-all duration-600 sm:flex"
                 :class="[isOpen ? 'opacity-100' : 'opacity-0']"
             ></div>
 

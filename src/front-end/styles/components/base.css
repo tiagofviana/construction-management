@@ -35,7 +35,6 @@ details {
     }
 }
 
-/* Estilo para navegadores modernos que suportam animação nativa do details */
 ::details-content {
     opacity: 0;
     block-size: 0;

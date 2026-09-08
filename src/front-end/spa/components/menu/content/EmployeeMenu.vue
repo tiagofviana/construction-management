@@ -1,5 +1,9 @@
 <template>
     <MenuLayout>
+        <template #bar>
+            <EmployeeBreadcrumbs />
+        </template>
+
         <template #nav>
             <p
                 v-if="info"
@@ -31,6 +35,7 @@ import { House, LogOut } from '@lucide/vue'
 import MenuLayout from '@/components/menu/MenuLayout.vue'
 import MenuItem from '@/components/menu/MenuItem.vue'
 import { accountStore, type AccountInfo } from '@/stores/account'
+import EmployeeBreadcrumbs from './EmployeeBreadcrumbs.vue'
 
 const account = accountStore()
 const info = ref<AccountInfo | null>()
