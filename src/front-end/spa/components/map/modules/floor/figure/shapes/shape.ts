@@ -67,8 +67,10 @@ export class Shape {
         })
 
         this.group.on('click', () => {
-            // this.rotationHandler.draw(this)
-            // this.rotationHandler.moveToTop()
+            if (tool.selected !== 'select') return
+
+            this.rotationHandler.draw(this)
+            this.rotationHandler.moveToTop()
             this.group.moveToTop()
         })
 
@@ -219,7 +221,11 @@ export class Shape {
     }
 
     public getDimentions(): IRect {
-        const rect = this.group.getClientRect()
+        const rect = this.group.getClientRect({
+            skipStroke: true,
+            skipShadow: true,
+            skipTransform: true,
+        })
         const position = this.group.getPosition()
 
         return {

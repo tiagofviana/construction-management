@@ -147,6 +147,7 @@ export class RotationHandler {
     }
 
     private normalizeAngle(angle: number): number {
+        // Ensure that the angle is between 0 and 360
         return ((angle % 360) + 360) % 360
     }
 
