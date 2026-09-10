@@ -6,83 +6,11 @@ from django.db.models import Count, QuerySet, F
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from apps.users.models import User
-from apps.constructions import forms as constructions_forms
-from apps.constructions import models as constructions_models
+from apps.maps import forms as maps_forms
+from apps.business import models as business_models
+from apps.maps import models as maps_models
 from apps.api import responses
 from .. import mixins
-
-
-class ConstructionsListView(mixins.AccountVerificationMixin, View):
-    http_method_names = ["get"]
-
-    def get(self, *args, **kwargs) -> http.JsonResponse:
-        data = self.get_contructions()
-        return responses.Success(data, safe=False)
-
-    def get_queryset(self) -> QuerySet[constructions_models.Employee]:
-        user: User = self.request.user
-        return constructions_models.Employee.objects.filter(user=user).select_related(
-            "construction"
-        )
-
-    def get_contructions(self) -> list:
-        employees = self.get_queryset()
-        data = list()
-
-        for item in employees:
-            construction = item.construction
-            photo_url = ""
-
-            if construction.photo:
-                photo_url = f"/media/{construction.photo}"
-
-            data.append(
-                {
-                    "employeeId": item.id,
-                    "name": construction.name,
-                    "address": construction.address,
-                    "photoUrl": photo_url,
-                }
-            )
-
-        return data
-
-
-class DashboardDataView(
-    mixins.AccountVerificationMixin, mixins.EmployeePermissionMixin, View
-):
-    http_method_names = ["get"]
-
-    def get(self, *args, **kwargs) -> http.JsonResponse:
-        data = {
-            "construction": self.construction_data(),
-            "atlas": self.atlas_data(),
-        }
-
-        return responses.Success(data, safe=False)
-
-    def construction_data(self) -> dict:
-        construction = self.get_employee_queryset().construction
-        photo_url = ""
-
-        if construction.photo:
-            photo_url = f"/media/{construction.photo}"
-
-        return {
-            "name": construction.name,
-            "address": construction.address,
-            "photoUrl": photo_url,
-        }
-
-    def atlas_data(self) -> list:
-        construction = self.get_employee_queryset().construction
-        result = (
-            constructions_models.Floor.objects.filter(construction=construction)
-            .annotate(roomCount=Count("room"))
-            .values("name", "roomCount")
-            .order_by("order")
-        )
-        return list(result)
 
 
 class FloorListView(
@@ -96,12 +24,12 @@ class FloorListView(
         data = self.get_floors()
         return responses.Success(data, safe=False)
 
-    def get_floor_queryset(self) -> QuerySet[constructions_models.Floor]:
+    def get_floor_queryset(self) -> QuerySet[maps_models.Floor]:
         construction = self.get_employee_queryset().construction
 
-        return constructions_models.Floor.objects.filter(
-            construction=construction
-        ).order_by("order")
+        return maps_models.Floor.objects.filter(construction=construction).order_by(
+            "order"
+        )
 
     def get_floors(self) -> list:
         floors = self.get_floor_queryset().values("id", "name")
@@ -124,20 +52,18 @@ class FloorDataView(
 
     def get_floor_settings(self):
         floor_id = self.kwargs.get("floor_id", None)
-        return constructions_models.Floor.objects.values("width", "height").get(
-            id=floor_id
-        )
+        return maps_models.Floor.objects.values("width", "height").get(id=floor_id)
 
-    def get_rooms_queryset(self) -> QuerySet[constructions_models.Room]:
+    def get_rooms_queryset(self) -> QuerySet[maps_models.Room]:
         construction = self.get_employee_queryset().construction
         floor_id = self.kwargs.get("floor_id", None)
-        return constructions_models.Room.objects.filter(
+        return maps_models.Room.objects.filter(
             floor__construction=construction, floor=floor_id
         )
 
     def is_valid(self) -> bool:
         floor_id = self.kwargs.get("floor_id", None)
-        return constructions_models.Floor.objects.filter(id=floor_id).exists()
+        return maps_models.Floor.objects.filter(id=floor_id).exists()
 
     def get_rooms(self) -> list:
         data = (
@@ -170,7 +96,7 @@ class UpdateFloorFormView(
     FormView,
 ):
     http_method_names = ["post"]
-    form_class = constructions_forms.UpdateFloorForm
+    form_class = maps_forms.UpdateFloorForm
 
     def post(self, request: http.HttpRequest, *args, **kwargs):
         self.floor_id = kwargs.get("floor_id", None)
@@ -183,15 +109,11 @@ class UpdateFloorFormView(
         kwargs["floor_id"] = self.floor_id
         return kwargs
 
-    def form_valid(
-        self, form: constructions_forms.UpdateFloorForm
-    ) -> http.JsonResponse:
+    def form_valid(self, form: maps_forms.UpdateFloorForm) -> http.JsonResponse:
         form.update()
         return responses.Success(safe=False)
 
-    def form_invalid(
-        self, form: constructions_forms.UpdateFloorForm
-    ) -> http.JsonResponse:
+    def form_invalid(self, form: maps_forms.UpdateFloorForm) -> http.JsonResponse:
         return responses.Error(form.errors)
 
 
@@ -200,7 +122,7 @@ class RoomCreateView(
     mixins.EmployeePermissionMixin,
     CreateView,
 ):
-    model = constructions_models.Room
+    model = maps_models.Room
     fields = [
         "floor",
         "svg_path",
@@ -215,7 +137,7 @@ class RoomCreateView(
         construction = self.get_employee_queryset().construction
         floor_id = request.POST.get("floor", None)
 
-        has_permission = constructions_models.Floor.objects.filter(
+        has_permission = maps_models.Floor.objects.filter(
             construction=construction, id=floor_id
         ).exists()
 
@@ -250,7 +172,7 @@ class RoomUpdateView(
     mixins.EmployeePermissionMixin,
     UpdateView,
 ):
-    model = constructions_models.Room
+    model = maps_models.Room
     pk_url_kwarg = "room_id"
     fields = [
         "svg_path",
@@ -263,9 +185,7 @@ class RoomUpdateView(
 
     def get_queryset(self):
         construction = self.get_employee_queryset().construction
-        return constructions_models.Room.objects.filter(
-            floor__construction=construction
-        )
+        return maps_models.Room.objects.filter(floor__construction=construction)
 
     def form_invalid(self, form):
         return responses.Error(form.errors)

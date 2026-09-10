@@ -1,5 +1,4 @@
 import logging
-
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms.models import fields_for_model
