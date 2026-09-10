@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import AccessMixin
 from django.conf import settings
 from django.db.models import QuerySet
 from apps.users.models import User
-from apps.constructions import models as constructions_models
+from apps.business import models as business_models
 from . import responses
 
 
@@ -65,9 +65,9 @@ class EmployeePermissionMixin(AccessMixin):
 
         return False
 
-    def get_employee_queryset(self) -> constructions_models.Employee:
+    def get_employee_queryset(self) -> business_models.Employee:
         return (
-            constructions_models.Employee.objects.select_related("construction")
+            business_models.Employee.objects.select_related("construction")
             .filter(id=self.employee_id, user=self.request.user)
             .first()
         )

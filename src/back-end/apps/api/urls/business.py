@@ -6,5 +6,6 @@ business_patterns = [
 ]
 
 urlpatterns = [
+    path("constructions-list", business.ConstructionsListView.as_view()),
     path("<int:employee_id>/", include(business_patterns)),
 ]

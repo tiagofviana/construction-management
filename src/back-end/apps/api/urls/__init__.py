@@ -1,10 +1,11 @@
 from django.urls import path, re_path, include
 from apps.api.responses import NotFound
-from . import account, employee
+from . import account, business, maps
 
 urlpatterns = [
     path("account/", include(account)),
-    path("employee/", include(employee)),
+    path("", include(business)),
+    path("employee/<int:employee_id>/", include(maps)),
 ]
 
 urlpatterns.append(

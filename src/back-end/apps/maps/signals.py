@@ -1,6 +1,6 @@
 from django.db.models import signals
 from django.dispatch import receiver
-from apps.constructions import models
+from apps.business import models
 from apps.core import utils as core_utils
 
 
