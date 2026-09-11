@@ -1,7 +1,5 @@
-from django.core.cache import cache
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 from django.core.validators import MinValueValidator
 from svgpathtools import parse_path
 from apps.core import models as core_models
@@ -12,6 +10,11 @@ User = get_user_model()
 
 
 class Floor(models.Model):
+    construction_permissions = [
+        ("can_view_map_floor", "Pode visualizar os andares do mapa."),
+        ("can_edit_map_floor", "Pode editar os andares do mapa."),
+    ]
+
     id = models.AutoField(
         auto_created=True,
         primary_key=True,
@@ -53,11 +56,6 @@ class Floor(models.Model):
         db_index=True,
     )
 
-    construction_permissions = [
-        ("can_view_map_floor", "Pode visualizar os andares do mapa."),
-        ("can_edit_map_floor", "Pode editar os andares do mapa."),
-    ]
-
     class Meta:
         managed = True
         constraints = [
@@ -73,6 +71,10 @@ class Floor(models.Model):
 
 
 class Room(models.Model):
+    construction_permissions = [
+        ("can_edit_map_room", "Pode editar os cômodos do mapa."),
+    ]
+
     id = models.UUIDField(
         primary_key=True,
         unique=True,
@@ -171,10 +173,6 @@ class Room(models.Model):
 
         viewbox = f"{xmin:.2f} {ymin:.2f} {width:.2f} {height:.2f}"
         self.svg_view_box = viewbox
-
-    construction_permissions = [
-        ("can_edit_map_room", "Pode editar os cômodos do mapa."),
-    ]
 
     class Meta:
         managed = True
