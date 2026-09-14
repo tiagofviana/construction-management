@@ -27,13 +27,13 @@
                     </div>
 
                     <h2 class="line-clamp-1 text-xl font-bold text-neutral-900">
-                        {{ title }}
+                        {{ props.title }}
                     </h2>
                 </div>
 
                 <hr v-if="title" class="border-gray-100" />
 
-                <p class="px-5 py-6">{{ message }}</p>
+                <p class="px-5 py-6">{{ props.message }}</p>
 
                 <hr class="border-gray-100" />
 
@@ -43,11 +43,11 @@
                         class="btn btn-white"
                         @click="handleCancel"
                     >
-                        {{ cancelLabel }}
+                        {{ props.cancelLabel }}
                     </button>
 
                     <button class="btn" :class="confirmBtnClass" @click="handleOk()">
-                        {{ confirmLabel }}
+                        {{ props.okLabel }}
                     </button>
                 </div>
             </div>
@@ -76,7 +76,7 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    confirmLabel: {
+    okLabel: {
         type: String,
         default: 'Confirmar',
     },

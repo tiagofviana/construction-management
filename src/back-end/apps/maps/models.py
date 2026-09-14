@@ -11,8 +11,8 @@ User = get_user_model()
 
 class Floor(models.Model):
     construction_permissions = [
-        ("can_view_map_floor", "Pode visualizar os andares do mapa."),
-        ("can_edit_map_floor", "Pode editar os andares do mapa."),
+        ("can_view_floor", "Pode visualizar os andares do mapa."),
+        ("can_edit_floor", "Pode editar os andares do mapa."),
     ]
 
     id = models.AutoField(
@@ -72,14 +72,15 @@ class Floor(models.Model):
 
 class Room(models.Model):
     construction_permissions = [
-        ("can_edit_map_room", "Pode editar os cômodos do mapa."),
+        ("can_edit_room", "Pode editar os cômodos do mapa."),
+        ("can_add_room", "Pode criar cômodos do mapa."),
     ]
 
     id = models.UUIDField(
         primary_key=True,
         unique=True,
         verbose_name="UUID",
-        default=core_models.UniqueUUIDGenerator("constructions", "Room"),
+        default=core_models.UniqueUUIDGenerator("maps", "Room"),
     )
 
     floor = models.ForeignKey(

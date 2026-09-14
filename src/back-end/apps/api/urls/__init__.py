@@ -4,7 +4,7 @@ from . import account, business, maps
 
 urlpatterns = [
     path("account/", include(account)),
-    path("", include(business)),
+    path("employee/", include(business)),
     path("employee/<int:employee_id>/", include(maps)),
 ]
 

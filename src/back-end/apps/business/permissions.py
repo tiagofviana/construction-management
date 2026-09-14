@@ -1,4 +1,5 @@
 import logging
+from django.core.cache import cache
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.db.models import Q, QuerySet
@@ -20,9 +21,7 @@ class PermissionsUpdater:
                 )
 
             for codename, name in perms:
-                self.permissions.append(
-                    {"codename": codename, "name": name, "content": content}
-                )
+                self.permissions.append({"codename": codename, "name": name})
 
         self._check_repeated()
 
@@ -74,19 +73,17 @@ class PermissionsUpdater:
                 to_create, ignore_conflicts=False
             )
 
-    def _to_create(self, construction: models.Construction) -> list:
+    def _to_create_codename(self, construction: models.Construction) -> list:
+        # Creates permission where codename doest no exists
         to_create = []
-
         perms_keys = set(
             models.ConstructionPermission.objects.filter(
                 construction=construction
-            ).values_list("codename")
+            ).values_list("codename", flat=True)
         )
 
         for item in self.permissions:
-            key = (item["codename"], item["content"].id)
-
-            if key not in perms_keys:
+            if item["codename"] not in perms_keys:
                 logging.info(
                     f'Preparing to create the construction permission  "{item["codename"]}" of {construction.name} #{construction.id}.'
                 )
@@ -101,13 +98,37 @@ class PermissionsUpdater:
 
         return to_create
 
-    def _to_delete_queryset(self) -> QuerySet:
+    def _to_update_name(self, construction: models.Construction) -> list:
+        # Updates permission name
+        to_update = []
+        perms = models.ConstructionPermission.objects.filter(construction=construction)
+
+        for item in perms:
+            permission = next(
+                (p for p in self.permissions if p["codename"] == item.codename), None
+            )
+
+            if permission == None:
+                raise ValueError(
+                    f'Could not find permission "{item.codename}" in PermissionUpdater'
+                )
+
+            if permission["name"] == item.name:
+                continue
+
+            logging.info(
+                f'Preparing to update the construction permission name "{item["codename"]}" of {construction.name} #{construction.id}. Current: "{item['name']}" to "{permission['name']}"'
+            )
+
+            item.name = permission["name"]
+            to_update.append(item)
+
+        return to_update
+
+    def _to_delete(self) -> QuerySet:
         q_objects = Q()
         for item in self.permissions:
-            q_objects |= Q(
-                codename=item["codename"],
-                name=item["name"],
-            )
+            q_objects |= Q(codename=item["codename"])
 
         to_delete = models.ConstructionPermission.objects.exclude(q_objects)
 
@@ -120,20 +141,29 @@ class PermissionsUpdater:
 
     def update(self):
         all_constructions = models.Construction.objects.all()
-        to_create = []
-
-        for construction in all_constructions:
-            to_create += self._to_create(construction)
-
         with transaction.atomic():
-            if to_create:
-                models.ConstructionPermission.objects.bulk_create(
-                    to_create, ignore_conflicts=False
-                )
+            for construction in all_constructions:
+                # Create the new one
+                to_create = self._to_create_codename(construction)
+                if to_create:
+                    models.ConstructionPermission.objects.bulk_create(
+                        to_create, ignore_conflicts=False
+                    )
 
                 logging.info(f"Created {len(to_create)} construction permissions")
 
-            to_delete = self._to_delete_queryset()
-            if to_delete:
-                logging.info(f"Removed {len(to_delete)} construction permissions")
-                to_delete.delete()
+                # Removes
+                to_delete = self._to_delete()
+                to_delete_len = len(to_delete)
+                if to_delete:
+                    to_delete.delete()
+
+                logging.info(f"Removed {to_delete_len} construction permissions")
+
+                to_update = self._to_update_name(construction)
+                if to_update:
+                    models.ConstructionPermission.objects.bulk_update(
+                        to_update, ignore_conflicts=False
+                    )
+
+                logging.info(f"Updated {len(to_update)} construction permissions")

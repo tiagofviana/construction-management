@@ -62,6 +62,7 @@
                         </div>
 
                         <div
+                            v-if="permissions.hasPermission(props.employeeId, 'can_edit_floor')"
                             class="mt-auto flex shrink-0 flex-col gap-2 border-t border-black/10 p-4"
                         >
                             <RouterLink
@@ -74,8 +75,8 @@
                                 }"
                                 class="btn btn-gray"
                             >
-                                Editar</RouterLink
-                            >
+                                Editar
+                            </RouterLink>
                         </div>
                     </template>
                 </aside>
@@ -87,6 +88,7 @@
 <script setup lang="ts">
 import {
     onMounted,
+    onBeforeMount,
     onBeforeUnmount,
     ref,
     watch,
@@ -97,6 +99,7 @@ import {
 } from 'vue'
 import axios from 'axios'
 import { Map } from '@lucide/vue'
+import { permissionsStore } from '@/stores/employee/permissions'
 import RoomList from '@/components/map/modules/viewer/RoomList.vue'
 import SelectField, { Option } from '@/components/form/SelectField.vue'
 import type { ModalType } from '@/components/alerts/ModalAlert.vue'
@@ -118,6 +121,7 @@ const props = defineProps({
     },
 })
 
+const permissions = permissionsStore()
 const selectOptions = ref<Array<Option>>([])
 const selectedFloor = ref<string>('')
 const rooms = ref<Array<Room>>([])
@@ -125,6 +129,7 @@ const isLoadingRooms = ref<boolean>(false)
 const container = useTemplateRef('container')
 const roomList = useTemplateRef('room-list')
 const viewerCanvas = shallowRef<null | ViewerCanvas>(null)
+const hasEditPermission = ref<boolean>(false)
 
 const isMapReady = computed(() => {
     if (selectedFloor.value === '') {
@@ -145,7 +150,11 @@ const modalAlert = ref<{ message: string; key: number; title: string; type: Moda
     type: 'success',
 })
 
-onMounted(async () => {
+onBeforeMount(() => {
+    permissions.fetchPermissions(props.employeeId)
+})
+
+onMounted(() => {
     const elm = container.value as HTMLDivElement
     const vc = new ViewerCanvas(elm)
     vc.setShapeDoubleClick((value) => {
@@ -182,11 +191,11 @@ function loadRooms() {
         .then((response) => {
             const data = response.data
 
+            hasEditPermission.value = data.hasEditPermission
             rooms.value = data.rooms as Array<Room>
 
             viewerCanvas.value?.setMapSize(data.floorSettings)
             viewerCanvas.value?.setRooms(rooms.value)
-
             viewerCanvas.value?.eventsHandler.zoom.reset()
             viewerCanvas.value?.eventsHandler.pan.centralize()
         })

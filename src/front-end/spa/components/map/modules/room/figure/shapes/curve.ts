@@ -22,8 +22,8 @@ export class CurveControllers extends Figure {
             const previous = path[index - 1]
             if (!previous) return
 
-            this.addFirstControl(previous, item)
-            this.addSecondControl(item)
+            this.createFirstController(previous, item)
+            this.createSecondController(item)
         })
     }
 
@@ -32,12 +32,12 @@ export class CurveControllers extends Figure {
         this.group.listening(false)
     }
 
-    private addFirstControl(previous: PathCommand, current: CurveCmd): void {
+    private createFirstController(previous: PathCommand, current: CurveCmd): void {
         const linePoint = { x: previous.x, y: previous.y }
         const endPoint = { x: current.x1, y: current.y1 }
 
-        const line = this.createControlLine(linePoint, endPoint)
-        const circle = this.createControlCircle(endPoint)
+        const line = this.createLine(linePoint, endPoint)
+        const circle = this.createCircle(endPoint)
 
         circle.on('dragmove', () => {
             const point = this.snapPoint({
@@ -62,12 +62,12 @@ export class CurveControllers extends Figure {
         this.group.add(line, circle)
     }
 
-    private addSecondControl(current: CurveCmd): void {
+    private createSecondController(current: CurveCmd): void {
         const linePoint = { x: current.x, y: current.y }
         const endPoint = { x: current.x2, y: current.y2 }
 
-        const line = this.createControlLine(linePoint, endPoint)
-        const circle = this.createControlCircle(endPoint)
+        const line = this.createLine(linePoint, endPoint)
+        const circle = this.createCircle(endPoint)
 
         circle.on('dragmove', () => {
             const point = this.snapPoint({
@@ -84,10 +84,15 @@ export class CurveControllers extends Figure {
             this.onControllerChange()
         })
 
+        circle.on('dragend', () => {
+            const path = svgPath.getPath()
+            svgPath.onPathChange(path)
+        })
+
         this.group.add(line, circle)
     }
 
-    private createControlLine(from: Point, to: Point): Line {
+    private createLine(from: Point, to: Point): Line {
         return new Konva.Line({
             points: [from.x, from.y, to.x, to.y],
             stroke: '#666',
@@ -96,7 +101,7 @@ export class CurveControllers extends Figure {
         })
     }
 
-    private createControlCircle(point: Point): Circle {
+    private createCircle(point: Point): Circle {
         return new Konva.Circle({
             x: point.x,
             y: point.y,

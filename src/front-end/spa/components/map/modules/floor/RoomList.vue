@@ -72,7 +72,12 @@
                     </p>
                 </details>
 
-                <button type="button" class="btn btn-gray mt-2 w-full" @click="setRoomEditor(item)">
+                <button
+                    v-if="permissions.hasPermission(props.employeeId, 'can_edit_room')"
+                    type="button"
+                    class="btn btn-gray mt-2 w-full"
+                    @click="setRoomEditor(item)"
+                >
                     Editar
                 </button>
 
@@ -118,9 +123,11 @@ import {
     computed,
     useTemplateRef,
     onMounted,
+    onBeforeMount,
     onBeforeUnmount,
 } from 'vue'
 import { MoveRight, MoveLeft } from '@lucide/vue'
+import { permissionsStore } from '@/stores/employee/permissions'
 import { computeCentroid } from '../utils'
 import { Room, Point } from '../types'
 
@@ -138,6 +145,10 @@ const props = defineProps({
         type: Array<Room>,
         required: true,
     },
+    employeeId: {
+        type: Number,
+        required: true,
+    },
 })
 
 const roomsCentroid = computed(() => {
@@ -148,13 +159,18 @@ const roomsCentroid = computed(() => {
     return centroids
 })
 
+const permissions = permissionsStore()
 const roomsList = useTemplateRef('rooms-list')
 const roomEditor = ref<{ key: number; room: Room | undefined }>({
     key: 0,
     room: undefined,
 })
 
-onMounted(() => {
+onBeforeMount(() => {
+    permissions.fetchPermissions(props.employeeId)
+})
+
+onMounted(async () => {
     roomsList.value?.addEventListener('wheel', handleWheel, { passive: false })
 })
 

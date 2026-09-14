@@ -1,7 +1,7 @@
 <template>
     <component v-if="route.meta.renderMenu !== false" :is="menuComponent" />
 
-    <main class="-mt-px bg-gray-100 pt-px" :class="{ 'min-h-content': menuComponent !== null }">
+    <main class="-my-px bg-gray-100 py-px" :class="{ 'min-h-content': menuComponent !== null }">
         <RouterView v-slot="{ Component, route }">
             <Transition name="content" mode="out-in">
                 <component :is="Component" :key="route.path" />

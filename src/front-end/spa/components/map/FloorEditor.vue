@@ -176,6 +176,7 @@
                         <RoomList
                             ref="room-list"
                             :rooms="rooms"
+                            :employee-id="props.employeeId"
                             @editing-room="floorCanvas.setTool(null)"
                             @roomChanged="loadRooms()"
                         />
@@ -193,6 +194,7 @@
                             </button>
 
                             <button
+                                v-if="permissions.hasPermission(props.employeeId, 'can_add_room')"
                                 type="button"
                                 class="btn btn-green flex items-center"
                                 @click="createRoom()"
@@ -202,7 +204,10 @@
                             </button>
 
                             <button
-                                v-if="rooms.length > 0"
+                                v-if="
+                                    rooms.length > 0 &&
+                                    permissions.hasPermission(props.employeeId, 'can_edit_floor')
+                                "
                                 type="button"
                                 class="btn btn-blue flex items-center"
                                 @click="saveRooms()"
@@ -244,6 +249,7 @@ import {
     Magnet,
     Sparkle,
 } from '@lucide/vue'
+import { permissionsStore } from '@/stores/employee/permissions'
 import RoomList from '@/components/map/modules/floor/RoomList.vue'
 import CanvasFloorSize, { type Size } from '@/components/map/modules/floor/CanvasFloorSize.vue'
 import type { ModalType } from '@/components/alerts/ModalAlert.vue'
@@ -278,6 +284,8 @@ const props = defineProps({
         required: true,
     },
 })
+
+const permissions = permissionsStore()
 const rooms = ref<Array<Room>>([])
 const floorSettings = reactive({
     size: {
@@ -310,6 +318,7 @@ const roomEditorKey = ref<number>(0)
 onBeforeMount(() => {
     provide('floorId', props.floorId)
     provide('employeeId', props.employeeId)
+    permissions.fetchPermissions(props.employeeId)
 })
 
 onMounted(async () => {

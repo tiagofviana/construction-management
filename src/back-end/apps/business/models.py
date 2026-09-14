@@ -207,7 +207,9 @@ class Employee(models.Model):
         if self.is_admin:
             return True
 
-        return codename in self.get_all_permissions(use_cache=use_cache)
+        permissions = self.get_all_permissions(use_cache=use_cache)
+        exists = any(item["codename"] == codename for item in permissions)
+        return exists
 
     def get_all_permissions(self, use_cache=True) -> list:
         key = self._get_cache_key()
@@ -234,5 +236,5 @@ class Employee(models.Model):
         cache.set(key, tuple(unique), 10 * 60)  # 10 minutes
         return unique
 
-    def delete_perm_cache(self):
+    def delete_perms_cache(self):
         cache.delete(self._get_cache_key())

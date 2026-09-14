@@ -22,9 +22,9 @@ class ConstructionsListView(mixins.AccountVerificationMixin, View):
 
     def get_queryset(self) -> QuerySet[business_models.Employee]:
         user: User = self.request.user
-        return business_models.Employee.objects.filter(user=user).select_related(
-            "construction"
-        )
+        return business_models.Employee.objects.filter(
+            user=user, is_active=True
+        ).select_related("construction")
 
     def get_contructions(self) -> list:
         employees = self.get_queryset()
@@ -63,7 +63,8 @@ class DashboardDataView(
         return responses.Success(data, safe=False)
 
     def construction_data(self) -> dict:
-        construction = self.get_employee_queryset().construction
+        employee = self.get_employee_queryset()
+        construction = employee.construction
         photo_url = ""
 
         if construction.photo:
@@ -76,11 +77,39 @@ class DashboardDataView(
         }
 
     def atlas_data(self) -> list:
-        construction = self.get_employee_queryset().construction
-        result = (
-            maps_models.Floor.objects.filter(construction=construction)
-            .annotate(roomCount=Count("room"))
-            .values("name", "roomCount")
-            .order_by("order")
-        )
-        return list(result)
+        employee = self.get_employee_queryset()
+        construction = employee.construction
+        has_permission = employee.has_permission("can_view_floor", use_cache=False)
+        result = []
+
+        if has_permission:
+            result = list(
+                maps_models.Floor.objects.filter(construction=construction)
+                .annotate(roomCount=Count("room"))
+                .values("name", "roomCount")
+                .order_by("order")
+            )
+
+        return result
+
+
+class PermissionsDataView(
+    mixins.AccountVerificationMixin, mixins.EmployeePermissionMixin, View
+):
+    http_method_names = ["get"]
+
+    def get(self, *args, **kwargs) -> http.JsonResponse:
+        employee = self.get_employee_queryset()
+        data = {"permissions": []}
+
+        if not employee.is_admin:
+            data["permissions"] = employee.get_all_permissions()
+        else:
+            data["permissions"] = [
+                {
+                    "codename": "is_admin",
+                    "name": "É administrador",
+                }
+            ]
+
+        return responses.Success(data, safe=False)

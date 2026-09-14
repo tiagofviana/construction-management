@@ -2,7 +2,7 @@
     <section class="mx-auto my-12 w-11/12">
         <div
             v-if="dashboardData"
-            class="mx-auto flex max-w-2xl flex-col items-stretch overflow-hidden rounded-lg shadow shadow-black/20 sm:flex-row"
+            class="mx-auto flex max-w-3xl flex-col items-stretch overflow-hidden rounded-lg shadow shadow-black/20 sm:flex-row"
         >
             <div
                 class="flex aspect-video h-40 w-full shrink-0 items-center justify-center overflow-hidden border-black/20 bg-gray-50 sm:h-auto sm:max-w-72 sm:border-r"
@@ -22,7 +22,9 @@
                     {{ dashboardData.construction.name }}
                 </h1>
 
-                <p class="line-clamp-3">{{ dashboardData.construction.address }}</p>
+                <p class="line-clamp-3 text-center text-pretty">
+                    {{ dashboardData.construction.address }}
+                </p>
 
                 <RouterLink
                     :to="{
@@ -37,19 +39,27 @@
 
         <ul class="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-4 sm:auto-rows-fr md:grid-cols-2">
             <li
+                v-if="permissions.hasPermission(employeeId, 'can_view_floor')"
                 class="flex min-h-100 flex-col justify-between rounded-lg border border-black/10 bg-white px-6 py-4"
             >
-                <h2 class="px-4 py-1.5 text-center text-2xl font-bold text-pretty">
-                    Quantidade de Cômodos por Andar
+                <h2
+                    class="px-4 py-1.5 text-center text-2xl font-bold text-pretty"
+                    :class="{
+                        'animate-pulse rounded-lg bg-gray-300 duration-100':
+                            dashboardData === undefined,
+                    }"
+                >
+                    <span :class="{ invisible: dashboardData === undefined }">
+                        Quantidade de Cômodos por Andar
+                    </span>
                 </h2>
 
                 <div
-                    v-if="!isChartJsReady || !(mapChartData.datasets[0].data.length > 0)"
-                    class="mt-4 flex-1 animate-pulse rounded-lg bg-gray-200 duration-200"
+                    v-if="!isChartJsReady || dashboardData === undefined"
+                    class="mt-4 flex-1 animate-pulse rounded-lg bg-gray-300 duration-100"
                 ></div>
-
                 <Bar
-                    v-if="isChartJsReady && mapChartData.datasets[0].data.length > 0"
+                    v-else
                     :options="{
                         responsive: true,
                         scales: {
@@ -66,6 +76,7 @@
                                 },
                             },
                             y: {
+                                suggestedMax: 4,
                                 beginAtZero: true,
                                 border: {
                                     display: false,
@@ -75,6 +86,7 @@
                                     drawTicks: false,
                                 },
                                 ticks: {
+                                    stepSize: 1,
                                     color: '#9CA3AF',
                                     padding: 10,
                                     font: {
@@ -120,6 +132,7 @@
 
                 <div class="flex flex-row items-center justify-center gap-2">
                     <RouterLink
+                        v-if="permissions.hasPermission(employeeId, 'can_view_floor')"
                         :to="{
                             name: 'employee.contruction-map',
                             params: { employeeId: employeeId },
@@ -143,13 +156,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeMount } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { ImageOff } from '@lucide/vue'
 import { Bar } from 'vue-chartjs'
 import { ensureChartJsReady } from '@/plugins/chartjsSetup'
 import { breadcrumbsStore } from '@/stores/employee/breadcrumbs'
+import { permissionsStore } from '@/stores/employee/permissions'
 
 interface DashboardData {
     construction: {
@@ -165,10 +179,15 @@ interface DashboardData {
 
 const route = useRoute()
 const breadcrumbs = breadcrumbsStore()
-const employeeId = route.params.employeeId
+const permissions = permissionsStore()
+const employeeId = Number(route.params.employeeId)
 const isLoadingData = ref<boolean>(true)
 const isChartJsReady = ref<boolean>(false)
 const dashboardData = ref<DashboardData>()
+
+onBeforeMount(() => {
+    permissions.fetchPermissions(employeeId)
+})
 
 onMounted(async () => {
     ensureChartJsReady().then(() => {

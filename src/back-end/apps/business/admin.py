@@ -34,6 +34,10 @@ class EmployeeAdmin(admin.ModelAdmin):
         ),
     )
 
+    def save_model(self, request, obj: models.Employee, form, change):
+        super().save_model(request, obj, form, change)
+        obj.delete_perms_cache()
+
 
 @admin.register(models.ConstructionPermission)
 class ConstructionPermissionAdmin(admin.ModelAdmin):

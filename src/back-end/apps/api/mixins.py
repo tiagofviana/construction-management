@@ -68,7 +68,7 @@ class EmployeePermissionMixin(AccessMixin):
     def get_employee_queryset(self) -> business_models.Employee:
         return (
             business_models.Employee.objects.select_related("construction")
-            .filter(id=self.employee_id, user=self.request.user)
+            .filter(id=self.employee_id, user=self.request.user, is_active=True)
             .first()
         )
 

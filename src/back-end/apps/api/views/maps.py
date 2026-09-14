@@ -21,11 +21,25 @@ class FloorListView(
     http_method_names = ["get"]
 
     def get(self, *args, **kwargs) -> http.JsonResponse:
+        employee = self.get_employee_queryset()
+        if not employee.has_permission("can_view_floor"):
+            return responses.Forbidden(
+                request=self.request,
+                data={
+                    "detail": "O usuário não possui a permissão necessária.",
+                    "code": "can_not_view_map",
+                },
+            )
+
         data = self.get_floors()
         return responses.Success(data, safe=False)
 
+    def has_employee_permission(self):
+        return super().has_employee_permission()
+
     def get_floor_queryset(self) -> QuerySet[maps_models.Floor]:
-        construction = self.get_employee_queryset().construction
+        employee = self.get_employee_queryset()
+        construction = employee.construction
 
         return maps_models.Floor.objects.filter(construction=construction).order_by(
             "order"
@@ -44,10 +58,23 @@ class FloorDataView(
     http_method_names = ["get"]
 
     def get(self, *args, **kwargs) -> http.JsonResponse:
-        if not self.is_valid():
+        if not self.is_valid_room():
             return responses.NotFound()
 
-        data = {"rooms": self.get_rooms(), "floorSettings": self.get_floor_settings()}
+        employee = self.get_employee_queryset()
+        if not employee.has_permission("can_view_floor"):
+            return responses.Forbidden(
+                request=self.request,
+                data={
+                    "detail": "O usuário não possui a permissão necessária.",
+                    "code": "can_not_view_map",
+                },
+            )
+
+        data = {
+            "rooms": self.get_rooms(),
+            "floorSettings": self.get_floor_settings(),
+        }
         return responses.Success(data, safe=False)
 
     def get_floor_settings(self):
@@ -61,7 +88,7 @@ class FloorDataView(
             floor__construction=construction, floor=floor_id
         )
 
-    def is_valid(self) -> bool:
+    def is_valid_room(self) -> bool:
         floor_id = self.kwargs.get("floor_id", None)
         return maps_models.Floor.objects.filter(id=floor_id).exists()
 
@@ -100,7 +127,31 @@ class UpdateFloorFormView(
 
     def post(self, request: http.HttpRequest, *args, **kwargs):
         self.floor_id = kwargs.get("floor_id", None)
+
+        if not self.has_access():
+            return responses.Forbidden(
+                request=self.request,
+                data={
+                    "detail": "O usuário não possui a permissão necessária.",
+                    "code": "can_not_edit_map",
+                },
+            )
         return super().post(request, *args, **kwargs)
+
+    def has_access(self):
+        employee = self.get_employee_queryset()
+
+        exists = maps_models.Floor.objects.filter(
+            construction=employee.construction, id=self.floor_id
+        ).exists()
+
+        if not exists:
+            return False
+
+        if not employee.has_permission("can_edit_floor"):
+            return False
+
+        return True
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -134,23 +185,36 @@ class RoomCreateView(
     http_method_names = ["post"]
 
     def post(self, request, *args, **kwargs):
-        construction = self.get_employee_queryset().construction
-        floor_id = request.POST.get("floor", None)
+        self.floor_id = request.POST.get("floor", None)
 
-        has_permission = maps_models.Floor.objects.filter(
-            construction=construction, id=floor_id
-        ).exists()
-
-        if not has_permission:
-            return responses.Unauthorized(
-                request=request,
+        if not self.has_access():
+            return responses.Forbidden(
+                request=self.request,
                 data={
-                    "detail": "Esse funcionário não tem a permissão necessária.",
-                    "code": "access_denied",
+                    "detail": "O usuário não possui a permissão necessária.",
+                    "code": "can_not_edit_map",
                 },
             )
 
         return super().post(request, *args, **kwargs)
+
+    def has_access(self):
+        employee = self.get_employee_queryset()
+
+        if not self.floor_id:
+            return False
+
+        exists = maps_models.Floor.objects.filter(
+            construction=employee.construction, id=self.floor_id
+        ).exists()
+
+        if not exists:
+            return False
+
+        if not employee.has_permission("can_edit_floor"):
+            return False
+
+        return True
 
     def form_invalid(self, form):
         return responses.Error(form.errors)
@@ -183,15 +247,35 @@ class RoomUpdateView(
     ]
     http_method_names = ["post"]
 
+    def post(self, request, *args, **kwargs):
+        if not self.has_access():
+            return responses.Forbidden(
+                request=self.request,
+                data={
+                    "detail": "O usuário não possui a permissão necessária.",
+                    "code": "can_not_edit_room",
+                },
+            )
+
+        return super().post(request, *args, **kwargs)
+
     def get_queryset(self):
         construction = self.get_employee_queryset().construction
         return maps_models.Room.objects.filter(floor__construction=construction)
+
+    def has_access(self):
+        employee = self.get_employee_queryset()
+        if not employee.has_permission("can_edit_room"):
+            return False
+
+        return True
 
     def form_invalid(self, form):
         return responses.Error(form.errors)
 
     def form_valid(self, form):
-        self.object = form.save()
+        form.save()
+        print(form.cleaned_data)
         return responses.Success()
 
     def get_form(self, form_class=None):
