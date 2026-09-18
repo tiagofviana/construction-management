@@ -38,16 +38,21 @@ export const publicRoutes: RouteRecordRaw[] = [
                     return true
                 },
             },
-            // {
-            //     path: '/esqueceu-senha',
-            //     name: 'public.forgot-password',
-            //     component: () => import('@/views/public/ForgotPasswordView.vue'),
-            // },
-            // {
-            //     path: '/conta/criar',
-            //     name: 'public.account-create',
-            //     component: () => import('@/views/public/AccountCreateView.vue'),
-            // },
+            {
+                path: '/esqueceu-senha',
+                name: 'public.forgot-password',
+                component: () => import('@/views/public/ForgotPasswordView.vue'),
+            },
+            {
+                path: '/alterar-senha/:uid/:token',
+                name: 'public.change-password',
+                component: () => import('@/views/public/ResetPasswordView.vue'),
+            },
+            {
+                path: '/cadastro',
+                name: 'public.account-create',
+                component: () => import('@/views/public/CreateAccountView.vue'),
+            },
         ],
     },
 ]

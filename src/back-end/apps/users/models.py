@@ -100,7 +100,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def send_email(self, subject, html_message, fail_silently=False, from_email=None):
         logging.info(
-            f'Sending email to "{self.email}". Subject: "{subject}". Message: "{html_message}"'
+            f'Sending email to User #{self.id}. Subject: "{subject}". Message: "{html_message}"'
         )
 
         if from_email is None:

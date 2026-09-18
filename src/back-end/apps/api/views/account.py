@@ -1,17 +1,13 @@
 import logging, hashlib
 from django import http
-from django.conf import settings
+from django.core.cache import cache
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView as AuthLoginView
-from django.core.cache import cache
-from django.middleware.csrf import get_token
-from django.template import loader
 from django.views import View
 from django.views.generic.edit import CreateView, FormView
 from apps.users.models import User
-from apps.users import forms as users_form
+from apps.users import forms as users_form, validators as users_validators
 from apps.api import responses
-from .. import mixins
 
 
 def hash_user_email(user: User):
@@ -56,6 +52,41 @@ class ForgotPasswordFormView(FormView):
         return responses.Success()
 
     def form_invalid(self, form: users_form.ForgotPasswordForm):
+        return responses.Error(form.errors)
+
+
+class ValidatePasswordReset(View):
+    http_method_names = ["get"]
+
+    def get(self, *args, **kwargs) -> http.JsonResponse:
+        reset = users_validators.PasswordReset(self.request)
+        if not reset.is_valid():
+            return responses.NotFound()
+
+        data = {"firstName": reset.user.first_name}
+        return responses.Success(data, safe=False)
+
+
+class PasswordResetFormView(FormView):
+    http_method_names = ["post"]
+    form_class = users_form.PasswordResetForm
+
+    def dispatch(self, request: http.HttpRequest, *args, **kwargs):
+        self.passwordReset = users_validators.PasswordReset(request)
+
+        if not self.passwordReset.is_valid():
+            return responses.NotFound()
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form: users_form.PasswordResetForm):
+        user = self.passwordReset.user
+        key = users_validators.PasswordReset.get_cache_key(user)
+        cache.set(key=key, value=1, timeout=1)
+        form.save(user)
+        return responses.Success()
+
+    def form_invalid(self, form: users_form.PasswordResetForm):
         return responses.Error(form.errors)
 
 
@@ -147,15 +178,15 @@ class ForgotPasswordFormView(FormView):
 #         return responses.Success()
 
 
-# class UserCreateView(CreateView):
-#     form_class = users_form.CustomUserCreationForm
+class UserCreateView(CreateView):
+    form_class = users_form.CustomUserCreationForm
 
-#     def form_valid(self, form: users_form.CustomUserCreationForm):
-#         form.save()
-#         return responses.Created()
+    def form_valid(self, form: users_form.CustomUserCreationForm):
+        form.save()
+        return responses.Created()
 
-#     def form_invalid(self, form: users_form.CustomUserCreationForm):
-#         return responses.Error(form.errors)
+    def form_invalid(self, form: users_form.CustomUserCreationForm):
+        return responses.Error(form.errors)
 
 
 class AccountInfoView(View):

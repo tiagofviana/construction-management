@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.sites",
     "django.contrib.messages",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
@@ -37,6 +38,8 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = "users.User"
 
+SITE_ID = 1
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -46,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "apps.core.middlewares.rate_limit.RateLimitMiddleware",
 ]
 
 ROOT_URLCONF = "website.urls"
@@ -152,10 +156,13 @@ EMAIL_PORT = os.environ["EMAIL_PORT"]
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
 EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
-DEFAULT_FROM_EMAIL = "Geomarket <%s>" % os.environ["EMAIL_HOST_USER"]
+DEFAULT_FROM_EMAIL = "Website <%s>" % os.environ["EMAIL_HOST_USER"]
 EMAIL_SUPPORT = os.environ["EMAIL_SUPPORT"]
 
 
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 # A list of all the administrators who get code error notifications.
 ADMINS = getaddresses([os.environ.get("DJANGO_ADMINS", default=None)])
+
+# Password reset
+PASSWORD_RESET_TIMEOUT = 60 * 30  # 30 minutes

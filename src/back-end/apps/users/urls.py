@@ -5,9 +5,4 @@ app_name = "users"
 
 urlpatterns = [
     path("logout", views.LogoutView.as_view(), name="logout"),
-    path(
-        "alterar-senha/<str:uidb64>/<str:token>",
-        views.PasswordResetView.as_view(),
-        name="password-reset",
-    ),
 ]

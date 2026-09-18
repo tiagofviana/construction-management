@@ -2,11 +2,13 @@ import logging
 from django import forms, http
 from django.template import loader
 from django.core.cache import cache
+from django.conf import settings
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from . import validators
 from . import models
 
 
@@ -23,8 +25,6 @@ class UserAdminCreationForm(auth_forms.UserCreationForm):
 
 
 class CustomUserCreationForm(auth_forms.UserCreationForm):
-    email2 = forms.EmailField(required=True)
-
     class Meta(auth_forms.UserChangeForm.Meta):
         model = models.User
         fields = ("email", "first_name", "last_name")
@@ -42,20 +42,10 @@ class CustomUserCreationForm(auth_forms.UserCreationForm):
                 }
             )
 
-        email = cleaned_data.get("email")
-        email2 = cleaned_data.get("email2")
-        if email != email2:
-            raise forms.ValidationError(
-                {
-                    "email": 'Os campos "Email" e "Email novamente" são diferentes',
-                    "email2": 'Os campos "Email" e "Email novamente" são diferentes',
-                }
-            )
-
         return cleaned_data
 
     def save(self, commit=True) -> models.User:
-        user: models.User.User = super().save(commit=False)
+        user: models.User = super().save(commit=False)
         user.set_password(self.cleaned_data["password2"])
         if commit:
             user.save()
@@ -76,24 +66,21 @@ class ForgotPasswordForm(forms.Form):
         cleaned_data = super().clean()
 
         email = cleaned_data.get("email")
-        email_key = f"api:forgot-password:counter:email-{email}"
+        key = f"users:forgot-password:counter:email-{email}"
+        count = cache.get(key)
+        timeout = 24 * 60 * 60  # 24 hours
 
-        ip = self.request.META.get("REMOTE_ADDR")
-        ip_key = f"api:forgot-password:counter:email-{ip}"
+        if count is None:
+            cache.set(key, 0, timeout=timeout)
+            count = 0
 
-        email_counter = cache.get(email_key, 0)
-        ip_counter = cache.get(ip_key, 0)
-
-        if email_counter >= 5 or ip_counter >= 5:
-            logging.warning(f'Limit on forgot-password. Email: "{email}". IP: "{ip}".')
+        if count >= 5:
+            logging.warning(f'Limit on forgot-password. Email: "{email}".')
             raise forms.ValidationError(
-                "Muitas tentativas de redefinição de senha foram realizadas. Tente novamente mais tarde."
+                "Muitas tentativas de redefinição de senha foram realizadas. Tente novamente daqui a 24 horas."
             )
 
-        timeout = 24 * 60 * 60  # 24 hours
-        cache.set(email_key, email_counter + 1, timeout=timeout)
-        cache.set(email_key, email_counter + 1, timeout=timeout)
-
+        cache.incr(key)
         return cleaned_data
 
     def send(self):
@@ -103,9 +90,8 @@ class ForgotPasswordForm(forms.Form):
         if not user:
             return
 
-        timeout = 60 * 60  # 1 hour
-        key = f"password-reset-request:{user.id}"
-        cache.set(key=key, value=True, timeout=timeout)
+        key = validators.PasswordReset.get_cache_key(user)
+        cache.set(key=key, value=0, timeout=settings.PASSWORD_RESET_TIMEOUT)
 
         uid = force_bytes(user.id)
         uidb64 = urlsafe_base64_encode(uid)
@@ -125,12 +111,6 @@ class ForgotPasswordForm(forms.Form):
         )
 
         user.send_email(subject="Reset", html_message=html_message)
-
-
-class SaveProfileForm(forms.ModelForm):
-    class Meta:
-        model = models.User
-        fields = ["first_name", "last_name"]
 
 
 class CustomAuthenticationForm(auth_forms.AuthenticationForm):
@@ -194,3 +174,9 @@ class PasswordResetForm(forms.Form):
             user.save()
 
         return user
+
+
+class SaveProfileForm(forms.ModelForm):
+    class Meta:
+        model = models.User
+        fields = ["first_name", "last_name"]

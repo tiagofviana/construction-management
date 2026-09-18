@@ -1,5 +1,5 @@
 <template>
-    <section class="flex min-h-dvh items-center justify-center py-6">
+    <section class="flex min-h-dvh flex-col items-center justify-center py-6">
         <AsyncModalAlert
             v-if="alertModal.message"
             type="error"
@@ -13,7 +13,6 @@
         <form
             @submit.prevent="handleSubmit()"
             class="w-11/12 max-w-sm rounded-md border border-black/10 bg-white p-6"
-            novalidate
         >
             <h1 class="py-4 text-center font-serif text-4xl font-bold">Login</h1>
 
@@ -70,6 +69,19 @@
                 <TextLoading text="ACESSAR" :isLoading="isFormLoading" class="stroke-white" />
             </button>
         </form>
+
+        <div class="relative mt-8 w-11/12 max-w-xs">
+            <RouterLink :to="{ name: 'public.forgot-password' }" class="mx-auto table">
+                Esqueceu sua senha?
+            </RouterLink>
+
+            <hr class="mt-6 border border-black/20" />
+            <span class="mx-auto -mt-3 table bg-gray-100 px-2 text-gray-400">OU</span>
+
+            <RouterLink :to="{ name: 'public.account-create' }" class="mx-auto mt-2 mb-4 table">
+                Crie uma conta
+            </RouterLink>
+        </div>
     </section>
 </template>
 
@@ -113,7 +125,7 @@ const alertInline = ref<{ message: string; key: number; type: InlineType }>({
     type: 'error',
 })
 
-function setAlertModal(msg: string, title: string) {
+function setModalAlert(msg: string, title: string) {
     alertModal.value = {
         message: msg,
         key: alertModal.value.key + 1,
@@ -121,7 +133,7 @@ function setAlertModal(msg: string, title: string) {
     }
 }
 
-function setAlertInline(msg: string, type: InlineType) {
+function setInlineAlert(msg: string, type: InlineType) {
     alertInline.value.message = msg
     alertInline.value.key++
     alertInline.value.type = type
@@ -145,7 +157,7 @@ function handleSubmit() {
             isFormLoading.value = false
 
             if (error.code === 'ERR_NETWORK') {
-                setAlertModal(
+                setModalAlert(
                     'Não foi possível conectar com servidor, por favor, tente novamente mais tarde.',
                     'Conexão instável',
                 )
@@ -156,7 +168,7 @@ function handleSubmit() {
                 const responseErros = error.response.data.errors
 
                 if (responseErros.__all__) {
-                    setAlertInline(responseErros.__all__[0], 'error')
+                    setInlineAlert(responseErros.__all__[0], 'error')
                 }
 
                 formErrors.value = {
@@ -168,7 +180,7 @@ function handleSubmit() {
             }
 
             console.error(error)
-            setAlertModal(
+            setModalAlert(
                 'O servidor não conseguiu processar a solicitação, por favor, contacte a nossa equipe.',
                 'Erro inesperado',
             )
