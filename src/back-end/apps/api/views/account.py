@@ -7,6 +7,7 @@ from django.views import View
 from django.views.generic.edit import CreateView, FormView
 from apps.users.models import User
 from apps.users import forms as users_form, validators as users_validators
+from apps.core import utils as core_utils
 from apps.api import responses
 
 
@@ -84,6 +85,7 @@ class PasswordResetFormView(FormView):
         key = users_validators.PasswordReset.get_cache_key(user)
         cache.set(key=key, value=1, timeout=1)
         form.save(user)
+        logging.info(f"User #{self.user_cache.id} changed the password.")
         return responses.Success()
 
     def form_invalid(self, form: users_form.PasswordResetForm):
@@ -182,7 +184,9 @@ class UserCreateView(CreateView):
     form_class = users_form.CustomUserCreationForm
 
     def form_valid(self, form: users_form.CustomUserCreationForm):
-        form.save()
+        user = form.save()
+        ip = core_utils.get_client_ip(self.request)
+        logging.info(f'New user #{user.id}. Client ip "{ip}".')
         return responses.Created()
 
     def form_invalid(self, form: users_form.CustomUserCreationForm):

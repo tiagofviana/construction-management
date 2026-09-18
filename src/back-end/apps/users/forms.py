@@ -90,6 +90,7 @@ class ForgotPasswordForm(forms.Form):
         if not user:
             return
 
+        logging.warning(f"User #{user.id} start the password reset.")
         key = validators.PasswordReset.get_cache_key(user)
         cache.set(key=key, value=0, timeout=settings.PASSWORD_RESET_TIMEOUT)
 
@@ -128,6 +129,9 @@ class CustomAuthenticationForm(auth_forms.AuthenticationForm):
             raise self.get_invalid_login_error()
 
         if not self.user_cache.check_password(password):
+            logging.info(
+                f"User #{self.user_cache.id} entered the wrong password during login."
+            )
             raise self.get_invalid_login_error()
 
         self.confirm_login_allowed(self.user_cache)

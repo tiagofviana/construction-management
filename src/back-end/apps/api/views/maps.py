@@ -162,6 +162,9 @@ class UpdateFloorFormView(
 
     def form_valid(self, form: maps_forms.UpdateFloorForm) -> http.JsonResponse:
         form.update()
+        user = self.request.user
+        floor_id = self.kwargs["floor_id"]
+        logging.info(f"User #{user.id}. Changed the Floor #{floor_id}.")
         return responses.Success(safe=False)
 
     def form_invalid(self, form: maps_forms.UpdateFloorForm) -> http.JsonResponse:
