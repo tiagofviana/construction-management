@@ -17,6 +17,10 @@
         >
             <h1 class="py-4 text-center font-serif text-4xl font-bold">Alterar senha</h1>
 
+            <p class="text-center text-pretty">
+                Olá, <strong> {{ firstName }} </strong>. Preencha o formulario com a sua nova senha.
+            </p>
+
             <InlineAlert
                 v-if="inlineAlert.message"
                 :message="inlineAlert.message"
@@ -25,7 +29,7 @@
             />
 
             <!-- Password1 -->
-            <div class="field" :class="{ 'invalid-field': formErrors.password1 }">
+            <div class="field mt-1" :class="{ 'invalid-field': formErrors.password1 }">
                 <label for="password1">Senha:</label>
 
                 <input
@@ -105,7 +109,6 @@ const inlineAlert = ref<{ message: string; key: number; type: InlineType }>({
 })
 
 onBeforeMount(async () => {
-    console.log(uid, token)
     await axios
         .get(`/api/account/validate-change-password/${uid}/${token}/form`)
         .then((response) => {
