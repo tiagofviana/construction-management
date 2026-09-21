@@ -34,9 +34,7 @@ export default {
 
                 if (error.response.status === 403) {
                     resetAll()
-                    router.push({
-                        name: 'error.forbidden',
-                    })
+                    router.push({ name: 'error.forbidden' })
                 }
 
                 if (error.response.status === 404) {
@@ -44,6 +42,10 @@ export default {
                         name: 'error.resourceNotFound',
                         query: { q: error.config.url || '' },
                     })
+                }
+
+                if (error.response.status === 462) {
+                    router.push({ name: 'account.email-verification' })
                 }
 
                 return Promise.reject(error)

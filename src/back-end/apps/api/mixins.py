@@ -30,13 +30,7 @@ class AccountVerificationMixin(AccessMixin):
             )
 
         if not user.is_email_verified:
-            return responses.Forbidden(
-                request=request,
-                data={
-                    "detail": "Email não verificado.",
-                    "code": "email_not_verified",
-                },
-            )
+            return responses.EmailVerification()
 
         if not user.is_active:
             logging.warning(f"Deactivated user #{user.id} is trying to login.")

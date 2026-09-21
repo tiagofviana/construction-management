@@ -278,7 +278,6 @@ class RoomUpdateView(
 
     def form_valid(self, form):
         form.save()
-        print(form.cleaned_data)
         return responses.Success()
 
     def get_form(self, form_class=None):

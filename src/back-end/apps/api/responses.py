@@ -53,6 +53,20 @@ class Forbidden(JsonResponse):
         super().__init__(data, *args, **kwargs)
 
 
+class EmailVerification(JsonResponse):
+    # The user email is not verified
+    status_code = 462
+
+    def __init__(self, data={}, *args, **kwargs):
+        if data:
+            data = {
+                "detail": "Email não verificado.",
+                "code": "email_not_verified",
+            }
+
+        super().__init__(data, *args, **kwargs)
+
+
 class NotFound(JsonResponse):
     # The server can’t find the requested resource.
     status_code = 404
@@ -71,7 +85,7 @@ class Conflict(JsonResponse):
     # The server can’t process the request due to a conflict with the resource.
     status_code = 409
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, data={}, *args, **kwargs):
         if not data:
             data = {
                 "detail": "Conflito.",

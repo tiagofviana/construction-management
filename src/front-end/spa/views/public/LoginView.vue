@@ -1,13 +1,13 @@
 <template>
     <section class="flex min-h-dvh flex-col items-center justify-center py-6">
         <AsyncModalAlert
-            v-if="alertModal.message"
+            v-if="modalAlert.message"
             type="error"
-            :title="alertModal.title"
-            :message="alertModal.message"
+            :title="modalAlert.title"
+            :message="modalAlert.message"
             ok-label="Confirmar"
             :has-cancel-button="false"
-            :key="alertModal.key"
+            :key="modalAlert.key"
         />
 
         <form
@@ -17,10 +17,10 @@
             <h1 class="py-4 text-center font-serif text-4xl font-bold">Login</h1>
 
             <InlineAlert
-                v-if="alertInline.message"
-                :message="alertInline.message"
-                :type="alertInline.type"
-                :key="alertInline.key"
+                v-if="inlineAlert.message"
+                :message="inlineAlert.message"
+                :type="inlineAlert.type"
+                :key="inlineAlert.key"
             />
 
             <!-- Email -->
@@ -113,30 +113,30 @@ const formErrors = ref<{
     password?: string[]
 }>({})
 
-const alertModal = ref<{ message: string; key: number; title: string }>({
+const modalAlert = ref<{ message: string; key: number; title: string }>({
     message: '',
     key: 0,
     title: '',
 })
 
-const alertInline = ref<{ message: string; key: number; type: InlineType }>({
+const inlineAlert = ref<{ message: string; key: number; type: InlineType }>({
     message: '',
     key: 0,
     type: 'error',
 })
 
 function setModalAlert(msg: string, title: string) {
-    alertModal.value = {
+    modalAlert.value = {
         message: msg,
-        key: alertModal.value.key + 1,
+        key: modalAlert.value.key + 1,
         title: title,
     }
 }
 
 function setInlineAlert(msg: string, type: InlineType) {
-    alertInline.value.message = msg
-    alertInline.value.key++
-    alertInline.value.type = type
+    inlineAlert.value.message = msg
+    inlineAlert.value.key++
+    inlineAlert.value.type = type
 }
 
 function handleSubmit() {

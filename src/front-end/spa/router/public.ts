@@ -32,7 +32,7 @@ export const publicRoutes: RouteRecordRaw[] = [
                     const info = await account.getInfo()
 
                     if (info !== null) {
-                        return { name: 'public.redirect' }
+                        return { name: 'public.redirect', params: { animate: 1 } }
                     }
 
                     return true

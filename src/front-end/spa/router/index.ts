@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { publicRoutes } from '@/router/public'
 import { errorRoutes } from '@/router/error'
+import { accountRoutes } from './account'
 import { employeeRoutes } from '@/router/employee'
 import { Content } from '@/types/content'
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: [...publicRoutes, ...employeeRoutes, ...errorRoutes],
+    routes: [...publicRoutes, ...accountRoutes, ...employeeRoutes, ...errorRoutes],
 })
 
 router.beforeEach(async (to) => {

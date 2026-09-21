@@ -3,6 +3,7 @@ from django import http
 from django.core.cache import cache
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView as AuthLoginView
+from django.template import loader
 from django.views import View
 from django.views.generic.edit import CreateView, FormView
 from apps.users.models import User
@@ -118,66 +119,73 @@ class PasswordResetFormView(FormView):
 #         return responses.NoContent()
 
 
-# class SendVerificationEmailView(mixins.ValidateJWTHeaderMixin, View):
-#     http_method_names = ["get"]
+class SendVerificationEmailView(View):
+    http_method_names = ["get"]
 
-#     def get(self, *args, **kwargs) -> http.JsonResponse:
-#         user: User = self.request.user
-#         if user.is_email_verified:
-#             return responses.Conflict()
+    def get(self, *args, **kwargs) -> http.JsonResponse:
+        user: User = self.request.user
 
-#         cache_key = f"api:email-verification:counter:user-{user.id}"
-#         counter = cache.get(cache_key, 0)
+        if not user.is_authenticated:
+            return responses.Unauthorized(request=self.request)
 
-#         if counter >= 5:
-#             logging.warning(
-#                 f"Already send {counter} verification emails to the user {user.id}"
-#             )
-#             return responses.NoContent()
+        if user.is_email_verified:
+            return responses.Conflict()
 
-#         cache.set(cache_key, counter + 1, timeout=24 * 60 * 60)  # 24 hours
-#         self._send_verification_email()
+        cache_key = f"api:send-email-verification:user-{user.id}"
+        counter = cache.get(cache_key, 0)
+        if counter >= 5:
+            logging.warning(
+                f"Already send {counter} verification emails to the user #{user.id}"
+            )
+            return responses.NoContent()
 
-#         return responses.Success()
+        cache.set(cache_key, counter + 1, timeout=24 * 60 * 60)  # 24 hours
+        self._send_verification_email()
 
-#     def _send_verification_email(self):
-#         user: User = self.request.user
-#         html_message = self._generate_email_message()
+        return responses.Success()
 
-#         try:
-#             logging.warning(f"Sending a verification email to the user {user.id}")
-#             user.send_email(subject="Verificação de email", html_message=html_message)
-#         except Exception as exception:
-#             logging.error(
-#                 f"Error on sending verification email to user ({user.id}): {str(exception)}"
-#             )
+    def _send_verification_email(self):
+        user: User = self.request.user
+        html_message = self._generate_email_message()
 
-#     def _generate_email_message(self) -> str:
-#         code = hash_user_email(user=self.request.user)
+        try:
+            logging.warning(f"Sending a verification email to the user #{user.id}")
+            user.send_email(subject="Verificação de email", html_message=html_message)
+        except Exception as exception:
+            logging.error(
+                f"Error on sending verification email to user #{user.id}. Error: {str(exception)}"
+            )
 
-#         return loader.render_to_string(
-#             template_name="users/email/verification.html",
-#             request=self.request,
-#             context={
-#                 "code": code,
-#             },
-#         )
+    def _generate_email_message(self) -> str:
+        code = hash_user_email(user=self.request.user)
+
+        return loader.render_to_string(
+            template_name="users/email/verification.html",
+            request=self.request,
+            context={
+                "code": code,
+            },
+        )
 
 
-# class EmailVerifyView(mixins.ValidateJWTHeaderMixin, View):
-#     http_method_names = ["post"]
+class EmailVerifyView(View):
+    http_method_names = ["post"]
 
-#     def post(self, *args, **kwargs) -> http.JsonResponse:
-#         user: User = self.request.user
-#         code = self.request.POST.get("code", "")
-#         hashed_code = hash_user_email(user=self.request.user)
+    def post(self, *args, **kwargs) -> http.JsonResponse:
+        user: User = self.request.user
 
-#         if code != hashed_code:
-#             return responses.Conflict()
+        if not user.is_authenticated:
+            return responses.Unauthorized(request=self.request)
 
-#         user.is_email_verified = True
-#         user.save()
-#         return responses.Success()
+        code = self.request.POST.get("code", "")
+        hashed_code = hash_user_email(user=self.request.user)
+
+        if code != hashed_code:
+            return responses.Conflict()
+
+        user.is_email_verified = True
+        user.save()
+        return responses.Success()
 
 
 class UserCreateView(CreateView):
@@ -205,8 +213,43 @@ class AccountInfoView(View):
         data = {
             "firstName": user.first_name,
             "lastName": user.last_name,
-            "email": user.email,
+            "email": self._mask_email(user.email),
             "isStaff": user.is_staff,
             "lastLogin": user.last_login.isoformat(),
         }
         return responses.Success(data)
+
+    def _mask_email(self, email: str):
+        if "@" not in email:
+            return email
+
+        username, domain = email.split("@", 1)
+
+        # Mask the username part
+        if len(username) <= 2:
+            masked_username = (
+                username[0] + "*" * (len(username) - 1) if len(username) > 0 else ""
+            )
+        else:
+            masked_username = username[0] + "*" * (len(username) - 2) + username[-1]
+
+        # Split domain into name and extension
+        domain_parts = domain.split(".")
+        domain_name = domain_parts[0]
+        tld = ".".join(domain_parts[1:])
+
+        # Mask the domain name part
+        if len(domain_name) <= 2:
+            masked_domain_name = (
+                domain_name[0] + "*" * (len(domain_name) - 1)
+                if len(domain_name) > 0
+                else ""
+            )
+        else:
+            masked_domain_name = (
+                domain_name[0] + "*" * (len(domain_name) - 2) + domain_name[-1]
+            )
+
+        masked_domain = f"{masked_domain_name}.{tld}" if tld else masked_domain_name
+
+        return f"{masked_username}@{masked_domain}"

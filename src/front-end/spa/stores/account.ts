@@ -16,7 +16,6 @@ export const accountStore = defineStore('account', () => {
         if (info !== null) return info
 
         const response = await axios.get('/api/account/info/get')
-
         if (response.status === 204) {
             return null
         }
