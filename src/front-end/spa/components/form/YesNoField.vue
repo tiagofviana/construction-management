@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Check, X } from '@lucide/vue'
 
 const props = defineProps({
@@ -35,6 +35,10 @@ const emit = defineEmits<{
 }>()
 
 const choice = ref(props.initial)
+
+onMounted(() => {
+    emit('change', choice.value)
+})
 
 function changeChoice() {
     choice.value = !choice.value

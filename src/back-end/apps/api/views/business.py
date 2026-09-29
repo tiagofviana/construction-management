@@ -344,9 +344,10 @@ class ConstructionGroupUpdateView(
     def form_valid(self, form: business_forms.SaveGroupForm) -> http.JsonResponse:
         group = form.save()
         employee = self.get_employee_queryset()
+        permissions: QuerySet = form.cleaned_data["permissions"]
 
         logging.info(
-            f'Employee #{employee.id}. Changed the construction group #"{group.id}". Permissions: {form.cleaned_data['permissions']}.'
+            f'Employee #{employee.id}. Changed the construction group #"{group.id}". Permissions: {list(permissions.all().values_list('id', flat=True))}.'
         )
         return responses.Success()
 

@@ -128,7 +128,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { ChevronRight, ChevronLeft, ChevronsRight, ChevronsLeft } from '@lucide/vue'
 
 export interface KeyValue {
@@ -165,6 +165,10 @@ const filteredChosen = computed<KeyValue[]>(() => {
     const term = searchChosen.value.trim().toLowerCase()
     if (!term) return chosen.value
     return chosen.value.filter((item) => item.value.toLowerCase().includes(term))
+})
+
+onMounted(() => {
+    emit('change', chosen.value)
 })
 
 function toggleHighlight(set: Set<string | number>, key: string | number) {
