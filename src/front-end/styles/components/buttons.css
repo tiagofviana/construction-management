@@ -11,6 +11,10 @@
         @apply text-shadow bg-blue-600 text-white hover:bg-blue-500 focus:ring-blue-400 active:bg-blue-700;
     }
 
+    .btn-purple {
+        @apply text-shadow bg-purple-800 text-white hover:bg-purple-700 focus:ring-purple-600 active:bg-purple-900;
+    }
+
     .btn-red {
         @apply text-shadow bg-red-600 text-white hover:bg-red-500 focus:ring-red-400 active:bg-red-700;
     }
@@ -24,7 +28,7 @@
     }
 
     .btn-gray {
-        @apply bg-neutral-200 text-neutral-700 hover:bg-neutral-300 focus:ring-neutral-300 active:bg-neutral-400;
+        @apply border border-black/5 bg-neutral-200 text-neutral-700 hover:bg-neutral-300 focus:ring-neutral-300 active:bg-neutral-400;
     }
 
     .btn-white {

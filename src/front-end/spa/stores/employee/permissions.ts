@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
@@ -7,24 +8,24 @@ export interface Permission {
 }
 
 export const permissionsStore = defineStore('permissions', () => {
-    let permissions: Array<Permission> | null = null
+    const permissions = ref<Array<Permission> | null>(null)
 
     async function fetchPermissions(employeeId: number): Promise<Array<Permission> | null> {
-        if (permissions !== null) return permissions
+        if (permissions.value !== null) return permissions.value
 
         const response = await axios.get(`/api/employee/${employeeId}/permissions-list`)
         if (response.status === 204) {
             return null
         }
 
-        permissions = response.data.permissions as Array<Permission>
-        return permissions
+        permissions.value = response.data.permissions as Array<Permission>
+        return permissions.value
     }
 
     function hasPermission(employeeId: number, codename: string): boolean {
-        if (permissions === null) return false
+        if (permissions.value === null) return false
 
-        return permissions.some((permission) => {
+        return permissions.value.some((permission) => {
             if (permission.codename === 'is_admin') return true
             if (permission.codename === codename) return true
 
@@ -32,9 +33,13 @@ export const permissionsStore = defineStore('permissions', () => {
         })
     }
 
-    function reset() {
-        permissions = null
+    function getAllPermissions() {
+        return permissions.value
     }
 
-    return { fetchPermissions, hasPermission, reset }
+    function reset() {
+        permissions.value = null
+    }
+
+    return { fetchPermissions, hasPermission, getAllPermissions, reset }
 })

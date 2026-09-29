@@ -145,11 +145,85 @@
             </li>
 
             <li
-                class="flex min-h-100 flex-col justify-between rounded-lg border border-black/10 bg-white px-6 py-4"
+                v-if="
+                    permissions.hasPermission(employeeId, 'can_view_employees') ||
+                    permissions.hasPermission(employeeId, 'can_view_constructionGroups')
+                "
+                class="grid min-h-100 grid-cols-1 gap-4"
             >
-                <h2 class="px-4 py-1.5 text-center text-2xl font-bold text-pretty">
-                    Em desenvolvimento...
-                </h2>
+                <div
+                    v-if="dashboardData?.employees.employeesCount !== undefined"
+                    class="flex flex-col items-center overflow-hidden rounded-lg border border-black/10 bg-white px-6 py-4"
+                >
+                    <h2
+                        text-2xl
+                        font-bold
+                        class="px-4 py-1.5 text-center text-pretty sm:text-left"
+                        :class="{
+                            'text-2xl font-bold':
+                                dashboardData?.employees.groupsCount === undefined,
+                        }"
+                    >
+                        Quantidade de Funcionários
+                    </h2>
+
+                    <p
+                        class="flex flex-1 items-center justify-center text-6xl font-bold text-purple-800"
+                    >
+                        {{ dashboardData?.employees.employeesCount }}
+                    </p>
+
+                    <p class="text-center text-sm text-pretty text-gray-800">
+                        sendo
+                        <span class="font-bold text-purple-800">
+                            {{ dashboardData?.employees.adminsCount }}
+                        </span>
+                        administradores
+                    </p>
+
+                    <RouterLink
+                        :to="{
+                            name: 'employee.team',
+                            params: { employeeId: employeeId },
+                        }"
+                        class="btn btn-purple mt-1"
+                    >
+                        Acessar Equipe
+                    </RouterLink>
+                </div>
+
+                <div
+                    v-if="dashboardData?.employees.groupsCount !== undefined"
+                    class="flex flex-col items-center overflow-hidden rounded-lg border border-black/10 bg-white px-6 py-4"
+                >
+                    <h2
+                        text-2xl
+                        font-bold
+                        class="px-4 py-1.5 text-center text-pretty sm:text-left"
+                        :class="{
+                            'text-2xl font-bold':
+                                dashboardData?.employees.employeesCount === undefined,
+                        }"
+                    >
+                        Quantidade de Grupos
+                    </h2>
+
+                    <p
+                        class="flex flex-1 items-center justify-center text-6xl font-bold text-blue-800"
+                    >
+                        {{ dashboardData?.employees.groupsCount }}
+                    </p>
+
+                    <RouterLink
+                        :to="{
+                            name: 'employee.contruction-groups',
+                            params: { employeeId: employeeId },
+                        }"
+                        class="btn btn-blue mt-1"
+                    >
+                        Acessar Grupos
+                    </RouterLink>
+                </div>
             </li>
         </ul>
     </section>
@@ -175,6 +249,11 @@ interface DashboardData {
         name: string
         roomCount: number
     }>
+    employees: {
+        employeesCount?: number
+        adminsCount?: number
+        groupsCount?: number
+    }
 }
 
 const route = useRoute()

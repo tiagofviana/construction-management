@@ -10,6 +10,8 @@ class ConstructionAdmin(admin.ModelAdmin):
 @admin.register(models.Employee)
 class EmployeeAdmin(admin.ModelAdmin):
     readonly_fields = ("id",)
+    list_display = ("user", "user__email", "construction")
+    ordering = ("construction", "user__first_name", "user__last_name", "user__email")
     filter_horizontal = ("permissions", "groups")
     fieldsets = (
         (

@@ -2,8 +2,7 @@ from django.db import models
 from django.core.cache import cache
 from django.contrib.auth import get_user_model
 from apps.core import models as core_models
-
-User = get_user_model()
+from apps.users.models import User
 
 
 class Construction(models.Model):
@@ -91,6 +90,12 @@ class ConstructionPermission(models.Model):
 
 
 class ConstructionGroup(models.Model):
+    construction_permissions = [
+        ("can_view_constructionGroups", "Pode visualizar os grupos."),
+        ("can_add_constructionGroups", "Pode adicionar os grupos."),
+        ("can_edit_constructionGroups", "Pode editar os grupos."),
+    ]
+
     id = models.AutoField(
         auto_created=True,
         primary_key=True,
@@ -135,6 +140,18 @@ class ConstructionGroup(models.Model):
 
 
 class Employee(models.Model):
+    construction_permissions = [
+        ("can_view_employees", "Pode visualizar os funcionários."),
+        ("can_add_employees", "Pode adicionar funcionários."),
+        (
+            "can_view_employeesPermissions",
+            "Pode visualizar as permissões dos funcionários.",
+        ),
+        (
+            "can_edit_employeesPermissions",
+            "Pode editar as permissões dos funcionários.",
+        ),
+    ]
     id = models.AutoField(
         auto_created=True,
         primary_key=True,

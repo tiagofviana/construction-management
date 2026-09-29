@@ -31,7 +31,7 @@ export const employeeRoutes: RouteRecordRaw[] = [
             },
 
             {
-                path: ':employeeId/dashboard/',
+                path: ':employeeId/dashboard',
                 name: 'employee.contruction-dashboard',
                 component: () => import('@/views/employee/DashboardView.vue'),
                 meta: {
@@ -53,6 +53,24 @@ export const employeeRoutes: RouteRecordRaw[] = [
                 component: () => import('@/views/employee/ContructionMapView.vue'),
                 meta: {
                     breadcrumbLabel: 'Mapa',
+                },
+            },
+
+            {
+                path: ':employeeId/grupo',
+                name: 'employee.contruction-groups',
+                component: () => import('@/views/employee/GroupsView.vue'),
+                meta: {
+                    breadcrumbLabel: 'Grupos',
+                },
+            },
+
+            {
+                path: ':employeeId/equipe',
+                name: 'employee.team',
+                component: () => import('@/views/employee/TeamView.vue'),
+                meta: {
+                    breadcrumbLabel: 'Equipe',
                 },
             },
         ],

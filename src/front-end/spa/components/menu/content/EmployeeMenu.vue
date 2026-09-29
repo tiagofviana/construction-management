@@ -7,9 +7,9 @@
         <template #nav>
             <p
                 v-if="info"
-                class="line-clamp-1 px-4 pb-6 text-center font-sans text-xl font-medium text-yellow-300"
+                class="min-w-64 px-4 pb-6 text-center font-sans text-xl font-medium text-pretty text-yellow-300"
             >
-                {{ info.firstName }}
+                {{ info.firstName }} {{ info.lastName }}
             </p>
 
             <MenuItem

@@ -6,8 +6,8 @@ class Success(JsonResponse):
     # The request succeeded.
     status_code = 200
 
-    def __init__(self, data: dict = {}, *args, **kwargs):
-        super().__init__(data, *args, **kwargs)
+    def __init__(self, data: dict = {}, safe=False, *args, **kwargs):
+        super().__init__(data, safe=safe, *args, **kwargs)
 
 
 class Created(JsonResponse):
