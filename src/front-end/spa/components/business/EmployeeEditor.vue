@@ -65,6 +65,24 @@
                         <FieldErrors v-if="formErrors.isAdmin" :messages="formErrors.isAdmin" />
                     </div>
 
+                    <!-- Groups -->
+                    <div class="field" :class="{ 'invalid-field': formErrors.groups }">
+                        <label>Grupos:</label>
+
+                        <SelectMultiple
+                            :initial="initialGroups"
+                            :options="constructionGroups"
+                            @change="
+                                (v) => {
+                                    form.groups = v
+                                    delete formErrors.groups
+                                }
+                            "
+                        />
+
+                        <FieldErrors v-if="formErrors.groups" :messages="formErrors.groups" />
+                    </div>
+
                     <!-- Permissions -->
                     <div class="field mt-6" :class="{ 'invalid-field': formErrors.permissions }">
                         <label>Permissões individuais:</label>
@@ -84,24 +102,6 @@
                             v-if="formErrors.permissions"
                             :messages="formErrors.permissions"
                         />
-                    </div>
-
-                    <!-- Groups -->
-                    <div class="field" :class="{ 'invalid-field': formErrors.groups }">
-                        <label>Grupos:</label>
-
-                        <SelectMultiple
-                            :initial="initialGroups"
-                            :options="constructionGroups"
-                            @change="
-                                (v) => {
-                                    form.groups = v
-                                    delete formErrors.groups
-                                }
-                            "
-                        />
-
-                        <FieldErrors v-if="formErrors.groups" :messages="formErrors.groups" />
                     </div>
 
                     <button class="btn btn-blue mx-auto mt-6" type="submit">

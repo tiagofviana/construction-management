@@ -3,7 +3,7 @@ import type { Stage } from 'konva/lib/Stage'
 import { DrawManager } from './figure'
 import { EventsHandler } from './events'
 import { settings, svgPath, ToolOptions, tool } from './core'
-import { PathCommand } from '../types'
+import { PathCommand, Size } from '../types'
 
 export class RoomCanvas {
     private stage: Stage
@@ -97,8 +97,10 @@ export class RoomCanvas {
         this.settings.measures.isOn = isVisible
 
         if (isVisible) {
+            settings.grid.isVisible = true
             this.drawManager.info.draw()
         } else {
+            settings.grid.isVisible = false
             this.drawManager.info.clear()
         }
     }
@@ -106,5 +108,13 @@ export class RoomCanvas {
     public destroy() {
         this.stage.destroy()
         this.svgPath.reset()
+    }
+
+    public setMapSize(size: Size) {
+        console.log('setMapSize')
+        settings.map.width = size.width * 10
+        settings.map.height = size.height * 10
+
+        this.drawManager.resetMap()
     }
 }

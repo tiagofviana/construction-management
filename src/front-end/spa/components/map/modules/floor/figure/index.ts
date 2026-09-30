@@ -32,4 +32,12 @@ export class DrawManager {
         this.background.clear()
         this.grid.clear()
     }
+
+    public resetMap() {
+        this.background.clear()
+        this.grid.clear()
+
+        this.background.draw()
+        this.grid.draw()
+    }
 }

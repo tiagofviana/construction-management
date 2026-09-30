@@ -65,10 +65,10 @@
                                     Pesquise o email ou nome para procurar um usuário.
                                 </template>
 
-                                <temaplte v-else>
+                                <template v-else>
                                     Não foi encontrado usuário que possui o email ou nome que comece
                                     com "{{ search }}".
-                                </temaplte>
+                                </template>
                             </p>
                         </li>
 

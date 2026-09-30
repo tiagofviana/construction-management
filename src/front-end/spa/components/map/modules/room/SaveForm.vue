@@ -131,7 +131,7 @@ import ModalAlert, { type ModalType } from '@/components/alerts/ModalAlert.vue'
 import FieldErrors from '@/components/form/FieldErrors.vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'
 import { PathSerializer } from '../serializers'
-import type { Room, PathCommand } from '../types'
+import type { Room, PathCommand, Size } from '../types'
 
 interface FormData {
     name: string
@@ -139,6 +139,8 @@ interface FormData {
     color: string
     area: number
     svgPath: Array<PathCommand>
+    width: number
+    height: number
 }
 
 interface ModalSettings {
@@ -177,6 +179,8 @@ onBeforeMount(() => {
             color: props.room.color || '#bcd9ff',
             area: props.room.area || 0,
             svgPath: PathSerializer.fromString(props.room.svgPath),
+            width: props.room.width,
+            height: props.room.height,
         }
     }
 })
@@ -250,6 +254,8 @@ const form = defineModel<FormData>({
         svgPath: Array<PathCommand>(),
         color: '#bcd9ff',
         area: 0,
+        width: 200,
+        height: 200,
     }),
 })
 const modalAlert = ref<ModalSettings & { key: number }>({
@@ -361,5 +367,10 @@ function setSvgPath(value: Array<PathCommand>) {
     }
 }
 
-defineExpose({ form, setSvgPath })
+function setMapSize(size: Size) {
+    form.value.width = size.width
+    form.value.height = size.height
+}
+
+defineExpose({ form, setSvgPath, setMapSize })
 </script>

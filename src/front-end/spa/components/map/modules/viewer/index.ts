@@ -3,8 +3,7 @@ import type { Stage } from 'konva/lib/Stage'
 import { DrawManager } from './figure'
 import { EventsHandler } from './events'
 import { settings, rooms } from './core'
-import type { Room } from '../types'
-import type { Size } from '../floor/CanvasFloorSize.vue'
+import type { Room, Size } from '../types'
 
 export class ViewerCanvas {
     private stage: Stage

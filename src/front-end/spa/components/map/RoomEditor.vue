@@ -107,7 +107,7 @@
                         <hr class="mt-auto border border-t border-slate-200" />
 
                         <p
-                            class="flex flex-row items-center justify-center gap-2 border-b border-black/10 px-4 py-3 text-xs text-gray-500"
+                            class="flex flex-row items-center justify-center gap-2 px-4 py-3 text-xs text-gray-500"
                         >
                             <span
                                 class="transition-all"
@@ -134,7 +134,17 @@
                             </span>
                         </p>
 
-                        <div class="flex flex-row items-center justify-center px-4 py-3">
+                        <CanvasRoomSize
+                            :min="200"
+                            :max="1000"
+                            :step="10"
+                            :initial-size="roomSettings.size"
+                            @change="setMapSize"
+                        />
+
+                        <div
+                            class="flex flex-row items-center justify-center border-t border-black/10 px-4 py-3"
+                        >
                             <button
                                 type="button"
                                 class="cursor-pointer stroke-black hover:stroke-green-700"
@@ -313,10 +323,11 @@ import {
 import gsap from 'gsap'
 import ModalAlert, { type ModalType } from '@/components/alerts/ModalAlert.vue'
 import SaveForm from '@/components/map/modules/room/SaveForm.vue'
-import { RoomCanvas } from './modules/room/index.js'
-import type { Point, PathCommand, Room } from './modules/types.js'
-import type { ToolOptions } from './modules/room/core/index.js'
-import { PathSerializer } from './modules/serializers.js'
+import { RoomCanvas } from './modules/room/index'
+import type { Point, PathCommand, Room, Size } from './modules/types'
+import type { ToolOptions } from './modules/room/core/index'
+import { PathSerializer } from './modules/serializers'
+import CanvasRoomSize from './modules/room/CanvasRoomSize.vue'
 
 interface RoomOptions {
     tool: ToolOptions
@@ -387,6 +398,12 @@ const path = ref<Array<PathCommand>>([])
 const saveForm = useTemplateRef('saveForm')
 const editor = useTemplateRef('editor')
 const section = useTemplateRef('section')
+const roomSettings = reactive({
+    size: {
+        width: 200,
+        height: 200,
+    },
+})
 
 onMounted(() => {
     animateIn()
@@ -493,6 +510,12 @@ function setModalAlert(settings: ModalSettings) {
         cancelLabel: settings.cancelLabel,
         okFunction: settings.okFunction,
     }
+}
+
+function setMapSize(size: Size) {
+    roomSettings.size = size
+    roomCanvas.value!.setMapSize(size)
+    saveForm.value?.setMapSize(size)
 }
 
 function toggleGrid() {

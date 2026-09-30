@@ -3,8 +3,7 @@ import type { Stage } from 'konva/lib/Stage'
 import { DrawManager } from './figure'
 import { EventsHandler } from './events'
 import { settings, ToolOptions, tool, rooms } from './core'
-import type { Room } from '../types'
-import type { Size } from './CanvasFloorSize.vue'
+import type { Room, Size } from '../types'
 
 export class FloorCanvas {
     private stage: Stage
@@ -58,8 +57,10 @@ export class FloorCanvas {
 
     public gridVisibility(isVisible: boolean) {
         if (isVisible) {
+            settings.grid.isVisible = true
             this.drawManager.grid.draw()
         } else {
+            settings.grid.isVisible = false
             this.drawManager.grid.clear()
         }
     }
@@ -85,8 +86,7 @@ export class FloorCanvas {
         settings.map.width = size.width * 10
         settings.map.height = size.height * 10
 
-        this.drawManager.clear()
-        this.drawManager.init()
+        this.drawManager.resetMap()
     }
 
     public setShapeDoubleClick(callback: (value: string) => void) {

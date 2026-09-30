@@ -109,6 +109,18 @@ class Room(models.Model):
         blank=True,
     )
 
+    width = models.PositiveSmallIntegerField(
+        verbose_name="largura do mapa",
+        null=False,
+        default=200,
+    )
+
+    height = models.PositiveSmallIntegerField(
+        verbose_name="altura do mapa",
+        null=False,
+        default=200,
+    )
+
     name = models.CharField(
         verbose_name="nome",
         max_length=100,

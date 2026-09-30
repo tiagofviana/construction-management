@@ -39,6 +39,7 @@ export class DrawManager {
         this.background.draw()
         this.grid.draw()
         this.room.draw()
+        console.log('123')
         this.preview.createListeners()
 
         tool.onChange = (value) => {
@@ -53,5 +54,13 @@ export class DrawManager {
             this.curveControllers.clear()
             this.vertices.clear()
         }
+    }
+
+    public resetMap() {
+        this.background.clear()
+        this.grid.clear()
+
+        this.background.draw()
+        this.grid.draw()
     }
 }

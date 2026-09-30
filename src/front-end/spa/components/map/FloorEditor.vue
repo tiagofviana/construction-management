@@ -251,10 +251,10 @@ import {
 } from '@lucide/vue'
 import { permissionsStore } from '@/stores/employee/permissions'
 import RoomList from '@/components/map/modules/floor/RoomList.vue'
-import CanvasFloorSize, { type Size } from '@/components/map/modules/floor/CanvasFloorSize.vue'
+import CanvasFloorSize from '@/components/map/modules/floor/CanvasFloorSize.vue'
 import type { ModalType } from '@/components/alerts/ModalAlert.vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'
-import type { Room, Point } from '@/components/map/modules/types'
+import type { Room, Point, Size } from '@/components/map/modules/types'
 import { FloorCanvas } from '@/components/map/modules/floor'
 import type { ToolOptions } from '@/components/map/modules/floor/core'
 
@@ -352,7 +352,6 @@ onMounted(async () => {
             isDragging: true,
         }
     }
-
     fc.setup()
 
     floorCanvas.value = fc

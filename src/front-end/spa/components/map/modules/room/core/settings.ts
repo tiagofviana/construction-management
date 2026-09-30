@@ -1,7 +1,7 @@
 class Settings {
     map = {
-        width: 2400,
-        height: 2400,
+        width: 2000,
+        height: 2000,
         padding: 400,
     }
 
@@ -12,6 +12,7 @@ class Settings {
     }
 
     grid = {
+        isVisible: true,
         size: 10,
     }
 

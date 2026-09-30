@@ -119,9 +119,12 @@
 <script setup lang="ts">
 import { ref, onUnmounted, watch, PropType } from 'vue'
 import { ChevronRight, ChevronLeft } from '@lucide/vue'
-import type { Size } from '@/components/map/modules/types'
 
 type Direction = 'left' | 'right'
+export interface Size {
+    width: number
+    height: number
+}
 
 const props = defineProps({
     max: {

@@ -4,6 +4,8 @@ import { settings } from '../core'
 
 export class Grid extends Figure {
     public draw() {
+        if (!settings.grid.isVisible) return
+
         const width = settings.map.width
         const height = settings.map.height
         const gridSize = settings.grid.size

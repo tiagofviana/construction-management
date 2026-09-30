@@ -12,6 +12,7 @@ class Settings {
     }
 
     grid = {
+        isVisible: true,
         size: 10,
     }
 

@@ -112,6 +112,8 @@ class FloorDataView(
                 "positionX",
                 "positionY",
                 "rotation",
+                "width",
+                "height",
             )
         )
         return list(data)
@@ -184,6 +186,8 @@ class RoomCreateView(
         "description",
         "area",
         "color",
+        "width",
+        "height",
     ]
     http_method_names = ["post"]
 
@@ -247,6 +251,8 @@ class RoomUpdateView(
         "description",
         "area",
         "color",
+        "width",
+        "height",
     ]
     http_method_names = ["post"]
 

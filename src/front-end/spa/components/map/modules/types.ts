@@ -3,6 +3,11 @@ export interface Point {
     y: number
 }
 
+export interface Size {
+    width: number
+    height: number
+}
+
 export type PathCommand = MoveCmd | LineCmd | CurveCmd
 
 export interface MoveCmd {
@@ -36,4 +41,6 @@ export interface Room {
     positionX: number
     positionY: number
     rotation: number
+    width: number
+    height: number
 }
