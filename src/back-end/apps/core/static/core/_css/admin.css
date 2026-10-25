@@ -1,0 +1,15 @@
+/* Django admin fixes when importing TailwindCSS */
+
+.deletelink {
+    box-sizing: content-box;
+}
+
+.aligned .flex label {
+    padding: 6px;
+    width: 100%;
+}
+
+#logout-form {
+    border: none;
+    background: transparent;
+}

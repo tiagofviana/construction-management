@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from svgpathtools import parse_path
-from apps.core import models as core_models
+from apps.core import models as core_models, validators as core_validators
 from apps.business import models as business_models
-from . import validator
+from . import validators
 
 User = get_user_model()
 
@@ -95,7 +95,7 @@ class Room(models.Model):
     svg_path = models.TextField(
         verbose_name="SVG path",
         help_text="Valor do atributo 'd' do elemento <path>.",
-        validators=[validator.SVGPathValidator()],
+        validators=[core_validators.SVGPathValidator()],
         null=False,
         blank=False,
     )
@@ -104,7 +104,7 @@ class Room(models.Model):
         verbose_name="SVG viewBox",
         max_length=64,
         help_text="Valor do atributo 'viewBox' (ex.: '0 0 1024 768').",
-        validators=[validator.SVGViewBoxValidator()],
+        validators=[validators.SVGViewBoxValidator()],
         null=False,
         blank=True,
     )
@@ -149,26 +149,26 @@ class Room(models.Model):
         null=False,
         blank=False,
         db_index=True,
-        validators=[validator.validate_hex_color],
+        validators=[validators.validate_hex_color],
     )
 
     position_x = models.FloatField(
         verbose_name="posição X",
         default=0.0,
-        validators=[validator.validate_position],
+        validators=[validators.validate_position],
     )
 
     position_y = models.FloatField(
         verbose_name="posição Y",
         default=0.0,
-        validators=[validator.validate_position],
+        validators=[validators.validate_position],
     )
 
     rotation = models.FloatField(
         verbose_name="rotação",
         default=0.0,
         help_text="Rotação em graus (0-360).",
-        validators=[validator.validate_rotation],
+        validators=[validators.validate_rotation],
     )
 
     def save(self, *args, **kwargs):

@@ -44,7 +44,7 @@ const loggerPlugin = {
 
             if (initialOptions.outfile) {
                 const stat = fs.statSync(initialOptions.outfile)
-                console.log('\x1b[34m%s\x1b[0m', `build finished: ${initialOptions.outfilet}`)
+                console.log('\x1b[34m%s\x1b[0m', `build finished: ${initialOptions.outfile}`)
                 console.log('\x1b[33m%s\x1b[0m', `Size: ${(stat.size / 1024).toFixed(1)} kb`)
             }
 
@@ -127,10 +127,23 @@ const entries = [
         entryPoints: ['src\\front-end\\mpa\\image\\cropper\\main.ts'],
         outdir: 'src\\back-end\\apps\\core\\static\\core\\_js\\widgets\\image_cropper\\bundled\\',
     },
+
+    {
+        ...defaultOption,
+        entryPoints: ['src\\front-end\\mpa\\svg\\editor\\main.ts'],
+        outdir: 'src\\back-end\\apps\\inventory\\static\\inventory\\_js\\widgets\\svg_editor\\bundled\\',
+    },
 ]
 
 entries.forEach(function (item) {
-    esbuild.context(item).then((context) => {
-        context.watch()
+    if (isDevMode) {
+        esbuild.context(item).then((context) => {
+            context.watch()
+        })
+        return
+    }
+
+    esbuild.build(item).catch(() => {
+        process.exitCode = 1
     })
 })

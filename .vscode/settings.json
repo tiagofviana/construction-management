@@ -30,5 +30,6 @@
     "prettier.configPath": ".prettierrc.json",
     "svg.preview.mode": "svg",
     "js/ts.tsdk.promptToUseWorkspaceVersion": true,
-    "js/ts.tsdk.path": "node_modules\\typescript\\lib"
+    "js/ts.tsdk.path": "node_modules\\typescript\\lib",
+    "svg.preview.background": "transparent"
 }
