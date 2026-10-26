@@ -180,7 +180,7 @@ class Item(models.Model):
         blank=True,
     )
 
-    attributes = models.JSONField(
+    attributes = core_models.CustomJsonEditorField(
         verbose_name="atributos",
         null=False,
         blank=False,

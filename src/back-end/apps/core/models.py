@@ -8,6 +8,12 @@ from django.utils.deconstruct import deconstructible
 from . import widgets, utils
 
 
+class CustomJsonEditorField(models.JSONField):
+    def formfield(self, **kwargs):
+        kwargs["widget"] = widgets.JsonInputWidget()
+        return super().formfield(**kwargs)
+
+
 class CustomImageField(models.ImageField):
     _formats = ("WEBP",)
 

@@ -21,8 +21,9 @@ class RoomObjectValidator:
     def __init__(self, room_object: RoomObject):
         self.errors = {}
         self.room_object = room_object
-        self.check_attributes: QuerySet[Attribute] = (
-            self.room_object.category.attributes.all()
+        self.has_category = self.room_object.category_id is not None
+        self.check_attributes: QuerySet[Attribute] | None = (
+            self.room_object.category.attributes.all() if self.has_category else None
         )
 
     def _add_error(self, key: str, message: str):
@@ -38,6 +39,11 @@ class RoomObjectValidator:
             raise ValidationError(
                 {"attributes": "Os atributos devem ser um objeto JSON."}
             )
+
+        # Without a category there is nothing to validate the attributes against.
+        # The "category" field validation already reports the missing value.
+        if not self.has_category:
+            return
 
         for item in self.check_attributes:
             value = attributes.get(item.name)
