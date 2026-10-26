@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . import models
+from . import forms, models
 
 
 @admin.register(models.Category)
@@ -14,7 +14,7 @@ class AttributeAdmin(admin.ModelAdmin):
 
 @admin.register(models.Item)
 class ItemAdmin(admin.ModelAdmin):
-    pass
+    form = forms.ItemAdminForm
 
 
 @admin.register(models.RoomItem)

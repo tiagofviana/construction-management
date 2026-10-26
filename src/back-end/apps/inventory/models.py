@@ -139,7 +139,7 @@ class Attribute(models.Model):
         verbose_name = "atributo"
         verbose_name_plural = "atributos"
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.category.name} → {self.label}"
 
 
@@ -184,6 +184,7 @@ class Item(models.Model):
         verbose_name="atributos",
         null=False,
         blank=False,
+        default={},
     )
 
     search_vector = SearchVectorField(

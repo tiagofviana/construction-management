@@ -18,9 +18,8 @@ def validate_rotation(value):
 
 
 class RoomObjectValidator:
-    errors = {}
-
     def __init__(self, room_object: RoomObject):
+        self.errors = {}
         self.room_object = room_object
         self.check_attributes: QuerySet[Attribute] = (
             self.room_object.category.attributes.all()
@@ -46,7 +45,7 @@ class RoomObjectValidator:
             if item.is_required and (value is None or value == ""):
                 self._add_error(
                     key=f"attributes.{item.name}",
-                    message="Este campo é obrigatório.",
+                    message="Este atributo é obrigatório.",
                 )
                 continue
 
