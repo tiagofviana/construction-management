@@ -89,6 +89,10 @@ export class FloorCanvas {
         this.drawManager.resetMap()
     }
 
+    public highlightRoom(roomId: string | null) {
+        this.drawManager.floor.highlight(roomId)
+    }
+
     public setShapeDoubleClick(callback: (value: string) => void) {
         this.drawManager.floor.onShapeDoubleClick = callback
     }

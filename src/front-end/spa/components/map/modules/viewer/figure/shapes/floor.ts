@@ -6,6 +6,7 @@ import { rooms } from '../../core'
 export class Floor {
     private shapes: Map<string, Shape>
     private group = new Group({ listening: true })
+    private highlightedId: string | null = null
     public onShapeDoubleClick: (roomId: string) => void
 
     constructor(layer: Layer) {
@@ -37,5 +38,21 @@ export class Floor {
             shape.onDoubleClick = this.onShapeDoubleClick
             this.shapes.set(item.id, shape)
         })
+
+        if (this.highlightedId) {
+            this.highlight(this.highlightedId)
+        }
+    }
+
+    public highlight(roomId: string | null) {
+        if (this.highlightedId) {
+            this.shapes.get(this.highlightedId)?.setHighlighted(false)
+        }
+
+        this.highlightedId = roomId
+
+        if (roomId) {
+            this.shapes.get(roomId)?.setHighlighted(true)
+        }
     }
 }

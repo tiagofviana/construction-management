@@ -52,6 +52,23 @@ export class Shape {
         })
     }
 
+    public setHighlighted(value: boolean) {
+        const path = this.findPath()
+        if (!path) return
+
+        if (value) {
+            this.group.moveToTop()
+        }
+
+        path.stroke(value ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,.5)')
+        path.strokeWidth(value ? 1.2 : 1)
+
+        path.shadowEnabled(value)
+        path.shadowColor('rgba(0,0,0,.8)')
+        path.shadowBlur(14)
+        path.shadowOpacity(0.5)
+    }
+
     private findPath(): Konva.Path {
         return this.group.findOne('.shape-path') as Konva.Path
     }

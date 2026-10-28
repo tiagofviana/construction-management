@@ -8,6 +8,7 @@ export class Floor {
     private shapes: Map<string, Shape>
     private group = new Group({ listening: true })
     private rotationHandler: RotationHandler
+    private highlightedId: string | null = null
     public onShapeDoubleClick: (roomId: string) => void
 
     constructor(layer: Layer, rotationHandler: RotationHandler) {
@@ -40,12 +41,28 @@ export class Floor {
             shape.onDoubleClick = this.onShapeDoubleClick
             this.shapes.set(item.id, shape)
         })
+
+        if (this.highlightedId) {
+            this.highlight(this.highlightedId)
+        }
+    }
+
+    public highlight(roomId: string | null) {
+        if (this.highlightedId) {
+            this.shapes.get(this.highlightedId)?.setHighlighted(false)
+        }
+
+        this.highlightedId = roomId
+
+        if (roomId) {
+            this.shapes.get(roomId)?.setHighlighted(true)
+        }
     }
 
     public centerShapes() {
         if (this.shapes.size === 0) return
 
-        const rect = this.group.getClientRect({ relativeTo: this.group })
+        const rect = this.group.getClientRect({ relativeTo: this.group, skipShadow: true })
 
         const dx = Math.round((settings.map.width - rect.width) / 2 - rect.x)
         const dy = Math.round((settings.map.height - rect.height) / 2 - rect.y)

@@ -111,15 +111,35 @@ const roomsCentroid = computed(() => {
     return centroids
 })
 
+const emit = defineEmits<{
+    change: [roomId: string | null]
+}>()
+
 const roomsList = useTemplateRef('rooms-list')
+let currentIndex = -1
 
 onMounted(() => {
     roomsList.value?.addEventListener('wheel', handleWheel, { passive: false })
+    roomsList.value?.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
 })
 
 onBeforeUnmount(() => {
     roomsList.value?.removeEventListener('wheel', handleWheel)
+    roomsList.value?.removeEventListener('scroll', handleScroll)
+    emit('change', null)
 })
+
+function handleScroll() {
+    const elmt = roomsList.value as HTMLUListElement
+    const width = elmt.clientWidth
+    const index = width > 0 ? Math.round(elmt.scrollLeft / width) : 0
+
+    if (index === currentIndex) return
+    currentIndex = index
+
+    emit('change', props.rooms[index]?.id ?? null)
+}
 
 function closeOpenDetails() {
     const elmt = roomsList.value as HTMLUListElement

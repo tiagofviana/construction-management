@@ -179,6 +179,7 @@
                             :employee-id="props.employeeId"
                             @editing-room="floorCanvas.setTool(null)"
                             @roomChanged="loadRooms()"
+                            @change="(roomId) => floorCanvas?.highlightRoom(roomId)"
                         />
 
                         <div

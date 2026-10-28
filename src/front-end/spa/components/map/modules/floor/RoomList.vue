@@ -125,6 +125,8 @@ import {
     onMounted,
     onBeforeMount,
     onBeforeUnmount,
+    watch,
+    nextTick,
 } from 'vue'
 import { MoveRight, MoveLeft } from '@lucide/vue'
 import { permissionsStore } from '@/stores/employee/permissions'
@@ -138,6 +140,7 @@ type Direction = 'left' | 'right'
 const emit = defineEmits<{
     roomChanged: []
     editingRoom: []
+    change: [roomId: string | null]
 }>()
 
 const props = defineProps({
@@ -170,13 +173,39 @@ onBeforeMount(() => {
     permissions.fetchPermissions(props.employeeId)
 })
 
+let currentIndex = -1
+
 onMounted(async () => {
     roomsList.value?.addEventListener('wheel', handleWheel, { passive: false })
+    roomsList.value?.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
 })
 
 onBeforeUnmount(() => {
     roomsList.value?.removeEventListener('wheel', handleWheel)
+    roomsList.value?.removeEventListener('scroll', handleScroll)
+    emit('change', null)
 })
+
+watch(
+    () => props.rooms,
+    async () => {
+        await nextTick()
+        currentIndex = -1
+        handleScroll()
+    },
+)
+
+function handleScroll() {
+    const elmt = roomsList.value as HTMLUListElement
+    const width = elmt.clientWidth
+    const index = width > 0 ? Math.round(elmt.scrollLeft / width) : 0
+
+    if (index === currentIndex) return
+    currentIndex = index
+
+    emit('change', props.rooms[index]?.id ?? null)
+}
 
 function closeOpenDetails() {
     const elmt = roomsList.value as HTMLUListElement

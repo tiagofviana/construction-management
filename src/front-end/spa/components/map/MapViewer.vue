@@ -58,6 +58,7 @@
                                 :rooms="rooms"
                                 :floor-id="Number(selectedFloor)"
                                 :employee-id="Number(employeeId)"
+                                @change="(roomId) => viewerCanvas?.highlightRoom(roomId)"
                             />
                         </div>
 

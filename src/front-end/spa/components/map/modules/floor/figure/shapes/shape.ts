@@ -10,6 +10,7 @@ export class Shape {
     private room: Room
     private group: Group
     private textCentroid: Point | null = null
+    private isHighlighted: boolean = false
     private rotationHandler: RotationHandler
     public onDoubleClick: (roomId: string) => void
 
@@ -106,7 +107,7 @@ export class Shape {
 
     private constraintDrag() {
         const center = this.getCenterPoint()
-        const rect = this.group.getClientRect({ relativeTo: this.group })
+        const rect = this.group.getClientRect({ relativeTo: this.group, skipShadow: true })
         const point = {
             x: Math.round(this.group.x() - center.x),
             y: Math.round(this.group.y() - center.y),
@@ -142,6 +143,26 @@ export class Shape {
         this.group.add(path, text)
 
         this.updateTextPosition()
+        this.setHighlighted(this.isHighlighted)
+    }
+
+    public setHighlighted(value: boolean) {
+        this.isHighlighted = value
+
+        const path = this.findPath()
+        if (!path) return
+
+        if (value) {
+            this.group.moveToTop()
+        }
+
+        path.stroke(value ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,.6)')
+        path.strokeWidth(value ? 1.2 : 1)
+
+        path.shadowEnabled(value)
+        path.shadowColor('rgba(0,0,0,.8)')
+        path.shadowBlur(14)
+        path.shadowOpacity(0.5)
     }
 
     private createKonvaPath(): Konva.Path {
