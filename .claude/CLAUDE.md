@@ -12,7 +12,7 @@ Sistema para a gestão da área de engenheiros de vários hospitais. O sistema �
 - Fazer a build do frontend local: `npm run build-prod`
 - Fazer a build TailwindCSS: `npm run styles-prod`
 - Lint/format: `npm run lint:fix`
-- Typecheck: `npm run typecheck`
+- Type check: `npm run type-check`
 
 ### Backend
 
