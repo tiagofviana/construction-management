@@ -65,7 +65,7 @@ export class Shape {
 
         path.shadowEnabled(value)
         path.shadowColor('rgba(0,0,0,.8)')
-        path.shadowBlur(14)
+        path.shadowBlur(16)
         path.shadowOpacity(0.5)
     }
 

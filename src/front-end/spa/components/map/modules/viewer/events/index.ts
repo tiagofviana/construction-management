@@ -9,5 +9,8 @@ export class EventsHandler {
     constructor(stage: Stage) {
         this.zoom = new Zoom(stage)
         this.pan = new Pan(stage)
+
+        // Without it the map jumps to the limits on the next drag
+        this.zoom.onZoom = () => this.pan.clamp()
     }
 }

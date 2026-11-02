@@ -62,23 +62,32 @@ export class Pan {
         })
     }
 
+    // Keeps the current position inside the limits, used after the scale changes
+    public clamp(): void {
+        this.stage.position(this.clampPoint(this.stage.position()))
+    }
+
     private clampPoint(point: Point): Point {
         // constrains point (x, y) within allowed maximum and minimum limits
         const scale = this.stage.scaleX()
-        const stageWidth = this.stage.width()
-        const stageHeight = this.stage.height()
-
         const scaledWorldW = settings.map.width * scale
         const scaledWorldH = settings.map.height * scale
 
-        const minX = stageWidth - scaledWorldW - settings.map.padding
-        const maxX = settings.map.padding
-        const minY = stageHeight - scaledWorldH - settings.map.padding
-        const maxY = settings.map.padding
-
         return {
-            x: Math.min(Math.max(point.x, minX), maxX),
-            y: Math.min(Math.max(point.y, minY), maxY),
+            x: this.clampAxis(point.x, this.stage.width(), scaledWorldW),
+            y: this.clampAxis(point.y, this.stage.height(), scaledWorldH),
         }
+    }
+
+    /**
+     * A map bigger than the stage moves until its edges reach the stage edges,
+     * a smaller one moves freely inside the stage. Both can go "padding" beyond the limits.
+     */
+    private clampAxis(value: number, stageLength: number, mapLength: number): number {
+        const space = stageLength - mapLength
+        const min = Math.min(space, 0) - settings.map.padding
+        const max = Math.max(space, 0) + settings.map.padding
+
+        return Math.min(Math.max(value, min), max)
     }
 }

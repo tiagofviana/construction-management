@@ -7,9 +7,8 @@ from . import models
 
 
 class PermissionsUpdater:
-    permissions = []
-
     def __init__(self) -> list:
+        self.permissions = []
         contents = ContentType.objects.all()
         for content in contents:
             model = content.model_class()

@@ -184,7 +184,7 @@ class Item(models.Model):
         verbose_name="atributos",
         null=False,
         blank=False,
-        default={},
+        default=dict,
     )
 
     search_vector = SearchVectorField(
@@ -228,23 +228,17 @@ class Item(models.Model):
 
     def clean(self):
         super().clean()
-        validators.RoomObjectValidator(self).validate()
+        validators.RoomItemValidator(self).validate()
 
     def save(self, *args, **kwargs):
         self.full_clean()
-
-        if not self.description:
-            self.generate_description()
-
-        if self.search_vector is None:
-            self.update_vector()
 
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name} #{self.id}"
 
-    def generate_description(self):
+    def _generate_description(self):
         descriptions = []
 
         for attribute in self.category.attributes.all():
@@ -259,8 +253,10 @@ class Item(models.Model):
 
             descriptions.append(f"{attribute.label} {value}")
 
-        self.description = "; ".join(descriptions)
-        return self.description
+        return "; ".join(descriptions)
+
+    def update_description(self):
+        self.description = self._generate_description()
 
     def _generate_vector(self):
         vector = SearchVector(
@@ -273,15 +269,15 @@ class Item(models.Model):
 
     def update_vector(self):
         self.search_vector = self._generate_vector()
-        logging.info(f"Updating product #{self.id}. Vector: {self.search_vector}.")
-        self.save(
-            update_fields=[
-                "search_vector",
-            ]
-        )
 
 
 class RoomItem(models.Model):
+    construction_permissions = [
+        ("can_edit_roomItem", "Pode editar itens dos cômodos."),
+        ("can_add_roomItem", "Pode criar itens dos cômodos."),
+        ("can_view_roomItem", "Pode visualziar itens dos cômodos."),
+        ("can_delete_roomItem", "Pode remover itens dos cômodos."),
+    ]
     id = models.UUIDField(
         primary_key=True,
         unique=True,

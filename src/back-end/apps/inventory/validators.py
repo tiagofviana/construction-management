@@ -17,7 +17,7 @@ def validate_rotation(value):
         raise ValidationError("A rotação deve estar entre 0 e 360.")
 
 
-class RoomObjectValidator:
+class RoomItemValidator:
     def __init__(self, room_object: RoomObject):
         self.errors = {}
         self.room_object = room_object
@@ -44,6 +44,14 @@ class RoomObjectValidator:
         # The "category" field validation already reports the missing value.
         if not self.has_category:
             return
+
+        # Reject attributes that are not defined for the category.
+        allowed_names = {item.name for item in self.check_attributes}
+        for name in attributes.keys() - allowed_names:
+            self._add_error(
+                key=f"attributes",
+                message=f'O atributo "{name}" não existe para a categoria selecionada.',
+            )
 
         for item in self.check_attributes:
             value = attributes.get(item.name)

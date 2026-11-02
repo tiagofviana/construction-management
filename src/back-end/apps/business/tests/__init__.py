@@ -1,4 +1,4 @@
-from .test_model import *
+from .test_models import *
 
 """
 To run this tests  run: 

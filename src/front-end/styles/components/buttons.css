@@ -34,4 +34,8 @@
     .btn-white {
         @apply border border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-50 focus:ring-neutral-300 active:bg-neutral-100;
     }
+
+    .btn-brown {
+        @apply text-shadow bg-amber-800 text-white hover:bg-amber-700 focus:ring-amber-600 active:bg-amber-900;
+    }
 }

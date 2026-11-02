@@ -63,6 +63,20 @@
                         {{ item.description }}
                     </p>
                 </details>
+
+                <RouterLink
+                    v-if="permissions.hasPermission(props.employeeId, 'can_view_roomItem')"
+                    :to="{
+                        name: 'employee.room-inventory',
+                        params: {
+                            employeeId: props.employeeId,
+                            roomId: item.id,
+                        },
+                    }"
+                    class="btn btn-brown mt-2 w-full"
+                >
+                    Inventário
+                </RouterLink>
             </li>
         </ul>
 
@@ -91,6 +105,7 @@
 <script setup lang="ts">
 import { computed, useTemplateRef, onMounted, onBeforeUnmount } from 'vue'
 import { MoveRight, MoveLeft } from '@lucide/vue'
+import { permissionsStore } from '@/stores/employee/permissions'
 import { computeCentroid } from '../utils'
 import { Room, Point } from '../types'
 
@@ -101,7 +116,13 @@ const props = defineProps({
         type: Array<Room>,
         required: true,
     },
+    employeeId: {
+        type: Number,
+        required: true,
+    },
 })
+
+const permissions = permissionsStore()
 
 const roomsCentroid = computed(() => {
     const centroids: Map<string, Point> = new Map()

@@ -6,10 +6,13 @@ import { settings } from '../core'
 export class Zoom {
     private stage: Stage
     public onZoomChange: (value: number) => void
+    // Internal hook, runs right after the scale and position change
+    public onZoom: () => void
 
     constructor(stage: Stage) {
         this.stage = stage
         this.onZoomChange = () => {}
+        this.onZoom = () => {}
 
         this.stage.on('wheel', (e) => {
             this.onWheel(e)
@@ -38,6 +41,7 @@ export class Zoom {
             y: targetPos.y,
         })
 
+        this.onZoom()
         this.onZoomChange(newScale)
     }
 
@@ -62,6 +66,7 @@ export class Zoom {
             y: cy - (cy - this.stage.y()) * ratio,
         })
 
+        this.onZoom()
         this.onZoomChange(newScale)
     }
 }

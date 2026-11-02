@@ -73,6 +73,15 @@ export const employeeRoutes: RouteRecordRaw[] = [
                     breadcrumbLabel: 'Equipe',
                 },
             },
+
+            {
+                path: ':employeeId/quarto/:roomId/inventario',
+                name: 'employee.room-inventory',
+                component: () => import('@/views/employee/RoomInventoryView.vue'),
+                meta: {
+                    breadcrumbLabel: 'Cômodo',
+                },
+            },
         ],
     },
 ]
