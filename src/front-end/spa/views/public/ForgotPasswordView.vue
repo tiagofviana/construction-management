@@ -71,11 +71,11 @@ import TextLoading from '@/components/loading/TextLoading.vue'
 
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 
-interface ForgotPasswordForm {
+interface IForgotPasswordForm {
     email: string
 }
 
-interface ModalSettings {
+interface IModalSettings {
     type: ModalType
     title: string
     message: string
@@ -93,13 +93,13 @@ const inlineAlert = ref({
 })
 
 const isFormLoading = ref(false)
-const form = ref<ForgotPasswordForm>({
+const form = ref<IForgotPasswordForm>({
     email: '',
 })
 const formErrors = ref<{
     email?: string[]
 }>({})
-const modalAlert = ref<ModalSettings & { key: number }>({
+const modalAlert = ref<IModalSettings & { key: number }>({
     type: 'success',
     title: '',
     message: '',
@@ -116,7 +116,7 @@ function setInlineAlert(msg: string, type: InlineType) {
     inlineAlert.value.type = type
 }
 
-function setModalAlert(settings: ModalSettings) {
+function setModalAlert(settings: IModalSettings) {
     modalAlert.value = {
         key: modalAlert.value.key + 1,
         type: settings.type,

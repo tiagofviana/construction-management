@@ -1,6 +1,6 @@
 import Konva from 'konva'
 import type { Label } from 'konva/lib/shapes/Label'
-import type { Point } from '../types'
+import type { IPoint } from '../types'
 import { Figure } from './figure'
 
 export class Room extends Figure {
@@ -39,7 +39,7 @@ export class Room extends Figure {
         this.addMeasure(height, { x: margin + width, y: centerY })
     }
 
-    private addMeasure(length: number, center: Point) {
+    private addMeasure(length: number, center: IPoint) {
         const label = this.createLabel(`${length / 100}m`)
         const bounds = label.getClientRect()
 

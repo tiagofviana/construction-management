@@ -1,26 +1,26 @@
-export interface Point {
+export interface IPoint {
     x: number
     y: number
 }
 
-export interface Size {
+export interface ISize {
     width: number
     height: number
 }
 
-export type PathCommand = MoveCmd | LineCmd | CurveCmd
+export type PathCommand = IMoveCmd | ILineCmd | ICurveCmd
 
-export interface MoveCmd {
+export interface IMoveCmd {
     cmd: 'M'
     x: number
     y: number
 }
-export interface LineCmd {
+export interface ILineCmd {
     cmd: 'L'
     x: number
     y: number
 }
-export interface CurveCmd {
+export interface ICurveCmd {
     cmd: 'C'
     x: number
     y: number
@@ -30,7 +30,7 @@ export interface CurveCmd {
     y2: number
 }
 
-export interface Room {
+export interface IRoom {
     id: string
     name: string
     description: string

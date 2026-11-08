@@ -1,13 +1,13 @@
 import { SVGPath } from './path'
 import { snapValue } from '../../utils'
-import type { Point } from '../../types'
+import type { IPoint } from '../../types'
 import { settings } from './settings'
 
 export { settings } from './settings'
 export { tool, ToolOptions } from './tool'
 export const svgPath = SVGPath.instance
 
-export function snapPoint(point: Point): Point {
+export function snapPoint(point: IPoint): IPoint {
     if (settings.snap.isOn) {
         point.x = snapValue(point.x, settings.snap.length)
         point.y = snapValue(point.y, settings.snap.length)
@@ -20,8 +20,8 @@ export function snapPoint(point: Point): Point {
 }
 
 export function calculateCurve(
-    start: Point,
-    end: Point,
+    start: IPoint,
+    end: IPoint,
 ): { x1: number; y1: number; x2: number; y2: number } {
     const dx = end.x - start.x
     const dy = end.y - start.y

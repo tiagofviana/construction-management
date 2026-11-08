@@ -131,7 +131,7 @@ import {
 import axios from 'axios'
 import { X } from '@lucide/vue'
 import gsap from 'gsap'
-import SelectMultiple, { type KeyValue } from '@/components/form/SelectMultiple.vue'
+import SelectMultiple, { type IKeyValue } from '@/components/form/SelectMultiple.vue'
 import type { ModalType } from '@/components/alerts/ModalAlert.vue'
 import type { InlineType } from '@/components/alerts/InlineAlert.vue'
 import YesNoField from '@/components/form/YesNoField.vue'
@@ -141,26 +141,26 @@ import FieldErrors from '@/components/form/FieldErrors.vue'
 const AsyncInlineAlert = defineAsyncComponent(() => import('@/components/alerts/InlineAlert.vue'))
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 
-interface Permission {
+interface IPermission {
     id: number
     name: string
 }
 
-interface EmployeeGroup {
+interface IEmployeeGroup {
     id: number
     name: string
 }
 
-export interface Employee {
+export interface IEmployee {
     id: number
     fullname: string
     email: string
     isAdmin: boolean
-    permissions: Permission[]
-    groups: EmployeeGroup[]
+    permissions: IPermission[]
+    groups: IEmployeeGroup[]
 }
 
-interface ModalSettings {
+interface IModalSettings {
     type: ModalType
     title: string
     message: string
@@ -176,13 +176,13 @@ const emit = defineEmits<{
 
 const props = defineProps({
     employee: {
-        type: Object as PropType<Employee>,
+        type: Object as PropType<IEmployee>,
         required: true,
     },
 })
 
-const constructionPermissions = ref<Array<KeyValue>>([])
-const constructionGroups = ref<Array<KeyValue>>([])
+const constructionPermissions = ref<Array<IKeyValue>>([])
+const constructionGroups = ref<Array<IKeyValue>>([])
 const initialPermissions = computed(() => {
     return props.employee.permissions.map((item) => {
         return {
@@ -221,8 +221,8 @@ const modalAlert = ref({
 })
 const form = ref({
     isAdmin: props.employee.isAdmin,
-    permissions: initialPermissions.value as KeyValue[],
-    groups: initialGroups.value as KeyValue[],
+    permissions: initialPermissions.value as IKeyValue[],
+    groups: initialGroups.value as IKeyValue[],
 })
 const formErrors = ref<{
     permissions?: string[]
@@ -232,7 +232,7 @@ const formErrors = ref<{
 
 onBeforeMount(async () => {
     axios.get(`/api/employee/${employeeId}/construction/all-permissions-list`).then((response) => {
-        const permissionsList = response.data.permissions as Permission[]
+        const permissionsList = response.data.permissions as IPermission[]
         constructionPermissions.value = permissionsList.map((item) => {
             return {
                 key: item.id,
@@ -242,7 +242,7 @@ onBeforeMount(async () => {
     })
 
     axios.get(`/api/employee/${employeeId}/construction/all-groups-list`).then((response) => {
-        const groupsList = response.data.groups as EmployeeGroup[]
+        const groupsList = response.data.groups as IEmployeeGroup[]
         constructionGroups.value = groupsList.map((item) => {
             return {
                 key: item.id,
@@ -301,7 +301,7 @@ function animateOut() {
     )
 }
 
-function setModalAlert(settings: ModalSettings) {
+function setModalAlert(settings: IModalSettings) {
     modalAlert.value = {
         key: modalAlert.value.key + 1,
         type: settings.type,

@@ -1,16 +1,16 @@
 import { reactive } from 'vue'
 import { defineStore } from 'pinia'
 
-interface BreadcrumbItem {
+interface IBreadcrumbItem {
     label: string
     link: string
 }
 
-interface BreadcrumbsData {
+interface IBreadcrumbsData {
     homeLabel: string
-    crumbs: BreadcrumbItem[]
+    crumbs: IBreadcrumbItem[]
 }
-const DEFAULT_DATA: BreadcrumbsData = {
+const DEFAULT_DATA: IBreadcrumbsData = {
     homeLabel: '',
     crumbs: [],
 }
@@ -19,7 +19,7 @@ const BREADCRUMBS_DATA = 'employeeBreadcrumbsData'
 
 export const breadcrumbsStore = defineStore('breadcrumbs', () => {
     const storedData = localStorage.getItem(BREADCRUMBS_DATA)
-    const data = reactive<BreadcrumbsData>(storedData ? JSON.parse(storedData) : DEFAULT_DATA)
+    const data = reactive<IBreadcrumbsData>(storedData ? JSON.parse(storedData) : DEFAULT_DATA)
 
     function persist() {
         localStorage.setItem(BREADCRUMBS_DATA, JSON.stringify(data))

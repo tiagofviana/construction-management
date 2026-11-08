@@ -116,7 +116,7 @@ import {
 } from 'vue'
 import axios from 'axios'
 import { ChevronDown } from '@lucide/vue'
-import SelectMultiple, { type KeyValue } from '@/components/form/SelectMultiple.vue'
+import SelectMultiple, { type IKeyValue } from '@/components/form/SelectMultiple.vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'
 import ItemList from '@/components/inventory/modules/viewer/ItemList.vue'
 import {
@@ -127,7 +127,7 @@ import {
 
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 
-interface Category {
+interface ICategory {
     id: number
     name: string
 }
@@ -141,8 +141,8 @@ const container = useTemplateRef('container')
 const itemList = useTemplateRef('item-list')
 const inventoryCanvas = shallowRef<InventoryCanvas | null>(null)
 
-const categories = ref<Array<KeyValue>>([])
-const selectedCategories = ref<Array<KeyValue>>([])
+const categories = ref<Array<IKeyValue>>([])
+const selectedCategories = ref<Array<IKeyValue>>([])
 const isLoadingCategories = ref(true)
 const isCategoriesOpen = ref(false)
 
@@ -267,7 +267,7 @@ function fetchCategories() {
     axios
         .get(`/api/employee/${props.employeeId}/inventory/categories`)
         .then((response) => {
-            const data = response.data as Array<Category>
+            const data = response.data as Array<ICategory>
             categories.value = data.map(({ id, name }) => ({ key: id, value: name }))
         })
         .catch(handleRequestError)

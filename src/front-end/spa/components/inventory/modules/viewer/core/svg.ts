@@ -1,8 +1,8 @@
-import type { Size } from '../types'
+import type { ISize } from '../types'
 
-export interface SVGImage {
+export interface ISVGImage {
     image: HTMLImageElement
-    size: Size
+    size: ISize
 }
 
 export class SVGParser {
@@ -16,7 +16,7 @@ export class SVGParser {
      * Converts the SVG markup into an image.
      * Rendering through <img> keeps the SVG sandboxed (no scripts, no access to the page).
      */
-    public loadImage(): Promise<SVGImage> {
+    public loadImage(): Promise<ISVGImage> {
         return new Promise((resolve, reject) => {
             const svg = this.parse()
             const size = this.getIntrinsicSize(svg)
@@ -58,7 +58,7 @@ export class SVGParser {
      * Priority: width/height attributes, then the viewBox, then the default size.
      * When only one attribute exists, the other one keeps the viewBox (or default) proportion.
      */
-    private getIntrinsicSize(svg: SVGSVGElement): Size {
+    private getIntrinsicSize(svg: SVGSVGElement): ISize {
         const width = this.getLengthAttribute(svg, 'width')
         const height = this.getLengthAttribute(svg, 'height')
 
@@ -85,7 +85,7 @@ export class SVGParser {
         return reference
     }
 
-    private getViewBoxSize(svg: SVGSVGElement): Size | null {
+    private getViewBoxSize(svg: SVGSVGElement): ISize | null {
         const viewBox = (svg.getAttribute('viewBox') || '')
             .trim()
             .split(/[\s,]+/)

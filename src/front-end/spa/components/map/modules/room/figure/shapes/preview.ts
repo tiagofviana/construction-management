@@ -1,7 +1,7 @@
 import Konva from 'konva'
 import type { Layer } from 'konva/lib/Layer'
 import type { Stage } from 'konva/lib/Stage'
-import type { Point } from '../../../types'
+import type { IPoint } from '../../../types'
 import { Figure } from '../figure'
 import { tool, svgPath, snapPoint, calculateCurve } from '../../core'
 
@@ -65,8 +65,8 @@ export class Preview extends Figure {
         })
     }
 
-    private getCurrentMousePoint(): Point {
-        const ptr = this.stage.getPointerPosition() as Point
+    private getCurrentMousePoint(): IPoint {
+        const ptr = this.stage.getPointerPosition() as IPoint
         const scale = this.stage.scaleX()
 
         const point = {

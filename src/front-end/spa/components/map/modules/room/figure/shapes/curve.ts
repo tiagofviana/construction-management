@@ -2,10 +2,10 @@ import Konva from 'konva'
 import type { Line } from 'konva/lib/shapes/Line'
 import type { Circle } from 'konva/lib/shapes/Circle'
 import { snapValue } from '../../../utils'
-import type { Point } from '../../../types'
+import type { IPoint } from '../../../types'
 import { Figure } from '../figure'
 import { svgPath, settings } from '../../core'
-import { PathCommand, CurveCmd } from '../../../types'
+import { PathCommand, ICurveCmd } from '../../../types'
 
 export class CurveControllers extends Figure {
     public onControllerChange: () => void = () => {}
@@ -32,7 +32,7 @@ export class CurveControllers extends Figure {
         this.group.listening(false)
     }
 
-    private createFirstController(previous: PathCommand, current: CurveCmd): void {
+    private createFirstController(previous: PathCommand, current: ICurveCmd): void {
         const linePoint = { x: previous.x, y: previous.y }
         const endPoint = { x: current.x1, y: current.y1 }
 
@@ -62,7 +62,7 @@ export class CurveControllers extends Figure {
         this.group.add(line, circle)
     }
 
-    private createSecondController(current: CurveCmd): void {
+    private createSecondController(current: ICurveCmd): void {
         const linePoint = { x: current.x, y: current.y }
         const endPoint = { x: current.x2, y: current.y2 }
 
@@ -92,7 +92,7 @@ export class CurveControllers extends Figure {
         this.group.add(line, circle)
     }
 
-    private createLine(from: Point, to: Point): Line {
+    private createLine(from: IPoint, to: IPoint): Line {
         return new Konva.Line({
             points: [from.x, from.y, to.x, to.y],
             stroke: '#666',
@@ -101,7 +101,7 @@ export class CurveControllers extends Figure {
         })
     }
 
-    private createCircle(point: Point): Circle {
+    private createCircle(point: IPoint): Circle {
         return new Konva.Circle({
             x: point.x,
             y: point.y,
@@ -113,7 +113,7 @@ export class CurveControllers extends Figure {
         })
     }
 
-    private snapPoint(point: Point): Point {
+    private snapPoint(point: IPoint): IPoint {
         if (settings.snap.isOn) {
             point.x = snapValue(point.x, settings.snap.length)
             point.y = snapValue(point.y, settings.snap.length)

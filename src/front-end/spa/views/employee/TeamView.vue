@@ -181,7 +181,7 @@ import { ChevronUp } from '@lucide/vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'
 import { type ModalType } from '@/components/alerts/ModalAlert.vue'
 import { permissionsStore } from '@/stores/employee/permissions'
-import type { Employee } from '@/components/business/EmployeeEditor.vue'
+import type { IEmployee } from '@/components/business/EmployeeEditor.vue'
 
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 const AsyncEmployeeAdd = defineAsyncComponent(() => import('@/components/business/EmployeeAdd.vue'))
@@ -189,7 +189,7 @@ const AsyncEditEmployee = defineAsyncComponent(
     () => import('@/components/business/EmployeeEditor.vue'),
 )
 
-interface ModalSettings {
+interface IModalSettings {
     type: ModalType
     title: string
     message: string
@@ -203,12 +203,12 @@ const route = useRoute()
 const permissions = permissionsStore()
 const employeeId = Number(route.params.employeeId)
 const isLoadingTeam = ref<boolean>(false)
-const employees = ref<Employee[]>([])
+const employees = ref<IEmployee[]>([])
 const openEmployees = ref<Set<number>>(new Set())
 const employeeAddKey = ref(0)
 const employeeEditor = ref({
     key: 0,
-    employee: undefined as undefined | Employee,
+    employee: undefined as undefined | IEmployee,
 })
 const modalAlert = ref({
     type: 'success' as ModalType,
@@ -237,14 +237,14 @@ onBeforeMount(() => {
     fetchTeam()
 })
 
-function setEmployeeEditor(employee: Employee) {
+function setEmployeeEditor(employee: IEmployee) {
     employeeEditor.value = {
         key: employeeEditor.value.key + 1,
         employee: employee,
     }
 }
 
-function setModalAlert(settings: ModalSettings) {
+function setModalAlert(settings: IModalSettings) {
     modalAlert.value = {
         key: modalAlert.value.key + 1,
         type: settings.type,
@@ -272,7 +272,7 @@ function fetchTeam() {
         })
 }
 
-function desactiveEmployee(employee: Employee) {
+function desactiveEmployee(employee: IEmployee) {
     axios.get(`/api/employee/${employeeId}/deactivate-employee/${employee.id}/`).then(() => {
         fetchTeam()
     })

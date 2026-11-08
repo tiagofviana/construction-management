@@ -95,13 +95,13 @@ import TextLoading from '@/components/loading/TextLoading.vue'
 
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 
-interface LoginForm {
+interface ILoginForm {
     email: string
     password: string
     stayConnected: boolean
 }
 
-const form = ref<LoginForm>({
+const form = ref<ILoginForm>({
     email: 'func@email.com',
     password: '1234asdf1',
     stayConnected: false,

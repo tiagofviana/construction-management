@@ -2,19 +2,19 @@ import Konva from 'konva'
 import type { Group } from 'konva/lib/Group'
 import type { IRect } from 'konva/lib/types'
 import { rooms, tool, settings } from '../../core'
-import type { Room, Point } from '../../../types'
+import type { IRoom, IPoint } from '../../../types'
 import { computeCentroid, snapValue } from '../../../utils'
 import type { RotationHandler } from './rotation'
 
 export class Shape {
-    private room: Room
+    private room: IRoom
     private group: Group
-    private textCentroid: Point | null = null
+    private textCentroid: IPoint | null = null
     private isHighlighted: boolean = false
     private rotationHandler: RotationHandler
     public onDoubleClick: (roomId: string) => void
 
-    constructor(room: Room, group: Group, rotationHandler: RotationHandler) {
+    constructor(room: IRoom, group: Group, rotationHandler: RotationHandler) {
         this.rotationHandler = rotationHandler
         this.room = room
         this.onDoubleClick = () => {}
@@ -34,7 +34,7 @@ export class Shape {
         this.setGroupEvents()
     }
 
-    public getPosition(): Point {
+    public getPosition(): IPoint {
         const center = this.getCenterPoint()
 
         return {
@@ -43,7 +43,7 @@ export class Shape {
         }
     }
 
-    public setPosition(point: Point) {
+    public setPosition(point: IPoint) {
         const center = this.getCenterPoint()
 
         this.group.position({
@@ -205,7 +205,7 @@ export class Shape {
         return [x, y, width, height]
     }
 
-    private getCenterPoint(): Point {
+    private getCenterPoint(): IPoint {
         const [, , width, height] = this.getViewBox()
 
         return {
@@ -236,7 +236,7 @@ export class Shape {
         return this.room.id
     }
 
-    public update(room: Room): void {
+    public update(room: IRoom): void {
         Object.assign(this.room, room)
         this.draw()
     }

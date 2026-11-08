@@ -72,14 +72,14 @@
 import { onBeforeMount, ref, useTemplateRef } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import { accountStore, AccountInfo } from '@/stores/account'
+import { accountStore, IAccountInfo } from '@/stores/account'
 import InlineAlert, { type InlineType } from '@/components/alerts/InlineAlert.vue'
 import TextLoading from '@/components/loading/TextLoading.vue'
 
 const router = useRouter()
 const account = accountStore()
 const confirmButton = useTemplateRef<HTMLButtonElement>('confirmButton')
-const info = ref<AccountInfo | null>(null)
+const info = ref<IAccountInfo | null>(null)
 const inlineAlert = ref({
     message: '',
     key: 0,

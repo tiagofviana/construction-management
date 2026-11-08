@@ -4,7 +4,7 @@ import { DrawManager } from './figure'
 import { EventsHandler } from './events'
 import { Settings } from './core/settings'
 import { SVGParser } from './core/svg'
-import type { Size } from './types'
+import type { ISize } from './types'
 
 export { SVGParseError } from './core/svg'
 
@@ -64,7 +64,7 @@ export class SVGCanvas {
     }
 
     // The size is the room size; the floor also includes the margin around the room
-    public setMapSize(size: Size) {
+    public setMapSize(size: ISize) {
         const margin = this.settings.room.margin * 2
         this.settings.map.width = size.width * 10 + margin
         this.settings.map.height = size.height * 10 + margin

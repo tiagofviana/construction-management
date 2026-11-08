@@ -1,7 +1,7 @@
 import Konva from 'konva'
 import type { Layer } from 'konva/lib/Layer'
 import { rooms } from '../../core'
-import type { Point } from '../../../types'
+import type { IPoint } from '../../../types'
 import type { Shape } from './shape'
 
 const LINE_SIZE = 60
@@ -12,7 +12,7 @@ export class RotationHandler {
         draggable: true,
     })
 
-    private centerPoint: Point = {
+    private centerPoint: IPoint = {
         x: 0,
         y: 0,
     }
@@ -65,7 +65,7 @@ export class RotationHandler {
         this.group.add(this.line, circle)
     }
 
-    private createLine(start: Point, end: Point): Konva.Line {
+    private createLine(start: IPoint, end: IPoint): Konva.Line {
         return new Konva.Line({
             points: [start.x, start.y, end.x, end.y],
             dash: [10, 5],
@@ -75,7 +75,7 @@ export class RotationHandler {
         })
     }
 
-    private createCircle(point: Point, color: string): Konva.Circle {
+    private createCircle(point: IPoint, color: string): Konva.Circle {
         return new Konva.Circle({
             x: point.x,
             y: point.y,

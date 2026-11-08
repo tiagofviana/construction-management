@@ -1,15 +1,15 @@
 import Konva from 'konva'
 import type { Group } from 'konva/lib/Group'
-import type { Room, Point } from '../../../types'
+import type { IRoom, IPoint } from '../../../types'
 import { computeCentroid } from '../../../utils'
 
 export class Shape {
-    private room: Room
+    private room: IRoom
     private group: Group
-    private textCentroid: Point | null = null
+    private textCentroid: IPoint | null = null
     public onDoubleClick: (roomId: string) => void
 
-    constructor(room: Room, group: Group) {
+    constructor(room: IRoom, group: Group) {
         this.room = room
         this.onDoubleClick = () => {}
 
@@ -95,7 +95,7 @@ export class Shape {
         return [x, y, width, height]
     }
 
-    private getCenterPoint(): Point {
+    private getCenterPoint(): IPoint {
         const [, , width, height] = this.getViewBox()
 
         return {

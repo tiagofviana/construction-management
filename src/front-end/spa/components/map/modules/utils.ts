@@ -1,5 +1,5 @@
 import { PathSerializer } from './serializers'
-import { Point, PathCommand } from './types'
+import { IPoint, PathCommand } from './types'
 
 export function snapValue(value: number, snapLength: number): number {
     return Math.round(value / snapLength) * snapLength
@@ -10,7 +10,7 @@ export function isHexColor(color: string) {
     return hexRegex.test(color)
 }
 
-export function computeCentroid(svgPath: string): Point {
+export function computeCentroid(svgPath: string): IPoint {
     const commands = PathSerializer.fromString(svgPath)
     const polygon = flattenToPolygon(commands)
     const centroid = getPolygonCentroid(polygon)
@@ -21,9 +21,9 @@ export function computeCentroid(svgPath: string): Point {
     }
 }
 
-function flattenToPolygon(commands: PathCommand[], curveSegments = 16): Point[] {
-    const points: Point[] = []
-    let current: Point = { x: 0, y: 0 }
+function flattenToPolygon(commands: PathCommand[], curveSegments = 16): IPoint[] {
+    const points: IPoint[] = []
+    let current: IPoint = { x: 0, y: 0 }
 
     for (const command of commands) {
         if (command.cmd === 'M' || command.cmd === 'L') {
@@ -46,7 +46,7 @@ function flattenToPolygon(commands: PathCommand[], curveSegments = 16): Point[] 
     return points
 }
 
-function cubicBezierPoint(p0: Point, p1: Point, p2: Point, p3: Point, t: number): Point {
+function cubicBezierPoint(p0: IPoint, p1: IPoint, p2: IPoint, p3: IPoint, t: number): IPoint {
     const mt = 1 - t
     return {
         x: mt ** 3 * p0.x + 3 * mt ** 2 * t * p1.x + 3 * mt * t ** 2 * p2.x + t ** 3 * p3.x,
@@ -54,7 +54,7 @@ function cubicBezierPoint(p0: Point, p1: Point, p2: Point, p3: Point, t: number)
     }
 }
 
-function getPolygonCentroid(points: Point[]): Point {
+function getPolygonCentroid(points: IPoint[]): IPoint {
     let area = 0
     let cx = 0
     let cy = 0

@@ -86,7 +86,7 @@ import Coloris from '@melloware/coloris'
 import '@melloware/coloris/dist/coloris.css'
 import { SVGCanvas, SVGParseError } from './visualizer/index'
 import RoomSize from './visualizer/RoomSize.vue'
-import type { Size } from './visualizer/types'
+import type { ISize } from './visualizer/types'
 
 const props = defineProps({
     svg: {
@@ -196,7 +196,7 @@ async function renderSVG(svg: string) {
     }
 }
 
-function setMapSize(size: Size) {
+function setMapSize(size: ISize) {
     roomSettings.size = size
     svgCanvas.value?.setMapSize(size)
 }

@@ -1,6 +1,6 @@
 import Konva from 'konva'
 import { Figure } from './figure'
-import type { SVGImage } from '../core/svg'
+import type { ISVGImage } from '../core/svg'
 
 // Distance between the object and the measure line
 const MEASURE_GAP = 10
@@ -8,9 +8,9 @@ const MEASURE_GAP = 10
 const MEASURE_TICK = 8
 
 export class SVGObject extends Figure {
-    private svgImage: SVGImage | null = null
+    private svgImage: ISVGImage | null = null
 
-    public setImage(svgImage: SVGImage | null) {
+    public setImage(svgImage: ISVGImage | null) {
         this.svgImage = svgImage
         this.redraw()
     }

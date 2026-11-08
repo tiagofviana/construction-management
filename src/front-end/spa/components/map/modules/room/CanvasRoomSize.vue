@@ -121,7 +121,7 @@ import { ref, onUnmounted, watch, PropType } from 'vue'
 import { ChevronRight, ChevronLeft } from '@lucide/vue'
 
 type Direction = 'left' | 'right'
-export interface Size {
+export interface ISize {
     width: number
     height: number
 }
@@ -140,7 +140,7 @@ const props = defineProps({
         required: true,
     },
     initialSize: {
-        type: Object as PropType<Size>,
+        type: Object as PropType<ISize>,
         required: false,
     },
 })
@@ -149,7 +149,7 @@ onUnmounted(() => {
 })
 
 const emit = defineEmits<{
-    change: [value: Size]
+    change: [value: ISize]
 }>()
 
 const floorSize = ref({ width: 0, height: 200 })

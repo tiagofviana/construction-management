@@ -3,7 +3,7 @@ import type { Stage } from 'konva/lib/Stage'
 import { DrawManager } from './figure'
 import { EventsHandler } from './events'
 import { settings, svgPath, ToolOptions, tool } from './core'
-import { PathCommand, Size } from '../types'
+import { PathCommand, ISize } from '../types'
 
 export class RoomCanvas {
     private stage: Stage
@@ -110,7 +110,7 @@ export class RoomCanvas {
         this.svgPath.reset()
     }
 
-    public setMapSize(size: Size) {
+    public setMapSize(size: ISize) {
         console.log('setMapSize')
         settings.map.width = size.width * 10
         settings.map.height = size.height * 10

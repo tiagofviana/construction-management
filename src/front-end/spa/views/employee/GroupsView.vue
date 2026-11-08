@@ -120,12 +120,12 @@ import { ChevronUp } from '@lucide/vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'
 import { type ModalType } from '@/components/alerts/ModalAlert.vue'
 import { permissionsStore } from '@/stores/employee/permissions'
-import type { Group } from '@/components/business/GroupEditor.vue'
+import type { IGroup } from '@/components/business/GroupEditor.vue'
 
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 const AsyncGroupEditor = defineAsyncComponent(() => import('@/components/business/GroupEditor.vue'))
 
-interface ModalSettings {
+interface IModalSettings {
     type: ModalType
     title: string
     message: string
@@ -139,12 +139,12 @@ const route = useRoute()
 const permissions = permissionsStore()
 const employeeId = Number(route.params.employeeId)
 const isLoadingGroups = ref<boolean>(false)
-const groups = ref<Group[]>([])
+const groups = ref<IGroup[]>([])
 const openGroups = ref<Set<string>>(new Set())
 const groupEditor = ref({
     key: 0,
     isUpdate: false,
-    group: undefined as undefined | Group,
+    group: undefined as undefined | IGroup,
 })
 const modalAlert = ref({
     type: 'success' as ModalType,
@@ -173,7 +173,7 @@ onBeforeMount(() => {
     fetchGroups()
 })
 
-function setGroupEditor(isUpdate: boolean, group: Group | undefined = undefined) {
+function setGroupEditor(isUpdate: boolean, group: IGroup | undefined = undefined) {
     groupEditor.value = {
         key: groupEditor.value.key + 1,
         isUpdate: isUpdate,
@@ -181,7 +181,7 @@ function setGroupEditor(isUpdate: boolean, group: Group | undefined = undefined)
     }
 }
 
-function setModalAlert(settings: ModalSettings) {
+function setModalAlert(settings: IModalSettings) {
     modalAlert.value = {
         key: modalAlert.value.key + 1,
         type: settings.type,

@@ -131,7 +131,7 @@ import {
 import { MoveRight, MoveLeft } from '@lucide/vue'
 import { permissionsStore } from '@/stores/employee/permissions'
 import { computeCentroid } from '../utils'
-import { Room, Point } from '../types'
+import { IRoom, IPoint } from '../types'
 
 const AsyncRoomEditor = defineAsyncComponent(() => import('@/components/map/RoomEditor.vue'))
 
@@ -145,7 +145,7 @@ const emit = defineEmits<{
 
 const props = defineProps({
     rooms: {
-        type: Array<Room>,
+        type: Array<IRoom>,
         required: true,
     },
     employeeId: {
@@ -155,7 +155,7 @@ const props = defineProps({
 })
 
 const roomsCentroid = computed(() => {
-    const centroids: Map<string, Point> = new Map()
+    const centroids: Map<string, IPoint> = new Map()
     props.rooms.forEach((item) => {
         centroids.set(item.id, computeCentroid(item.svgPath))
     })
@@ -164,7 +164,7 @@ const roomsCentroid = computed(() => {
 
 const permissions = permissionsStore()
 const roomsList = useTemplateRef('rooms-list')
-const roomEditor = ref<{ key: number; room: Room | undefined }>({
+const roomEditor = ref<{ key: number; room: IRoom | undefined }>({
     key: 0,
     room: undefined,
 })
@@ -215,7 +215,7 @@ function closeOpenDetails() {
     })
 }
 
-function setRoomEditor(room: Room) {
+function setRoomEditor(room: IRoom) {
     roomEditor.value = {
         key: roomEditor.value.key + 1,
         room: room,

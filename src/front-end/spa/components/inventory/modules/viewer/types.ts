@@ -1,14 +1,14 @@
-export interface Point {
+export interface IPoint {
     x: number
     y: number
 }
 
-export interface Size {
+export interface ISize {
     width: number
     height: number
 }
 
-export interface InventoryRoom {
+export interface IInventoryRoom {
     id: string
     name: string
     description: string
@@ -18,7 +18,7 @@ export interface InventoryRoom {
     color: string
 }
 
-export interface InventoryItem {
+export interface IInventoryItem {
     id: string
     name: string
     description: string

@@ -1,5 +1,5 @@
 import { calculateCurve, snapPoint } from '.'
-import type { PathCommand, Point } from '../../types'
+import type { PathCommand, IPoint } from '../../types'
 
 export class SVGPath {
     // Singleton
@@ -29,7 +29,7 @@ export class SVGPath {
         this.path = []
     }
 
-    public addCurveCommand(endPoint: Point) {
+    public addCurveCommand(endPoint: IPoint) {
         const startPoint = this.path.at(-1)
 
         if (!startPoint) {
@@ -52,7 +52,7 @@ export class SVGPath {
         this.onPathChange(this.path)
     }
 
-    private addMoveCommand(point: Point) {
+    private addMoveCommand(point: IPoint) {
         point = snapPoint(point)
         this.path.push({
             cmd: 'M',
@@ -63,7 +63,7 @@ export class SVGPath {
         this.onPathChange(this.path)
     }
 
-    public addLineCommand(point: Point) {
+    public addLineCommand(point: IPoint) {
         const startPoint = this.path.at(-1)
 
         if (!startPoint) {

@@ -107,7 +107,7 @@ import {
 import axios from 'axios'
 import { X } from '@lucide/vue'
 import gsap from 'gsap'
-import SelectMultiple, { type KeyValue } from '../form/SelectMultiple.vue'
+import SelectMultiple, { type IKeyValue } from '../form/SelectMultiple.vue'
 import type { ModalType } from '@/components/alerts/ModalAlert.vue'
 import type { InlineType } from '@/components/alerts/InlineAlert.vue'
 import TextLoading from '@/components/loading/TextLoading.vue'
@@ -116,18 +116,18 @@ import FieldErrors from '@/components/form/FieldErrors.vue'
 const AsyncInlineAlert = defineAsyncComponent(() => import('@/components/alerts/InlineAlert.vue'))
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 
-interface Permission {
+interface IPermission {
     id: number
     name: string
 }
 
-export interface Group {
+export interface IGroup {
     id: number
     name: string
-    permissions: Permission[]
+    permissions: IPermission[]
 }
 
-interface ModalSettings {
+interface IModalSettings {
     type: ModalType
     title: string
     message: string
@@ -143,7 +143,7 @@ const emit = defineEmits<{
 
 const props = defineProps({
     group: {
-        type: Object as PropType<Group>,
+        type: Object as PropType<IGroup>,
         required: false,
     },
     isUpdate: {
@@ -152,7 +152,7 @@ const props = defineProps({
     },
 })
 
-const constructionPermissions = ref<Array<KeyValue>>([])
+const constructionPermissions = ref<Array<IKeyValue>>([])
 const groupPermissions = computed(() => {
     if (!props.group) return []
 
@@ -185,7 +185,7 @@ const modalAlert = ref({
 })
 const form = ref({
     name: props.group?.name || '',
-    permissions: [] as KeyValue[],
+    permissions: [] as IKeyValue[],
 })
 const formErrors = ref<{
     name?: string[]
@@ -194,7 +194,7 @@ const formErrors = ref<{
 
 onBeforeMount(async () => {
     axios.get(`/api/employee/${employeeId}/construction/all-permissions-list`).then((response) => {
-        const permissions = response.data.permissions as Permission[]
+        const permissions = response.data.permissions as IPermission[]
         constructionPermissions.value = permissions.map((item) => {
             return {
                 key: item.id,
@@ -253,7 +253,7 @@ function animateOut() {
     )
 }
 
-function setModalAlert(settings: ModalSettings) {
+function setModalAlert(settings: IModalSettings) {
     modalAlert.value = {
         key: modalAlert.value.key + 1,
         type: settings.type,

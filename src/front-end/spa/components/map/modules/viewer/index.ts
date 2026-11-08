@@ -3,7 +3,7 @@ import type { Stage } from 'konva/lib/Stage'
 import { DrawManager } from './figure'
 import { EventsHandler } from './events'
 import { settings, rooms } from './core'
-import type { Room, Size } from '../types'
+import type { IRoom, ISize } from '../types'
 
 export class ViewerCanvas {
     private stage: Stage
@@ -21,7 +21,7 @@ export class ViewerCanvas {
         this.eventsHandler = new EventsHandler(this.stage)
     }
 
-    public setRooms(data: Array<Room>) {
+    public setRooms(data: Array<IRoom>) {
         rooms.setRooms(data)
         this.drawManager.floor.draw()
     }
@@ -35,7 +35,7 @@ export class ViewerCanvas {
         this.setRooms([])
     }
 
-    public setMapSize(size: Size) {
+    public setMapSize(size: ISize) {
         settings.map.width = size.width * 10
         settings.map.height = size.height * 10
 

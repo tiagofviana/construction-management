@@ -131,9 +131,9 @@ import ModalAlert, { type ModalType } from '@/components/alerts/ModalAlert.vue'
 import FieldErrors from '@/components/form/FieldErrors.vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'
 import { PathSerializer } from '../serializers'
-import type { Room, PathCommand, Size } from '../types'
+import type { IRoom, PathCommand, ISize } from '../types'
 
-interface FormData {
+interface IFormData {
     name: string
     description: string
     color: string
@@ -143,7 +143,7 @@ interface FormData {
     height: number
 }
 
-interface ModalSettings {
+interface IModalSettings {
     type: ModalType
     title: string
     message: string
@@ -160,7 +160,7 @@ const emit = defineEmits<{
 
 const props = defineProps({
     room: {
-        type: Object as PropType<Room>,
+        type: Object as PropType<IRoom>,
         required: false,
     },
     isUpdate: {
@@ -247,7 +247,7 @@ const formErrors = ref<{
     area?: string[]
     svgPath?: string[]
 }>({})
-const form = defineModel<FormData>({
+const form = defineModel<IFormData>({
     default: () => ({
         name: '',
         description: '',
@@ -258,7 +258,7 @@ const form = defineModel<FormData>({
         height: 200,
     }),
 })
-const modalAlert = ref<ModalSettings & { key: number }>({
+const modalAlert = ref<IModalSettings & { key: number }>({
     type: 'success',
     title: '',
     message: '',
@@ -270,7 +270,7 @@ const modalAlert = ref<ModalSettings & { key: number }>({
 })
 const isSavingRoom = ref<boolean>(false)
 
-function setModalAlert(settings: ModalSettings) {
+function setModalAlert(settings: IModalSettings) {
     modalAlert.value = {
         key: modalAlert.value.key + 1,
         type: settings.type,
@@ -367,7 +367,7 @@ function setSvgPath(value: Array<PathCommand>) {
     }
 }
 
-function setMapSize(size: Size) {
+function setMapSize(size: ISize) {
     form.value.width = size.width
     form.value.height = size.height
 }

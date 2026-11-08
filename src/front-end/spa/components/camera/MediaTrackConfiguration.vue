@@ -107,13 +107,13 @@ const alert = ref({
 const trackCapabilities = computed(() => props.videoTrack.getCapabilities())
 const trackSettings = computed(() => props.videoTrack.getSettings())
 
-interface configI {
+interface IConfig {
     value: number
     min: number
     max: number
     step: number
 }
-const trackConfig = reactive<Record<string, configI>>({})
+const trackConfig = reactive<Record<string, IConfig>>({})
 
 onMounted(() => {
     prepareConfigurations()

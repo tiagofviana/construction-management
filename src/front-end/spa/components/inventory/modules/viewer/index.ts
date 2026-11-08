@@ -4,9 +4,9 @@ import { Settings } from './core/settings'
 import { EventsHandler } from './events'
 import { Room } from './figure/room'
 import { RoomItems } from './figure/items'
-import type { InventoryRoom, InventoryItem } from './types'
+import type { IInventoryRoom, IInventoryItem } from './types'
 
-export type { InventoryRoom, InventoryItem } from './types'
+export type { IInventoryRoom, IInventoryItem } from './types'
 
 export class InventoryCanvas {
     private stage: Stage
@@ -38,12 +38,12 @@ export class InventoryCanvas {
         this.resizeObserver.observe(elmt)
     }
 
-    public setRoom(room: InventoryRoom) {
+    public setRoom(room: IInventoryRoom) {
         this.room.draw(room)
         this.eventsHandler.pan.centralize()
     }
 
-    public setItems(items: Array<InventoryItem>) {
+    public setItems(items: Array<IInventoryItem>) {
         return this.items.draw(items)
     }
 

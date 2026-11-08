@@ -239,7 +239,7 @@ import { ensureChartJsReady } from '@/plugins/chartjsSetup'
 import { breadcrumbsStore } from '@/stores/employee/breadcrumbs'
 import { permissionsStore } from '@/stores/employee/permissions'
 
-interface DashboardData {
+interface IDashboardData {
     construction: {
         name: string
         address: string
@@ -262,7 +262,7 @@ const permissions = permissionsStore()
 const employeeId = Number(route.params.employeeId)
 const isLoadingData = ref<boolean>(true)
 const isChartJsReady = ref<boolean>(false)
-const dashboardData = ref<DashboardData>()
+const dashboardData = ref<IDashboardData>()
 
 onBeforeMount(() => {
     permissions.fetchPermissions(employeeId)

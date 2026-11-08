@@ -255,17 +255,17 @@ import RoomList from '@/components/map/modules/floor/RoomList.vue'
 import CanvasFloorSize from '@/components/map/modules/floor/CanvasFloorSize.vue'
 import type { ModalType } from '@/components/alerts/ModalAlert.vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'
-import type { Room, Point, Size } from '@/components/map/modules/types'
+import type { IRoom, IPoint, ISize } from '@/components/map/modules/types'
 import { FloorCanvas } from '@/components/map/modules/floor'
 import type { ToolOptions } from '@/components/map/modules/floor/core'
 
-interface FloorOptions {
+interface IFloorOptions {
     tool: ToolOptions
     zoom: {
         scale: number
     }
     mouse: {
-        point: Point
+        point: IPoint
         isDragging: boolean
     }
     grid: { isVisible: boolean }
@@ -287,7 +287,7 @@ const props = defineProps({
 })
 
 const permissions = permissionsStore()
-const rooms = ref<Array<Room>>([])
+const rooms = ref<Array<IRoom>>([])
 const floorSettings = reactive({
     size: {
         width: 200,
@@ -297,7 +297,7 @@ const floorSettings = reactive({
 const container = useTemplateRef('container')
 const roomList = useTemplateRef('room-list')
 const floorCanvas = shallowRef<null | FloorCanvas>(null)
-const controller = reactive<FloorOptions>({
+const controller = reactive<IFloorOptions>({
     tool: null,
     zoom: { scale: 1 },
     mouse: { point: { x: 0, y: 0 }, isDragging: false },
@@ -375,7 +375,7 @@ function setModalAlert(msg: string, title: string, type: ModalType) {
     }
 }
 
-function setMapSize(size: Size) {
+function setMapSize(size: ISize) {
     floorSettings.size = size
     floorCanvas.value!.setMapSize(size)
 }
@@ -431,10 +431,10 @@ function loadRooms() {
         .then((response) => {
             const data = response.data
 
-            floorSettings.size = data.floorSettings as Size
+            floorSettings.size = data.floorSettings as ISize
             floorCanvas.value?.setMapSize(data.floorSettings)
 
-            rooms.value = data.rooms as Array<Room>
+            rooms.value = data.rooms as Array<IRoom>
             floorCanvas.value?.setRooms(rooms.value)
 
             floorCanvas.value?.centralizeZoom()

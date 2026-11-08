@@ -1,6 +1,6 @@
 import Konva from 'konva'
 import type { Circle } from 'konva/lib/shapes/Circle'
-import type { Point } from '../../../types'
+import type { IPoint } from '../../../types'
 import { Figure } from '../figure'
 import { svgPath, snapPoint } from '../../core'
 
@@ -55,7 +55,7 @@ export class Vertices extends Figure {
         this.group.destroyChildren()
     }
 
-    private createCircle(point: Point, color: string): Circle {
+    private createCircle(point: IPoint, color: string): Circle {
         return new Konva.Circle({
             x: point.x,
             y: point.y,

@@ -41,14 +41,14 @@
 <script lang="ts" setup>
 import { ref, useTemplateRef, onMounted, onBeforeUnmount } from 'vue'
 import { Video, VideoOff } from '@lucide/vue'
-import SelectField, { Option } from '@/components/form/SelectField.vue'
+import SelectField, { IOption } from '@/components/form/SelectField.vue'
 import InlineAlert from '@/components/alerts/InlineAlert.vue'
 import TextLoading from '@/components/loading/TextLoading.vue'
 
 const video = useTemplateRef('video')
 const alert = ref({ message: '', key: 0 })
 const isLoadingPermissions = ref<boolean>(true)
-const selectOptions = ref<Array<Option>>([])
+const selectOptions = ref<Array<IOption>>([])
 const stream = ref<MediaStream | null>(null)
 const emit = defineEmits<{
     (e: 'getStream', stream: MediaStream): void

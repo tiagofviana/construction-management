@@ -324,18 +324,18 @@ import gsap from 'gsap'
 import ModalAlert, { type ModalType } from '@/components/alerts/ModalAlert.vue'
 import SaveForm from '@/components/map/modules/room/SaveForm.vue'
 import { RoomCanvas } from './modules/room/index'
-import type { Point, PathCommand, Room, Size } from './modules/types'
+import type { IPoint, PathCommand, IRoom, ISize } from './modules/types'
 import type { ToolOptions } from './modules/room/core/index'
 import { PathSerializer } from './modules/serializers'
 import CanvasRoomSize from './modules/room/CanvasRoomSize.vue'
 
-interface RoomOptions {
+interface IRoomOptions {
     tool: ToolOptions
     zoom: {
         scale: number
     }
     mouse: {
-        point: Point
+        point: IPoint
         isDragging: boolean
     }
     grid: {
@@ -349,7 +349,7 @@ const emit = defineEmits<{
     saved: []
 }>()
 
-interface ModalSettings {
+interface IModalSettings {
     type: ModalType
     title: string
     message: string
@@ -361,7 +361,7 @@ interface ModalSettings {
 
 const props = defineProps({
     room: {
-        type: Object as PropType<Room>,
+        type: Object as PropType<IRoom>,
         required: false,
     },
     isUpdate: {
@@ -370,7 +370,7 @@ const props = defineProps({
     },
 })
 
-const modalAlert = ref<ModalSettings & { key: number }>({
+const modalAlert = ref<IModalSettings & { key: number }>({
     type: 'success',
     title: '',
     message: '',
@@ -385,7 +385,7 @@ const isHidden = ref<boolean>(false)
 const container = useTemplateRef('container')
 const roomCanvas = shallowRef<null | RoomCanvas>(null)
 
-const controller = reactive<RoomOptions>({
+const controller = reactive<IRoomOptions>({
     tool: null,
     zoom: { scale: 1 },
     mouse: { point: { x: 0, y: 0 }, isDragging: false },
@@ -499,7 +499,7 @@ function animateOut() {
     )
 }
 
-function setModalAlert(settings: ModalSettings) {
+function setModalAlert(settings: IModalSettings) {
     modalAlert.value = {
         key: modalAlert.value.key + 1,
         type: settings.type,
@@ -512,7 +512,7 @@ function setModalAlert(settings: ModalSettings) {
     }
 }
 
-function setMapSize(size: Size) {
+function setMapSize(size: ISize) {
     roomSettings.size = size
     roomCanvas.value!.setMapSize(size)
     saveForm.value?.setMapSize(size)

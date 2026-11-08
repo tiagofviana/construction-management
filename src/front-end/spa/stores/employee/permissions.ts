@@ -2,15 +2,15 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-export interface Permission {
+export interface IPermission {
     name: string
     codename: string
 }
 
 export const permissionsStore = defineStore('permissions', () => {
-    const permissions = ref<Array<Permission> | null>(null)
+    const permissions = ref<Array<IPermission> | null>(null)
 
-    async function fetchPermissions(employeeId: number): Promise<Array<Permission> | null> {
+    async function fetchPermissions(employeeId: number): Promise<Array<IPermission> | null> {
         if (permissions.value !== null) return permissions.value
 
         const response = await axios.get(`/api/employee/${employeeId}/permissions-list`)
@@ -18,7 +18,7 @@ export const permissionsStore = defineStore('permissions', () => {
             return null
         }
 
-        permissions.value = response.data.permissions as Array<Permission>
+        permissions.value = response.data.permissions as Array<IPermission>
         return permissions.value
     }
 

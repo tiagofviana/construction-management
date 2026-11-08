@@ -107,13 +107,13 @@ import { computed, useTemplateRef, onMounted, onBeforeUnmount } from 'vue'
 import { MoveRight, MoveLeft } from '@lucide/vue'
 import { permissionsStore } from '@/stores/employee/permissions'
 import { computeCentroid } from '../utils'
-import { Room, Point } from '../types'
+import { IRoom, IPoint } from '../types'
 
 type Direction = 'left' | 'right'
 
 const props = defineProps({
     rooms: {
-        type: Array<Room>,
+        type: Array<IRoom>,
         required: true,
     },
     employeeId: {
@@ -125,7 +125,7 @@ const props = defineProps({
 const permissions = permissionsStore()
 
 const roomsCentroid = computed(() => {
-    const centroids: Map<string, Point> = new Map()
+    const centroids: Map<string, IPoint> = new Map()
     props.rooms.forEach((item) => {
         centroids.set(item.id, computeCentroid(item.svgPath))
     })

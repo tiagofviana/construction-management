@@ -1,9 +1,9 @@
-export interface Point {
+export interface IPoint {
     x: number
     y: number
 }
 
-export interface Size {
+export interface ISize {
     width: number
     height: number
 }

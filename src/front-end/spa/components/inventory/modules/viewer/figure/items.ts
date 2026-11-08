@@ -1,7 +1,7 @@
 import Konva from 'konva'
 import type { Settings } from '../core/settings'
-import { SVGParser, type SVGImage } from '../core/svg'
-import type { InventoryItem } from '../types'
+import { SVGParser, type ISVGImage } from '../core/svg'
+import type { IInventoryItem } from '../types'
 
 export class RoomItems {
     private group = new Konva.Group({ listening: true })
@@ -21,7 +21,7 @@ export class RoomItems {
      * The nodes are added right away to keep the items order,
      * the image is set once its SVG finishes loading.
      */
-    public draw(items: Array<InventoryItem>) {
+    public draw(items: Array<IInventoryItem>) {
         this.clear()
 
         items.forEach((item) => {
@@ -49,7 +49,7 @@ export class RoomItems {
         })
     }
 
-    private createImage(item: InventoryItem): Konva.Image {
+    private createImage(item: IInventoryItem): Konva.Image {
         const node = new Konva.Image({
             name: item.id,
             image: undefined,
@@ -65,7 +65,7 @@ export class RoomItems {
         return node
     }
 
-    private setImage(node: Konva.Image, item: InventoryItem, svgImage: SVGImage) {
+    private setImage(node: Konva.Image, item: IInventoryItem, svgImage: ISVGImage) {
         const { image, size } = svgImage
         const padding = this.settings.map.padding
 

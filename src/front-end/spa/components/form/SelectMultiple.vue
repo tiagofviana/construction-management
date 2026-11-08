@@ -131,37 +131,37 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { ChevronRight, ChevronLeft, ChevronsRight, ChevronsLeft } from '@lucide/vue'
 
-export interface KeyValue {
+export interface IKeyValue {
     key: string | number
     value: string
 }
 
 const props = defineProps<{
-    options: KeyValue[]
-    initial: KeyValue[]
+    options: IKeyValue[]
+    initial: IKeyValue[]
 }>()
 
 const emit = defineEmits<{
-    change: [value: KeyValue[]]
+    change: [value: IKeyValue[]]
 }>()
 
-const chosen = ref<KeyValue[]>([...props.initial])
+const chosen = ref<IKeyValue[]>([...props.initial])
 const searchAvailable = ref('')
 const searchChosen = ref('')
 const highlightedAvailable = ref<Set<string | number>>(new Set())
 const highlightedChosen = ref<Set<string | number>>(new Set())
 
-const available = computed<KeyValue[]>(() =>
+const available = computed<IKeyValue[]>(() =>
     props.options.filter((option) => !chosen.value.some((item) => item.key === option.key)),
 )
 
-const filteredAvailable = computed<KeyValue[]>(() => {
+const filteredAvailable = computed<IKeyValue[]>(() => {
     const term = searchAvailable.value.trim().toLowerCase()
     if (!term) return available.value
     return available.value.filter((item) => item.value.toLowerCase().includes(term))
 })
 
-const filteredChosen = computed<KeyValue[]>(() => {
+const filteredChosen = computed<IKeyValue[]>(() => {
     const term = searchChosen.value.trim().toLowerCase()
     if (!term) return chosen.value
     return chosen.value.filter((item) => item.value.toLowerCase().includes(term))
@@ -179,12 +179,12 @@ function toggleHighlight(set: Set<string | number>, key: string | number) {
     }
 }
 
-function moveToChosen(item: KeyValue) {
+function moveToChosen(item: IKeyValue) {
     chosen.value.push(item)
     highlightedAvailable.value.delete(item.key)
 }
 
-function moveToAvailable(item: KeyValue) {
+function moveToAvailable(item: IKeyValue) {
     chosen.value = chosen.value.filter((chosenItem) => chosenItem.key !== item.key)
     highlightedChosen.value.delete(item.key)
 }

@@ -103,12 +103,12 @@
 <script setup lang="ts">
 import { useTemplateRef, onMounted, onBeforeUnmount } from 'vue'
 import { MoveRight, MoveLeft, Eye, EyeOff } from '@lucide/vue'
-import type { InventoryItem } from './types'
+import type { IInventoryItem } from './types'
 
 type Direction = 'left' | 'right'
 
 const props = defineProps<{
-    items: Array<InventoryItem>
+    items: Array<IInventoryItem>
     visibleIds: Set<string>
     categoryNames: Map<number, string>
 }>()

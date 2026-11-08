@@ -80,7 +80,7 @@
 import { ref, useTemplateRef, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { type LucideIcon, ChevronUp, Check } from '@lucide/vue'
 
-export interface Option {
+export interface IOption {
     icon?: { component: LucideIcon; class?: string }
     name: string
     value: string
@@ -90,7 +90,7 @@ const props = defineProps<{
     label?: string
     inputName: string
     placeholder?: string
-    options: Array<Option>
+    options: Array<IOption>
 }>()
 
 const isDropdownHidden = ref(true)

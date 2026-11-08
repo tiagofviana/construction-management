@@ -2,15 +2,15 @@ import type { Vector2d } from 'konva/lib/types'
 import type { KonvaEventObject } from 'konva/lib/Node'
 import type { Stage } from 'konva/lib/Stage'
 import type { Settings } from '../core/settings'
-import type { Size } from '../types'
+import type { ISize } from '../types'
 
 export class Zoom {
     private stage: Stage
     private settings: Settings
-    private getMapSize: () => Size
+    private getMapSize: () => ISize
     public onZoom: () => void = () => {}
 
-    constructor(stage: Stage, settings: Settings, getMapSize: () => Size) {
+    constructor(stage: Stage, settings: Settings, getMapSize: () => ISize) {
         this.stage = stage
         this.settings = settings
         this.getMapSize = getMapSize

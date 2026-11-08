@@ -141,7 +141,7 @@ import TextLoading from '@/components/loading/TextLoading.vue'
 
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 
-interface RegisterForm {
+interface IRegisterForm {
     firstName: string
     lastName: string
     email: string
@@ -149,7 +149,7 @@ interface RegisterForm {
     password2: string
 }
 
-interface ModalSettings {
+interface IModalSettings {
     type: ModalType
     title: string
     message: string
@@ -167,7 +167,7 @@ const alertInline = ref({
 })
 
 const isFormLoading = ref(false)
-const form = ref<RegisterForm>({
+const form = ref<IRegisterForm>({
     firstName: '',
     lastName: '',
     email: '',
@@ -181,7 +181,7 @@ const formErrors = ref<{
     password1?: string[]
     password2?: string[]
 }>({})
-const modalAlert = ref<ModalSettings & { key: number }>({
+const modalAlert = ref<IModalSettings & { key: number }>({
     type: 'success',
     title: '',
     message: '',
@@ -198,7 +198,7 @@ function setAlertInline(msg: string, type: InlineType) {
     alertInline.value.type = type
 }
 
-function setModalAlert(settings: ModalSettings) {
+function setModalAlert(settings: IModalSettings) {
     modalAlert.value = {
         key: modalAlert.value.key + 1,
         type: settings.type,

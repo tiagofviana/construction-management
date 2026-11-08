@@ -34,11 +34,11 @@ import { onMounted, ref } from 'vue'
 import { House, LogOut } from '@lucide/vue'
 import MenuLayout from '@/components/menu/MenuLayout.vue'
 import MenuItem from '@/components/menu/MenuItem.vue'
-import { accountStore, type AccountInfo } from '@/stores/account'
+import { accountStore, type IAccountInfo } from '@/stores/account'
 import EmployeeBreadcrumbs from './EmployeeBreadcrumbs.vue'
 
 const account = accountStore()
-const info = ref<AccountInfo | null>()
+const info = ref<IAccountInfo | null>()
 
 onMounted(async () => {
     info.value = await account.getInfo()

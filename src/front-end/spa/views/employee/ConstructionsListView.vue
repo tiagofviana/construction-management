@@ -78,14 +78,14 @@ import SimpleLoader from '@/components/loading/SimpleLoader.vue'
 
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 
-interface Construction {
+interface IConstruction {
     employeeId: number
     name: string
     address: string
     photoUrl: string
 }
 
-const constructions = ref<Construction[]>([])
+const constructions = ref<IConstruction[]>([])
 const isLoading = ref(true)
 const alertModal = reactive<{ message: string; key: number; title: string }>({
     message: '',
@@ -97,7 +97,7 @@ onBeforeMount(() => {
     axios
         .get(`/api/employee/constructions-list`)
         .then((respose) => {
-            const data = respose.data as Array<Construction>
+            const data = respose.data as Array<IConstruction>
             constructions.value = data
         })
         .finally(() => {

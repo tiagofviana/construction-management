@@ -1,13 +1,13 @@
 import type { Stage } from 'konva/lib/Stage'
 import type { KonvaEventObject } from 'konva/lib/Node'
-import type { Point } from '../../types'
+import type { IPoint } from '../../types'
 import { svgPath, tool } from '../core'
 import type { DrawManager } from '../figure'
 
 export class MouseTracker {
     private stage: Stage
-    public onTrackChange: (point: Point) => void
-    public onDragChange: (point: Point) => void
+    public onTrackChange: (point: IPoint) => void
+    public onDragChange: (point: IPoint) => void
     private drawManager: DrawManager
 
     constructor(stage: Stage, drawManager: DrawManager) {
@@ -21,8 +21,8 @@ export class MouseTracker {
         this.stage.on('dragmove', (e) => this.onDragMove(e))
     }
 
-    private getCurrentMousePoint(): Point {
-        const ptr = this.stage.getPointerPosition() as Point
+    private getCurrentMousePoint(): IPoint {
+        const ptr = this.stage.getPointerPosition() as IPoint
         const scale = this.stage.scaleX()
 
         const point = {
@@ -34,7 +34,7 @@ export class MouseTracker {
     }
 
     private onMouseMove(): void {
-        const ptr = this.stage.getPointerPosition() as Point
+        const ptr = this.stage.getPointerPosition() as IPoint
         const scale = this.stage.scaleX()
 
         const point = {

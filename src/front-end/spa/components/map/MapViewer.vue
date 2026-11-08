@@ -102,15 +102,15 @@ import axios from 'axios'
 import { Map } from '@lucide/vue'
 import { permissionsStore } from '@/stores/employee/permissions'
 import RoomList from '@/components/map/modules/viewer/RoomList.vue'
-import SelectField, { Option } from '@/components/form/SelectField.vue'
+import SelectField, { IOption } from '@/components/form/SelectField.vue'
 import type { ModalType } from '@/components/alerts/ModalAlert.vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'
 import { ViewerCanvas } from '@/components/map/modules/viewer'
-import type { Room } from '@/components/map/modules/types'
+import type { IRoom } from '@/components/map/modules/types'
 
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 
-interface Floor {
+interface IFloor {
     id: number
     name: string
 }
@@ -123,9 +123,9 @@ const props = defineProps({
 })
 
 const permissions = permissionsStore()
-const selectOptions = ref<Array<Option>>([])
+const selectOptions = ref<Array<IOption>>([])
 const selectedFloor = ref<string>('')
-const rooms = ref<Array<Room>>([])
+const rooms = ref<Array<IRoom>>([])
 const isLoadingRooms = ref<boolean>(false)
 const container = useTemplateRef('container')
 const roomList = useTemplateRef('room-list')
@@ -165,7 +165,7 @@ onMounted(() => {
     viewerCanvas.value = vc
 
     axios.get(`/api/employee/${props.employeeId}/floors-list`).then((response) => {
-        const data = response.data as Array<Floor>
+        const data = response.data as Array<IFloor>
         selectOptions.value = data.map(({ id, name }) => ({
             value: id.toString(),
             name: name,
@@ -193,7 +193,7 @@ function loadRooms() {
             const data = response.data
 
             hasEditPermission.value = data.hasEditPermission
-            rooms.value = data.rooms as Array<Room>
+            rooms.value = data.rooms as Array<IRoom>
 
             viewerCanvas.value?.setMapSize(data.floorSettings)
             viewerCanvas.value?.setRooms(rooms.value)

@@ -1,7 +1,7 @@
 import Konva from 'konva'
 import type { Label } from 'konva/lib/shapes/Label'
 import type { Text } from 'konva/lib/shapes/Text'
-import type { PathCommand, LineCmd, CurveCmd } from '../../../types'
+import type { PathCommand, ILineCmd, ICurveCmd } from '../../../types'
 import { Figure } from '../figure'
 import { svgPath, settings } from '../../core'
 
@@ -36,7 +36,7 @@ export class Info extends Figure {
         return Math.round(Math.sqrt(dx * dx + dy * dy))
     }
 
-    private createLineLabels(previus: PathCommand, current: LineCmd) {
+    private createLineLabels(previus: PathCommand, current: ILineCmd) {
         const distance = this.euclidianDistance(previus, current)
 
         if (distance < 1) return
@@ -57,7 +57,7 @@ export class Info extends Figure {
         this.group.add(label)
     }
 
-    private createCurveLabels(previous: PathCommand, current: CurveCmd) {
+    private createCurveLabels(previous: PathCommand, current: ICurveCmd) {
         const area = this.calculateCurveArea(previous, current)
         if (Math.abs(area) >= 1) {
             const chordMid = {
@@ -110,7 +110,7 @@ export class Info extends Figure {
 
     private getCurveApexOnPerpendicular(
         start: PathCommand,
-        curve: CurveCmd,
+        curve: ICurveCmd,
         segments = 64,
     ): { x: number; y: number } {
         const chordDx = curve.x - start.x
@@ -190,7 +190,7 @@ export class Info extends Figure {
         })
     }
 
-    private calculateCurveArea(start: PathCommand, curve: CurveCmd, segments = 32): number {
+    private calculateCurveArea(start: PathCommand, curve: ICurveCmd, segments = 32): number {
         // Shoelace formula
         const points: Array<{ x: number; y: number }> = [{ x: start.x, y: start.y }]
 
@@ -209,7 +209,7 @@ export class Info extends Figure {
         return area / 2
     }
 
-    private getCurvePoint(start: PathCommand, curve: CurveCmd, t: number) {
+    private getCurvePoint(start: PathCommand, curve: ICurveCmd, t: number) {
         const mt = 1 - t
 
         const x =

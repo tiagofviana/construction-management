@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-export interface AccountInfo {
+export interface IAccountInfo {
     firstName: string
     lastName: string
     email: string
@@ -10,9 +10,9 @@ export interface AccountInfo {
 }
 
 export const accountStore = defineStore('account', () => {
-    let info: AccountInfo | null = null
+    let info: IAccountInfo | null = null
 
-    async function getInfo(): Promise<AccountInfo | null> {
+    async function getInfo(): Promise<IAccountInfo | null> {
         if (info !== null) return info
 
         const response = await axios.get('/api/account/info/get')

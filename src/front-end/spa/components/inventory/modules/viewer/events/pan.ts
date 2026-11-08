@@ -1,11 +1,11 @@
 import type { Vector2d } from 'konva/lib/types'
 import type { Stage } from 'konva/lib/Stage'
 import type { Settings } from '../core/settings'
-import type { Point, Size } from '../types'
+import type { IPoint, ISize } from '../types'
 
-interface MotionPoints {
-    pointer: Point
-    stage: Point
+interface IMotionPoints {
+    pointer: IPoint
+    stage: IPoint
 }
 
 export class Pan {
@@ -14,12 +14,12 @@ export class Pan {
      * Calculates motion relative to the initial touch/click position.
      */
 
-    private motionPoints: MotionPoints | null = null
+    private motionPoints: IMotionPoints | null = null
     private stage: Stage
     private settings: Settings
-    private getMapSize: () => Size
+    private getMapSize: () => ISize
 
-    constructor(stage: Stage, settings: Settings, getMapSize: () => Size) {
+    constructor(stage: Stage, settings: Settings, getMapSize: () => ISize) {
         this.stage = stage
         this.settings = settings
         this.getMapSize = getMapSize
@@ -60,7 +60,7 @@ export class Pan {
         this.stage.position(this.clampPoint(this.stage.position()))
     }
 
-    private clampPoint(point: Point): Point {
+    private clampPoint(point: IPoint): IPoint {
         // constrains point (x, y) within allowed maximum and minimum limits
         const scale = this.stage.scaleX()
         const { width, height } = this.getMapSize()

@@ -1,11 +1,11 @@
 import Konva from 'konva'
 import type { Settings } from '../core/settings'
-import type { InventoryRoom, Size } from '../types'
+import type { IInventoryRoom, ISize } from '../types'
 
 export class Room {
     private group = new Konva.Group({ listening: false })
     private settings: Settings
-    private room: InventoryRoom | null = null
+    private room: IInventoryRoom | null = null
 
     constructor(layer: Konva.Layer, settings: Settings) {
         this.settings = settings
@@ -17,7 +17,7 @@ export class Room {
     }
 
     // The map is the room view box plus the padding on each side
-    public getMapSize(): Size {
+    public getMapSize(): ISize {
         if (!this.room) return { width: 0, height: 0 }
 
         const [, , width, height] = this.room.svgViewBox.split(' ').map(Number)
@@ -29,7 +29,7 @@ export class Room {
         }
     }
 
-    public draw(room: InventoryRoom) {
+    public draw(room: IInventoryRoom) {
         this.clear()
         this.room = room
 

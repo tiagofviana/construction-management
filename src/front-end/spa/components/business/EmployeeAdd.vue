@@ -124,13 +124,13 @@ import type { ModalType } from '@/components/alerts/ModalAlert.vue'
 
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
 
-interface User {
+interface IUser {
     id: number
     fullname: string
     email: string
 }
 
-interface ModalSettings {
+interface IModalSettings {
     type: ModalType
     title: string
     message: string
@@ -160,7 +160,7 @@ const modalAlert = ref({
     okFunction: () => {},
 })
 const search = ref('')
-const searchResult = ref<User[]>([])
+const searchResult = ref<IUser[]>([])
 
 onMounted(() => {
     animateIn()
@@ -212,7 +212,7 @@ function animateOut() {
     )
 }
 
-function setModalAlert(settings: ModalSettings) {
+function setModalAlert(settings: IModalSettings) {
     modalAlert.value = {
         key: modalAlert.value.key + 1,
         type: settings.type,
@@ -268,7 +268,7 @@ function highlightSearch(text: string) {
     )
 }
 
-function addEmployee(user: User) {
+function addEmployee(user: IUser) {
     const formData = new FormData()
     formData.append('user', String(user.id))
 
