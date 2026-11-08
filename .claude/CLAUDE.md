@@ -17,6 +17,7 @@ Sistema para a gestão da área de engenheiros de vários hospitais. O sistema �
 ### Backend
 
 - Siga as instruções do README.md (somente se necessário)
+- Testes (na pasta `src/back-end`, com o venv): `python manage.py test apps.NOME_DO_APP.tests` — sempre o módulo `tests` completo, pois `apps/` não é um pacote Python
 
 ## Estrutura
 
@@ -27,4 +28,4 @@ Sistema para a gestão da área de engenheiros de vários hospitais. O sistema �
 
 - NUNCA edite arquivos gerados pela build pelo Esbuild ou pelo TailwindCSS
 - Não altere migrações existentes e nem crie novas
-- Segredos ficam em um arquivo `.env`, jamais leia esse arquivo
+- Segredos ficam num arquivo `.env`, jamais leia esse arquivo

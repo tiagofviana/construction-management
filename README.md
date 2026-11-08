@@ -117,3 +117,27 @@ python manage.py runserver
 ```
 
 Browse it at <a href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a>
+
+## 🧪 Executar os testes
+
+Os comandos abaixo devem ser executados na pasta `\src\back-end`, com o ambiente virtual ativado.
+
+Para executar os testes de um app específico, substitua `NOME_DO_APP` pelo nome da pasta do app dentro de `apps`:
+
+```sh
+python manage.py test apps.NOME_DO_APP.tests
+```
+
+Adicione `--verbosity 2` para listar cada teste durante a execução:
+
+```sh
+python manage.py test apps.NOME_DO_APP.tests --verbosity 2
+```
+
+Para executar apenas um arquivo, uma classe ou um método de teste, substitua também `NOME_DO_ARQUIVO`, `NOME_DA_CLASSE` e `NOME_DO_METODO` pelos nomes correspondentes. O caminho pode terminar no arquivo, na classe ou no método:
+
+```sh
+python manage.py test apps.NOME_DO_APP.tests.NOME_DO_ARQUIVO.NOME_DA_CLASSE.NOME_DO_METODO
+```
+
+> **IMPORTANTE:** Sempre informe o módulo `tests` completo (`apps.NOME_DO_APP.tests`). Executar `python manage.py test apps` falha, pois a pasta `apps` não é um pacote Python.
