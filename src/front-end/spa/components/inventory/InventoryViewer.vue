@@ -1,5 +1,5 @@
 <template>
-    <section class="w-full overflow-hidden rounded-lg border border-black/20 bg-white">
+    <section class="max-h-content min-h-content relative flex size-full">
         <AsyncModalAlert
             v-if="modalAlert.message"
             type="error"
@@ -10,95 +10,101 @@
             :key="modalAlert.key"
         />
 
-        <!-- Room -->
-        <div class="px-4 py-3 sm:px-6">
-            <h2 class="truncate text-xl font-bold sm:text-2xl">{{ room?.name ?? 'Cômodo' }}</h2>
-
-            <p v-if="room?.description" class="mt-1 text-sm text-pretty text-gray-600">
-                {{ room.description }}
-            </p>
-        </div>
-
-        <!-- Categories -->
         <div
-            class="border-y border-black/10 transition-all duration-400"
-            :class="{ 'border-x bg-mauve-200': isCategoriesOpen }"
+            class="relative m-8 flex flex-1 flex-col overflow-hidden rounded-lg border border-black/20 bg-white shadow shadow-black/20"
         >
-            <button
-                type="button"
-                class="flex w-full cursor-pointer items-center gap-2 px-4 py-3 text-left hover:bg-black/10"
-                @click="isCategoriesOpen = !isCategoriesOpen"
-            >
-                <span class="text-sm font-bold text-black/70"> Categorias dos itens exibidos </span>
+            <!-- Room -->
+            <div class="px-4 py-3">
+                <h2 class="truncate text-xl font-bold sm:text-2xl">{{ room?.name ?? 'Cômodo' }}</h2>
 
-                <span v-if="!isLoadingCategories" class="text-xs text-gray-500">
-                    {{ selectedCategories.length }} de {{ categories.length }} selecionadas
-                </span>
+                <p v-if="room?.description" class="mt-1 text-sm text-pretty text-gray-600">
+                    {{ room.description }}
+                </p>
+            </div>
 
-                <ChevronDown
-                    :size="18"
-                    class="ml-auto text-gray-500 transition-transform"
-                    :class="{ 'rotate-180': isCategoriesOpen }"
-                />
-            </button>
-
+            <!-- Categories -->
             <div
-                class="grid transition-all duration-400 ease-in-out"
-                :class="isCategoriesOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
-                :inert="!isCategoriesOpen"
+                class="border-y border-black/10 transition-all duration-400"
+                :class="{ 'border-x bg-mauve-200': isCategoriesOpen }"
             >
-                <div class="min-h-0 overflow-hidden">
-                    <div class="p-4">
-                        <SimpleLoader v-if="isLoadingCategories" class="mx-auto" />
+                <button
+                    type="button"
+                    class="flex w-full cursor-pointer items-center gap-2 px-4 py-3 text-left hover:bg-black/10"
+                    @click="isCategoriesOpen = !isCategoriesOpen"
+                >
+                    <span class="text-sm font-bold text-black/70">
+                        Categorias dos itens exibidos
+                    </span>
 
-                        <SelectMultiple
-                            v-else
-                            :initial="categories"
-                            :options="categories"
-                            @change="(v) => (selectedCategories = v)"
-                        />
+                    <span v-if="!isLoadingCategories" class="text-xs text-gray-500">
+                        {{ selectedCategories.length }} de {{ categories.length }} selecionadas
+                    </span>
+
+                    <ChevronDown
+                        :size="18"
+                        class="ml-auto text-gray-500 transition-transform"
+                        :class="{ 'rotate-180': isCategoriesOpen }"
+                    />
+                </button>
+
+                <div
+                    class="grid transition-all duration-400 ease-in-out"
+                    :class="isCategoriesOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
+                    :inert="!isCategoriesOpen"
+                >
+                    <div class="min-h-0 overflow-hidden">
+                        <div class="p-4">
+                            <SimpleLoader v-if="isLoadingCategories" class="mx-auto" />
+
+                            <SelectMultiple
+                                v-else
+                                :initial="categories"
+                                :options="categories"
+                                @change="(v) => (selectedCategories = v)"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="flex h-[80vh] min-h-80 flex-row">
-            <!-- Map -->
-            <div class="relative flex-1">
-                <div ref="container" class="size-full"></div>
+            <div class="flex min-h-0 flex-1 flex-row">
+                <!-- Map -->
+                <div class="relative flex-1">
+                    <div ref="container" class="size-full"></div>
 
-                <div
-                    class="pointer-events-none absolute inset-0 inset-shadow-sm inset-shadow-black/20"
-                ></div>
+                    <div
+                        class="pointer-events-none absolute inset-0 inset-shadow-sm inset-shadow-black/20"
+                    ></div>
 
-                <SimpleLoader
-                    v-if="isLoadingInventory"
-                    :size="44"
-                    class="absolute top-1/2 left-1/2 z-1 -translate-1/2 stroke-gray-700"
-                />
-            </div>
-
-            <!-- Items -->
-            <aside
-                class="flex h-full w-full max-w-56 shrink-0 flex-col overflow-y-auto border-r border-black/10 bg-white"
-            >
-                <div
-                    class="flex h-12 shrink-0 items-center justify-center border-b border-slate-200"
-                >
-                    <h2 class="px-4 text-lg">Itens</h2>
+                    <SimpleLoader
+                        v-if="isLoadingInventory"
+                        :size="44"
+                        class="absolute top-1/2 left-1/2 z-1 -translate-1/2 stroke-gray-700"
+                    />
                 </div>
 
-                <ItemList
-                    v-if="!isLoadingInventory"
-                    ref="item-list"
-                    :items="items"
-                    :visible-ids="visibleIds"
-                    :category-names="categoryNames"
-                    @change="selectItem"
-                    @show="showItem"
-                    @hide="hideItem"
-                />
-            </aside>
+                <!-- Items -->
+                <aside
+                    class="flex h-full w-full max-w-56 shrink-0 flex-col overflow-y-auto border-r border-black/10 bg-white"
+                >
+                    <div
+                        class="flex h-12 shrink-0 items-center justify-center border-b border-slate-200"
+                    >
+                        <h2 class="px-4 text-lg">Itens</h2>
+                    </div>
+
+                    <ItemList
+                        v-if="!isLoadingInventory"
+                        ref="item-list"
+                        :items="items"
+                        :visible-ids="visibleIds"
+                        :category-names="categoryNames"
+                        @change="selectItem"
+                        @show="showItem"
+                        @hide="hideItem"
+                    />
+                </aside>
+            </div>
         </div>
     </section>
 </template>
@@ -121,8 +127,8 @@ import SimpleLoader from '@/components/loading/SimpleLoader.vue'
 import ItemList from '@/components/inventory/modules/viewer/ItemList.vue'
 import {
     InventoryCanvas,
-    type InventoryRoom,
-    type InventoryItem,
+    type IInventoryRoom,
+    type IInventoryItem,
 } from '@/components/inventory/modules/viewer'
 
 const AsyncModalAlert = defineAsyncComponent(() => import('@/components/alerts/ModalAlert.vue'))
@@ -146,8 +152,8 @@ const selectedCategories = ref<Array<IKeyValue>>([])
 const isLoadingCategories = ref(true)
 const isCategoriesOpen = ref(false)
 
-const room = ref<InventoryRoom | null>(null)
-const items = ref<Array<InventoryItem>>([])
+const room = ref<IInventoryRoom | null>(null)
+const items = ref<Array<IInventoryItem>>([])
 const isLoadingInventory = ref(true)
 const selectedItemId = ref<string | null>(null)
 // Items shown or hidden one by one, they ignore whether their category is selected
@@ -282,7 +288,7 @@ function fetchInventory() {
     axios
         .get(`/api/employee/${props.employeeId}/room/${props.roomId}/inventory-data`)
         .then((response) => {
-            const data = response.data as { room: InventoryRoom; items: Array<InventoryItem> }
+            const data = response.data as { room: IInventoryRoom; items: Array<IInventoryItem> }
 
             room.value = data.room
             items.value = data.items

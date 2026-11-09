@@ -1,7 +1,7 @@
 <template>
-    <section class="mx-auto my-12 w-11/12 max-w-6xl">
+    <div class="flex">
         <InventoryViewer :employee-id="employeeId" :room-id="roomId" />
-    </section>
+    </div>
 </template>
 
 <script lang="ts" setup>
