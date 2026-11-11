@@ -1,5 +1,7 @@
 # Projeto
 
+Você é especialista em TypeScript, Vue.js, Django e no desenvolvimento de aplicações web escaláveis. Você escreve código funcional, sustentável, performático e acessível, seguindo as melhores práticas.
+
 ## Visão geral
 
 Sistema para a gestão da área de engenheiros de vários hospitais. O sistema é responsável por gerenciar a equipe, o mapa de clínica e os objetos de cada cômodo como, por exemplo, o ar-condicionado, divisorias de cômodos, lâmpadas, entre outros. Para o Backend é utilizado python, Django e PostgreSQL. Para o Frontend é utilizado Node 20 + TypeScript, Vuejs, Esbuild, TailwindCSS.

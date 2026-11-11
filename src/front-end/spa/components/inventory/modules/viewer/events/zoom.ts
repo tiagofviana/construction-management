@@ -36,6 +36,23 @@ export class Zoom {
         this.onZoom()
     }
 
+    // Changes the scale by "delta" keeping the stage center in the same place
+    public apply(delta: number): void {
+        const { min, max } = this.settings.zoom
+        const oldScale = this.stage.scaleX()
+        const newScale = Math.min(Math.max(oldScale + delta, min), max)
+        const scaleRatio = newScale / oldScale
+        const center = { x: this.stage.width() / 2, y: this.stage.height() / 2 }
+
+        this.stage.setAttrs({
+            scaleX: newScale,
+            scaleY: newScale,
+            x: center.x - (center.x - this.stage.x()) * scaleRatio,
+            y: center.y - (center.y - this.stage.y()) * scaleRatio,
+        })
+        this.onZoom()
+    }
+
     // Scales the stage so the whole map fits inside it
     public fit(): void {
         const { width, height } = this.getMapSize()

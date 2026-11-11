@@ -103,6 +103,21 @@
                         @show="showItem"
                         @hide="hideItem"
                     />
+
+                    <div
+                        v-if="permissions.hasPermission(props.employeeId, 'can_edit_roomItem')"
+                        class="mt-auto flex shrink-0 flex-col gap-2 border-t border-black/10 p-4"
+                    >
+                        <RouterLink
+                            :to="{
+                                name: 'employee.room-inventory-editor',
+                                params: { employeeId: props.employeeId, roomId: props.roomId },
+                            }"
+                            class="btn btn-gray"
+                        >
+                            Editar
+                        </RouterLink>
+                    </div>
                 </aside>
             </div>
         </div>
@@ -122,6 +137,7 @@ import {
 } from 'vue'
 import axios from 'axios'
 import { ChevronDown } from '@lucide/vue'
+import { permissionsStore } from '@/stores/employee/permissions'
 import SelectMultiple, { type IKeyValue } from '@/components/form/SelectMultiple.vue'
 import SimpleLoader from '@/components/loading/SimpleLoader.vue'
 import ItemList from '@/components/inventory/modules/viewer/ItemList.vue'
@@ -142,6 +158,8 @@ const props = defineProps<{
     employeeId: number
     roomId: string
 }>()
+
+const permissions = permissionsStore()
 
 const container = useTemplateRef('container')
 const itemList = useTemplateRef('item-list')
@@ -182,6 +200,8 @@ const visibleItems = computed(() => {
 const visibleIds = computed(() => new Set(visibleItems.value.map((item) => item.id)))
 
 onMounted(() => {
+    permissions.fetchPermissions(props.employeeId)
+
     const vc = new InventoryCanvas(container.value as HTMLDivElement)
     vc.setItemClick((itemId) => itemList.value?.goTo(itemId))
     inventoryCanvas.value = vc

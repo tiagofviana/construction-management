@@ -1,5 +1,6 @@
 import type { Vector2d } from 'konva/lib/types'
 import type { Stage } from 'konva/lib/Stage'
+import type { KonvaEventObject, Node } from 'konva/lib/Node'
 import type { Settings } from '../core/settings'
 import type { IPoint, ISize } from '../types'
 
@@ -23,12 +24,16 @@ export class Pan {
         this.stage = stage
         this.settings = settings
         this.getMapSize = getMapSize
-        this.stage.on('mousedown touchstart', () => this.onMouseDown())
+        this.stage.on('mousedown touchstart', (e) => this.onMouseDown(e))
         this.stage.on('mousemove touchmove', () => this.onMouseMove())
         this.stage.on('mouseup touchend mouseleave', () => (this.motionPoints = null))
     }
 
-    private onMouseDown(): void {
+    private onMouseDown(e: KonvaEventObject<MouseEvent | TouchEvent>): void {
+        // Dragging a node (e.g. an item in the editor) must not move the map
+        const draggableTarget = e.target.findAncestor((node: Node) => node.draggable(), true)
+        if (draggableTarget !== undefined) return
+
         const position = this.stage.getPointerPosition() as Vector2d
         this.motionPoints = {
             pointer: { x: position.x, y: position.y },

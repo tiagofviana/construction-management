@@ -6,4 +6,8 @@ urlpatterns = [
     path(
         "room/<uuid:room_id>/inventory-data", inventory.RoomInventoryDataView.as_view()
     ),
+    path(
+        "room/<uuid:room_id>/inventory/update/form",
+        inventory.UpdateRoomInventoryFormView.as_view(),
+    ),
 ]

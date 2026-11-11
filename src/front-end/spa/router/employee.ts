@@ -82,6 +82,15 @@ export const employeeRoutes: RouteRecordRaw[] = [
                     breadcrumbLabel: 'Cômodo',
                 },
             },
+
+            {
+                path: ':employeeId/quarto/:roomId/inventario/editor',
+                name: 'employee.room-inventory-editor',
+                component: () => import('@/views/employee/RoomInventoryEditorView.vue'),
+                meta: {
+                    breadcrumbLabel: 'Editor',
+                },
+            },
         ],
     },
 ]
