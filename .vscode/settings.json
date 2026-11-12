@@ -9,8 +9,8 @@
     "explorer.autoReveal": false,
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
-        "package.json": "package-lock.json, tsconfig.json, eslint*, .prettier*, esbuild.config.js",
-        ".gitignore": ".gitattributes, README.md",
+        "package.json": "package-lock.json, tsconfig.json,  esbuild.config.js, eslint.config.ts, prettier.config.js, .prettierignore",
+        ".editorconfig": "README.md, .gitattributes, .gitignore",
         "requirements-default.txt": "requirements*.txt"
     },
     "editor.wordWrap": "bounded",
@@ -27,9 +27,9 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
     },
-    "prettier.configPath": ".prettierrc.json",
+    "prettier.configPath": "src\\front-end\\prettier.config.js",
     "svg.preview.mode": "svg",
     "js/ts.tsdk.promptToUseWorkspaceVersion": true,
-    "js/ts.tsdk.path": "node_modules\\typescript\\lib",
+    "js/ts.tsdk.path": "src\\front-end\\node_modules\\typescript\\lib",
     "svg.preview.background": "transparent"
 }
