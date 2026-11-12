@@ -101,7 +101,7 @@ const defaultOption = {
     chunkNames: 'chunks\\[name]-[hash].min',
     assetNames: 'assets\\[name]-[hash]',
     alias: {
-        '@': fileURLToPath(new URL('.\\src\\front-end\\spa', import.meta.url)),
+        '@': fileURLToPath(new URL('./spa', import.meta.url)),
     },
     loader: {
         '.webp': 'file',
@@ -116,28 +116,28 @@ const entries = [
     // SPA
     {
         ...defaultOption,
-        entryPoints: ['src\\front-end\\spa\\main.ts'],
-        outdir: '.\\src\\back-end\\apps\\spa\\static\\spa\\_js\\index\\bundled\\',
+        entryPoints: ['spa\\main.ts'],
+        outdir: '..\\back-end\\apps\\spa\\static\\spa\\_js\\index\\bundled\\',
         publicPath: '/static/spa/_js/index/bundled',
     },
 
     // MPA
     {
         ...defaultOption,
-        entryPoints: ['src\\front-end\\mpa\\json\\editor\\main.ts'],
-        outdir: 'src\\back-end\\apps\\core\\static\\core\\_js\\widgets\\json_editor\\bundled\\',
+        entryPoints: ['mpa\\json\\editor\\main.ts'],
+        outdir: '..\\back-end\\apps\\core\\static\\core\\_js\\widgets\\json_editor\\bundled\\',
     },
 
     {
         ...defaultOption,
-        entryPoints: ['src\\front-end\\mpa\\image\\cropper\\main.ts'],
-        outdir: 'src\\back-end\\apps\\core\\static\\core\\_js\\widgets\\image_cropper\\bundled\\',
+        entryPoints: ['mpa\\image\\cropper\\main.ts'],
+        outdir: '..\\back-end\\apps\\core\\static\\core\\_js\\widgets\\image_cropper\\bundled\\',
     },
 
     {
         ...defaultOption,
-        entryPoints: ['src\\front-end\\mpa\\svg\\editor\\main.ts'],
-        outdir: 'src\\back-end\\apps\\inventory\\static\\inventory\\_js\\widgets\\svg_editor\\bundled\\',
+        entryPoints: ['mpa\\svg\\editor\\main.ts'],
+        outdir: '..\\back-end\\apps\\inventory\\static\\inventory\\_js\\widgets\\svg_editor\\bundled\\',
     },
 ]
 

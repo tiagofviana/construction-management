@@ -16,7 +16,7 @@
         "incremental": true,
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
         "paths": {
-            "@/*": ["./src/front-end/spa/*"]
+            "@/*": ["./spa/*"]
         },
         "lib": ["DOM", "ESNext"]
     },

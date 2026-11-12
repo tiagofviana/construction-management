@@ -2,14 +2,14 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "styles-dev": "@tailwindcss -i src\\front-end\\styles\\main.css -o src\\back-end\\apps\\core\\static\\core\\_css\\tailwind\\output.css --watch",
-        "styles-prod": "@tailwindcss -i src\\front-end\\styles\\main.css -o src\\back-end\\apps\\core\\static\\core\\_css\\tailwind\\output.css --minify",
+        "styles-dev": "@tailwindcss -i styles\\main.css -o ..\\back-end\\apps\\core\\static\\core\\_css\\tailwind\\output.css --watch",
+        "styles-prod": "@tailwindcss -i styles\\main.css -o ..\\back-end\\apps\\core\\static\\core\\_css\\tailwind\\output.css --minify",
         "build-dev": "node .\\esbuild.config.js --dev",
         "build-prod": "node .\\esbuild.config.js",
         "type-check": "vue-tsc --project .\\tsconfig.json --noEmit",
-        "lint": "eslint src/",
-        "lint:fix": "eslint src/ --fix",
-        "format": "prettier --write src/"
+        "lint": "eslint spa mpa",
+        "lint:fix": "eslint spa mpa --fix",
+        "format": "prettier --write spa mpa"
     },
     "devDependencies": {
         "@types/node": "^26.6.4",
